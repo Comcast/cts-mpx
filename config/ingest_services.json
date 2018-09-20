@@ -1,0 +1,14 @@
+{
+	"Ingest Service": {
+		"path": "ingest",
+		"form": "json",
+		"endpoints": {
+			"Publish": {
+				"schema": "1.5.0"
+			},
+			"Test": {
+				"schema": "1.5.0"
+			}
+		}
+	}
+}

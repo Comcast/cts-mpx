@@ -1,0 +1,423 @@
+{
+    "Access Data Service": {
+        "uri_hint": "access.auth",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.3.0",
+        "endpoints": [
+            "Account",
+            "Account/Field",
+            "AccountSettings",
+            "AccountSettings/Field",
+            "Permission",
+            "Registry",
+            "Role",
+            "SuperUser"
+        ]
+    },
+    "Admin Storefront Service": {
+        "uri_hint": "admin.storefront.commerce",
+        "path": "data",
+        "form": "cjson",
+        "schema": "3.1.0",
+        "endpoints": [
+            "Action",
+            "Contract",
+            "FulfillmentItem",
+            "LedgerEntry",
+            "Order",
+            "orderFulfillment",
+            "OrderHistory",
+            "OrderItem",
+            "OrderSummary",
+            "PaymentInstrumentInfo",
+            "Shipment"
+        ]
+    },
+    "Commerce Configuration Data Service": {
+        "uri_hint": "configuration.commerce",
+        "path": "data",
+        "form": "cjson",
+        "schema": "2.4.0",
+        "endpoints": [
+            "CheckoutConfiguration",
+            "CheckoutConfiguration/Field",
+            "CommerceRegistry",
+            "FulfillmentConfiguration",
+            "FulfillmentConfiguration/Field",
+            "PaymentConfiguration",
+            "PaymentConfiguration/Field",
+            "Rule",
+            "RuleSet",
+            "TaxConfiguration",
+            "TaxConfiguration/Field"
+        ]
+    },
+    "Commerce Event Data Service": {
+        "uri_hint": "event.commerce",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.8.0",
+        "endpoints": [
+            "OrderTracking"
+        ]
+    },
+    "Console Data Service": {
+        "uri_hint": "mpx",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.4.0",
+        "endpoints": [
+            "AccountSettings",
+            "AccountSettings/Field",
+            "Command",
+            "Command/Field",
+            "MenuItem",
+            "MenuItem/Field",
+            "Pane",
+            "Pane/Field",
+            "PaneState",
+            "PaneState/Field",
+            "Panel",
+            "Panel/Field",
+            "Shortcut",
+            "Shortcut/Field",
+            "UserAccountSettings",
+            "UserAccountSettings/Field",
+            "View",
+            "View/Field",
+            "ViewLink",
+            "ViewLink/Field"
+        ]
+    },
+    "Cue Point Data Service": {
+        "uri_hint": "event.commerce",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.3.0",
+        "endpoints": [
+            "CuePoint",
+            "CuePointType"
+        ]
+    },
+    "Delivery Data Service": {
+        "uri_hint": "delivery",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.8.0",
+        "endpoints": [
+            "AccountSettings",
+            "AccountSettings/Field",
+            "AdPolicy",
+            "AdPolicy/Field",
+            "Restriction",
+            "Restriction/Field",
+            "UserAgent"
+        ]
+    },
+    "Entertainment Data Service": {
+        "uri_hint": "entertainment.tv",
+        "path": "data",
+        "form": "cjson",
+        "schema": "2.10.0",
+        "endpoints": [
+            "AccountSettings",
+            "AccountSettings/Field",
+            "Channel",
+            "Channel/Field",
+            "ChannelSchedule",
+            "ChannelSchedule/Field",
+            "Company",
+            "Company/Field",
+            "Credit",
+            "Credit/Field",
+            "Listing",
+            "Listing/Field",
+            "Location",
+            "Location/Field",
+            "Person",
+            "Person/Field",
+            "Program",
+            "Program/Field",
+            "ProgramAvailability",
+            "ProgramAvailability/Field",
+            "Station",
+            "Station/Field",
+            "Tag",
+            "Tag/Field",
+            "TvSeason",
+            "TvSeason/Field"
+        ]
+    },
+    "Entertainment Ingest Data Service": {
+        "uri_hint": "ingest.tv",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.3.0",
+        "endpoints": [
+            "IngestConfig",
+            "IngestConfig/Field",
+            "IngestResult"
+        ]
+    },
+    "Entitlement Data Service": {
+        "uri_hint": "entitlement",
+        "path": "data",
+        "form": "cjson",
+        "schema": "",
+        "endpoints": []
+    },
+    "FeedReader Data Service": {
+        "uri_hint": "feedreader.ingest",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.3.0",
+        "endpoints": [
+            "FeedRecord",
+            "FeedRecord/Field"
+        ]
+    },
+    "Feeds Data Service": {
+        "uri_hint": "feed",
+        "path": "data",
+        "form": "cjson",
+        "schema": "2.2.0",
+        "endpoints": [
+            "FeedAdapter",
+            "FeedAdapter/Field",
+            "FeedConfig",
+            "FeedConfig/Field"
+        ]
+    },
+    "Ingest Data Service": {
+        "uri_hint": "adapter.ingest",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.2.0",
+        "endpoints": [
+            "Adapter",
+            "Adapter/Field",
+            "AdapterConfiguration",
+            "AdapterConfiguration/Field",
+            "Checksum"
+        ]
+    },
+    "Key Data Service": {
+        "uri_hint": "key.entitlement",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.2.0",
+        "endpoints": [
+            "Key",
+            "Key/Field",
+            "UserKey"
+        ]
+    },
+    "Ledger Data Service": {
+        "uri_hint": "ledger.commerce",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.3.0",
+        "endpoints": [
+            "LedgerEntry"
+        ]
+    },
+    "Live Event Service": {
+        "uri_hint": "liveevent",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.4.0",
+        "endpoints": [
+            "LiveEncoder",
+            "LiveEncoder/Field",
+            "LiveEvent",
+            "PhysicalRecording",
+            "PhysicalRecording/Field"
+        ]
+    },
+    "Message Data Service": {
+        "uri_hint": "message",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.3.0",
+        "endpoints": [
+            "EmailTemplate",
+            "EmailTemplate/Field",
+            "MessageInstruction",
+            "MessageQueue",
+            "NotificationFilter"
+        ]
+    },
+    "Comcast Messenger Data Service": {
+        "path": "data",
+        "uri_hint": "messenger.comcast",
+        "form": "cjson",
+        "schema": "1.6.0",
+        "endpoints": [
+            "Message",
+            "NotificationSetting"
+        ]
+    },
+    "Player Data Service": {
+        "uri_hint": "player",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.4.0",
+        "endpoints": [
+            "AccountSettings",
+            "ColorScheme",
+            "Layout",
+            "Player",
+            "Player/Field",
+            "PlayerDefaults",
+            "Plugin",
+            "Skin"
+        ]
+    },
+    "Product Data Service": {
+        "uri_hint": "product",
+        "path": "data",
+        "form": "cjson",
+        "schema": "2.5.0",
+        "endpoints": [
+            "AccountSettings",
+            "AccountSettings/Field",
+            "PricingTemplate",
+            "PricingTemplate/Field",
+            "Product",
+            "Product/Field",
+            "ProductTag",
+            "ProductTag/Field",
+            "Subscription",
+            "Subscription/Field"
+        ]
+    },
+    "Promotion Service": {
+        "uri_hint": "promotion.commerce",
+        "path": "data",
+        "form": "cjson",
+        "schema": "3.1.0",
+        "endpoints": [
+            "Promotion",
+            "Promotion/Field",
+            "PromotionAction",
+            "PromotionAction/Field",
+            "PromotionCondition",
+            "PromotionUseCount"
+        ]
+    },
+    "Publish Data Service": {
+        "uri_hint": "publish",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.8.0",
+        "endpoints": [
+            "Adapter",
+            "AdapterConfiguration",
+            "PublishProfile",
+            "PublishProfile/Field"
+        ]
+    },
+    "Sharing Data Service": {
+        "uri_hint": "share",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.7.0",
+        "endpoints": [
+            "OutletProfile",
+            "OutletProfile/Field",
+            "ProviderAdapter",
+            "ProviderAdapter/Field"
+        ]
+    },
+    "Media Data Service": {
+        "uri_hint": "media",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.7.0",
+        "search_schema": "1.0",
+        "read_only": true,
+        "endpoints": [
+            "AccountSettings",
+            "AccountSettings/Field",
+            "AssetType",
+            "AssetType/Field",
+            "Category",
+            "Category/Field",
+            "Media",
+            "Media/Field",
+            "MediaDefaults",
+            "MediaFile",
+            "MediaFile/Field",
+            "Provider",
+            "Provider/Field",
+            "Release",
+            "Release/Field",
+            "Server",
+            "Server/Field"
+        ]
+    },
+    "Task Service": {
+        "uri_hint": "task",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.3.0",
+        "endpoints": [
+            "Agent",
+            "Batch",
+            "Task",
+            "TaskTemplate",
+            "TaskTemplate/Field",
+            "TaskType"
+        ]
+    },
+    "WatchFolder Data Service": {
+        "uri_hint": "watchfolder.ingest",
+        "path": "data",
+        "form": "json",
+        "schema": "1.2.0",
+        "endpoints": [
+            "WatchFolder",
+            "WatchFolder/Field",
+            "WatchFolderFile",
+            "WatchFolderFile/Field"
+        ]
+    },
+    "Workflow Data Service": {
+        "uri_hint": "workflow",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.3.0",
+        "endpoints": [
+            "ProfileResult",
+            "ProfileStepResult",
+            "WorkflowQueue"
+        ]
+    },
+    "Validation Data Service": {
+        "uri_hint": "validation",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.3.0",
+        "endpoints": [
+            "ConditionalRule",
+            "ConditionalRule/Field",
+            "ValidationRule",
+            "ValidationRule/Field",
+            "Validator",
+            "Validator/Field"
+        ]
+    },
+    "User Data Service master": {
+        "uri_hint": "identity.auth",
+        "path": "data",
+        "form": "cjson",
+        "schema": "1.5.0",
+        "endpoints": [
+            "Directory",
+            "Directory/Field",
+            "Security",
+            "User"
+        ]
+    }
+}

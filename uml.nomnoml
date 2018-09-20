@@ -1,0 +1,242 @@
+[<module> Assemblers|
+  |
+     host(user: nil, service: nil, account_id: 'urn:theplatform:auth:root')
+     path(service: nil, endpoint: nil, extra_path: nil, ids: nil, account: 'urn:theplatform:auth:root')
+     query(user: nil, account: nil, service: nil, endpoint: nil, query: {}, range: nil, count: nil, entries: nil, sort: nil)
+     query_data(range: nil, count: nil, entries: nil, sort: nil)
+ ]
+ [<module> Connections|
+  |
+     \[\](uri = nil)
+ ]
+ [<module> Helpers|
+  |
+     raise_if_not_a(objects, type)
+     raise_if_not_an_array(objects)
+     raise_if_not_a_hash(objects)
+     required_arguments(arguments, a_binding)
+ ]
+ [<class> Page|
+     +entries kind_of:Array
+       +xmlns kind_of:Hash
+    |
+     initialize
+     to_s(indent_depth = nil)
+ ]
+ [<class> Request|
+     +method kind_of:Symbol
+       +url kind_of:String
+       +query kind_of:Hash
+       +payload kind_of:String
+       +response kind_of:::Cts::Mpx::Driver::Response
+       +headers kind_of:Hash
+    |
+     call
+     call_exceptions(method, url)
+ ]
+ [<class> Response|
+     +original kind_of:Excon::Response
+    |
+     data
+     healthy?
+     service_exception?
+     page
+     status
+ ]
+ [<module> Driver|
+  |
+     gem_dir
+     config_dir
+     load_json_file(filename)
+ ]
+ [<class> Entries|
+     +collection kind_of:Array
+    |
+     self.create_from_page(page)
+     \[\](key = nil)
+     add(entry)
+     each
+     initialize
+     remove(argument)
+     reset
+ ]
+ [<class> Entry|
+     +data kind_of:Hash
+       +endpoint kind_of:String
+       +fields kind_of:Fields
+       +id kind_of:String
+       +service kind_of:String
+       +xmlns kind_of:Hash
+    |
+     self.load_by_id(user: nil, id: nil, fields: nil)
+     id
+     id=(value)
+     initialize
+     load(user: nil, fields: nil)
+     save(user: nil)
+ ]
+ [<module> Exceptions|
+  |
+     raise_unless_account_id(argument)
+ ]
+ [<module> Exceptions|
+  |
+     raise_unless_argument_error?(data, type = nil, &block)
+ ]
+ [<module> Exceptions|
+  |
+     raise_unless_reference?(argument)
+ ]
+ [<module> Exceptions|
+  |
+     raise_unless_required_argument?(argument: nil)
+ ]
+ [<class> Field|
+     +field_name kind_of:String
+       +xmlns kind_of:Hash
+    |
+     name
+     qualified_field_name
+     to_s
+     to_h
+     type
+ ]
+ [<class> Fields|
+     +collection kind_of:Array
+    |
+     self.create_from_data(data: nil, xmlns: nil)
+     \[\](key = nil)
+     \[\]=(key, value, xmlns: nil)
+     add(field)
+     each
+     initialize
+     parse(xmlns: nil, data: nil)
+     remove(field_name)
+     reset
+     to_h
+     to_s
+     xmlns
+ ]
+ [<class> Query|
+     +account kind_of:String
+       +endpoint kind_of:String
+       +extra_path kind_of:String
+       +fields kind_of:String
+       +ids kind_of:Array
+       +page kind_of:Driver::Page
+       +query kind_of:Hash
+       +range kind_of:String
+       +return_count kind_of:FalseClass
+       +return_entries kind_of:TrueClass
+       +service kind_of:String
+       +sort kind_of:String
+    |
+     attributes
+     initialize
+     entries
+     run(user: nil)
+     url(user: nil, token: nil); end
+     params
+ ]
+ [<module> Registry|
+  |
+     domains
+     fetch_and_store_domain(user, account_id = 'urn:theplatform:auth:root')
+     fetch_domain(user, account_id = 'urn:theplatform:auth:root')
+     store_domain(data, account_id = 'urn:theplatform:auth:root')
+     initialize
+     raise_argument_error(data, name)
+ ]
+ [<class> Service|
+  |
+     initialize
+     url(account_id = 'urn:theplatform:auth:root')
+     url?(account_id = 'urn:theplatform:auth:root')
+ ]
+ [<module> Data|
+  |
+     \[\](key = nil)
+     delete(user: nil, account: nil, service: nil, endpoint: nil, sort: nil, extra_path: nil, range: nil, ids: nil, query: {}, headers: {}, count: nil, entries: nil)
+     get(user: nil, account: nil, service: nil, fields: nil, endpoint: nil, sort: nil, extra_path: nil, range: nil, ids: nil, query: {}, headers: {}, count: nil, entries: nil, method: :get)
+     post(user: nil, account: nil, service: nil, endpoint: nil, extra_path: nil, query: {}, page: nil, headers: {}, method: :post)
+     put(user: nil, account: nil, service: nil, endpoint: nil, extra_path: nil, query: {}, page: nil, headers: {})
+     prep_call(args = {})
+ ]
+ [<module> Ingest|
+  |
+     \[\](key = nil)
+     services
+     post(user: nil, account: nil, service: nil, endpoint: nil, headers: {}, payload: nil, extra_path: nil)
+ ]
+ [<module> Web|
+  |
+     \[\](key = nil)
+     services
+     assemble_payload(service: nil, endpoint: nil, method: nil, arguments: nil)
+     post(user: nil, account: nil, service: nil, endpoint: nil, method: nil, query: {}, headers: {}, arguments: {}, extra_path: nil)
+ ]
+ [<module> Services|
+  |
+     \[\](key = nil)
+     from_url(url)
+     initialize
+     load_reference_file(file: nil, type: nil)
+     load_references
+     load_services
+     raw_reference
+     reference(key = nil)
+     types
+ ]
+ [<class> User|
+  |
+     sign_in(idle_timeout: nil, duration: nil)
+     sign_out
+     token!
+ ]
+ [<module> Validators|
+  |
+     account_id?(account_id)
+ ]
+ [<module> Validators|
+  |
+     argument_error?(data, type = nil, &block)
+ ]
+ [<module> Validators|
+  |
+     reference?(uri)
+ ]
+ [<module> Validators|
+  |
+     required_argument?(argument: nil)
+ ]
+ [<module> Mpx|
+  |
+ ]
+ [<module> Mpx|
+  |
+ ]
+
+
+[Cts]->[Mpx]
+[Mpx]->[User]
+[Mpx]->[Entries]
+[Mpx]->[Entry]
+[Mpx]->[Field]
+[Mpx]->[Fields]
+[Mpx]->[Query]
+[Mpx]->[Registry]
+[Mpx]->[Service]
+[Mpx]->[Services]
+[Mpx]->[Exceptions]
+[Mpx]->[Driver]
+[Mpx]->[Validators]
+
+[Driver]->[Assemblers]
+[Driver]->[Connections]
+[Driver]->[Helpers]
+[Driver]->[Page]
+[Driver]->[Request]
+[Driver]->[Response]
+[Services]->[Data]
+[Services]->[Web]
+[Services]->[Ingest]

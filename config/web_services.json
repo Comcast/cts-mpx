@@ -1,0 +1,544 @@
+{
+	"Access Data Service": {
+		"url": "http://access.auth.theplatform.com",
+		"end_user": "Access Data Service audience",
+		"read_only": true,
+		"path": "web",
+		"form": "json",
+		"endpoints": {
+			"Registry": {
+				"schema": "1.1",
+				"methods": {
+					"resolveAllUrls": [
+						"service"
+					],
+					"resolveDomain": [
+						"accountId"
+					],
+					"resolveUrlByAccount": [
+						"accountId",
+						"service"
+					],
+					"resolveUrlByPid": [
+						"pid",
+						"service"
+					]
+				}
+			},
+			"Lookup": {
+				"schema": "1.0",
+				"methods": {
+					"getAccountInfoByIds": [
+						"AccountIds"
+					],
+					"getParentAccountInfoByIds": [
+						"AccountIds"
+					]
+				}
+			},
+			"Authorization": {
+				"schema": "1.3",
+				"methods": {
+					"authorize": [
+						"operations"
+					],
+					"authorizeList": [
+						"requests"
+					]
+				}
+			}
+		}
+	},
+	"Admin Storefront Service": {
+		"form": "json",
+		"path": "web",
+		"endpoints": {
+			"schema": "1.4",
+			"Checkout": {
+				"methods": {
+					"abandonOrder": [
+						"providerOrderRef"
+					],
+					"commitOrder": [
+						"providerOrderRef",
+						"paymentInstrumentCreationInfo",
+						"secondaryAuth",
+						"userId"
+					],
+					"createOrder": [
+						"purchaseItemInfos",
+						"paymentRef",
+						"paymentInstrumentCreationInfo",
+						"promotionCode",
+						"properties",
+						"userId",
+						"locale"
+					],
+					"inAppOrder": [
+						"type",
+						"purchaseItemInfo",
+						"paymentInstrumentInfo",
+						"properties"
+					],
+					"oneStepOrder": [
+						"userId",
+						"secondaryAuth",
+						"purchaseItemInfos",
+						"paymentInstrumentCreationInfo",
+						"paymentRef",
+						"locale",
+						"promotionCode",
+						"properties"
+					],
+					"refreshReceipt": [
+						"type",
+						"receiptInfo",
+						"paymentRef"
+					],
+					"applyPromotionToContract": [
+						"contractId",
+						"promotionCode",
+						"extendContractForPromotion",
+						"allowPartialDiscount"
+					],
+					"autoRenewSubscription": [
+						"contractId",
+						"autoRenew"
+					],
+					"billSubscription": [
+						"billingInstruction"
+					],
+					"cancelSubscription": [
+						"contractId",
+						"forceCancel",
+						"refund",
+						"atNextAction"
+					],
+					"changeAllContractPayments": [
+						"oldPaymentInstrumentId",
+						"newPaymentInstrumentId"
+					],
+					"changeContractPayment": [
+						"contractId",
+						"newPaymentInstrumentId"
+					],
+					"endSubscription": [
+						"contractId"
+					],
+					"extendSubscription": [
+						"contractId",
+						"numberOfIntervals"
+					],
+					"reactivateSubscription": [
+						"contractId",
+						"paymentInstrumentId",
+						"billAmountType"
+					],
+					"refundItem": [
+						"fulfillmentItemRef",
+						"amount",
+						"message"
+					],
+					"refundItems": [
+						"fulfillmentItemRefs",
+						"message"
+					],
+					"renewSubscription": [
+						"contractId"
+					],
+					"rolloverSubscription": [
+						"contractId",
+						"newSubscriptionId",
+						"forceRollover",
+						"refund",
+						"atNextAction"
+					]
+				}
+			}
+		}
+	},
+	"Entertainment Ingest Data Service": {
+		"form": "json",
+		"path": "web",
+		"endpoints": {
+			"schema": "1.0",
+			"Process": {
+				"methods": {
+					"cancelIngest": [
+						"ingestResultId"
+					]
+				}
+			}
+		}
+	},
+	"Entitlement License Service": {
+		"path": "web",
+		"form": "json",
+		"endpoints": {
+			"ContentAccessRules": {
+				"schema": "1.0",
+				"methods": {
+					"GetApplicableDistributionRights": [],
+					"GetApplicableDistributionRightsWithSubjectInfo": [
+						"subjectInfo",
+						"retrieveAdditionalSubjectInformation"
+					]
+				}
+			},
+			"License": {
+				"schema": "2.6",
+				"methods": {
+					"GetEMMs.cgi": [
+						"assetid",
+						"clientid",
+						"time",
+						"userdata"
+					],
+					"getLicenseResponse": [
+						"releasePids",
+						"releaseIds",
+						"protectionScheme",
+						"auth",
+						"deviceId",
+						"clientIdentifier"
+					],
+					"getLicenseResponseWithSubjectInfo": [
+						"releasePids",
+						"releaseIds",
+						"protectionScheme",
+						"subjectInfo",
+						"retrieveAdditionalSubjectInformation",
+						"deviceId"
+					]
+				}
+			}
+		}
+	},
+	"Entitlement Register Device": {
+		"url": "http://entitlement.theplatform.com/ent",
+		"path": "web",
+		"form": "json",
+		"extraParams": "audience",
+		"endpoints": {
+			"schema": "1.0",
+			"RegisterDevice": {
+				"methods": {
+					"registerPhysicalDevice": [
+						"keyModulus",
+						"physicalDeviceId",
+						"publicKeyExponent"
+					],
+					"registerProductDevice": [
+						"productDevice",
+						"physicalDevice"
+					],
+					"registerUserDevice": [
+						"userDevice",
+						"productDevice",
+						"physicalDevice"
+					]
+				}
+			}
+		}
+	},
+	"Entitlement Web Service": {
+		"form": "json",
+		"path": "web",
+		"endpoints": {
+			"Cookie": {
+				"schema": "1.0",
+				"methods": {
+					"clearDrmCookie": [
+						"account"
+					],
+					"setDrmCookie": [
+						"account",
+						"deviceId",
+						"expirationDate",
+						"token"
+					]
+				}
+			},
+			"Entitlement": {
+				"schema": "2.1",
+				"methods": {
+					"registerDevice": [
+						"device"
+					],
+					"renewEntitlements": [
+						"entitlementsIds"
+					],
+					"resetRightsInfo": [
+						"entitlementId"
+					]
+				}
+			}
+		}
+	},
+	"File Management Service": {
+		"form": "json",
+		"path": "web",
+		"endpoints": {
+			"FileManagement": {
+				"schema": "1.6",
+				"methods": {
+					"analyzeFile": [
+						"fileId",
+						"batchId",
+						"taskPriority"
+					],
+					"analyzeFiles": [
+						"fileIds",
+						"batchIds",
+						"transformId",
+						"taskPriority"
+					],
+					"copyFile": [
+						"fileId",
+						"mediaId",
+						"serverId",
+						"mediaFileInfo",
+						"requiredPath",
+						"batchId",
+						"taskPriority"
+					],
+					"copyNewFiles": [
+						"sourceFiles",
+						"mediaId",
+						"transformId",
+						"mediaFileSettings",
+						"transformArguments",
+						"batchIds",
+						"taskPriority"
+					],
+					"deleteFile": [
+						"fileId",
+						"batchIds",
+						"deletePhysicalFileFirst",
+						"taskPriority"
+					],
+					"deleteMedia": [
+						"mediaId",
+						"batchIds",
+						"taskPriority"
+					],
+					"generateNewFiles": [
+						"sourceFiles",
+						"mediaId",
+						"transformId",
+						"mediaFileSettings",
+						"transformArguments",
+						"batchIds",
+						"taskPriority"
+					],
+					"getUploadUrls": [
+						"serverId"
+					],
+					"linkNewFile": [
+						"mediaId",
+						"sourceUrl",
+						"mediaFileInfo",
+						"analyze",
+						"batchId",
+						"taskPriority"
+					],
+					"manageNewFile": [
+						"mediaId",
+						"sourceUrl",
+						"serverId",
+						"mediaFileInfo",
+						"analyze",
+						"batchId",
+						"taskPriority"
+					],
+					"moveFile": [
+						"fileIds",
+						"serverId",
+						"requiredPath",
+						"batchIds",
+						"taskPriority"
+					],
+					"moveNewFiles": [
+						"sourceFiles",
+						"mediaId",
+						"transformId",
+						"mediaFileSettings",
+						"transformArguments",
+						"batchIds",
+						"taskPriority"
+					],
+					"resetTask": [
+						"taskId"
+					]
+				}
+			}
+		}
+	},
+	"Live Event Service": {
+		"path": "web",
+		"form": "json",
+		"endpoints": {
+			"schema": "1.0",
+			"Replay": {
+				"methods": {
+					"deletePhysicalRecording": [
+						"prId",
+						"force"
+					],
+					"resetPhysicalRecording": [
+						"prId",
+						"force"
+					]
+				}
+			},
+			"Scheduling": {
+				"methods": {
+					"sync": [
+						"liveEncoderId"
+					]
+				}
+			}
+		}
+	},
+	"Promotion Data Service": {
+		"form": "json",
+		"path": "web",
+		"endpoints": {
+			"Promotion": {
+				"schema": "1.2",
+				"methods": {
+					"applyPromotion": [
+						"productIds",
+						"promotionId",
+						"userId",
+						"promotionCode",
+						"purchaseCurrency"
+					],
+					"countPromotionUses": [
+						"promotionId",
+						"userId",
+						"promotionCode"
+					],
+					"countPromotionUsesForCode": [
+						"promotionCode",
+						"userId"
+					]
+				}
+			}
+		}
+	},
+	"Publish Service": {
+		"form": "json",
+		"path": "web",
+		"endpoints": {
+			"schema": "1.2",
+			"Publish": {
+				"methods": {
+					"publish": [
+						"mediaId",
+						"profileId"
+					],
+					"revoke": [
+						"mediaId",
+						"profileId"
+					],
+					"update": [
+						"mediaId",
+						"profileId"
+					],
+					"updateMetadata": [
+						"mediaId",
+						"profileId"
+					]
+				}
+			}
+		}
+	},
+	"Storefront Service": {
+		"form": "json",
+		"path": "web",
+		"endpoints": {
+			"schema": "1.1",
+			"Publish": {
+				"methods": {
+					"createPaymentInstrument": [
+						"billingAddress",
+						"expirationDate",
+						"expirationMonth",
+						"expirationYear",
+						"guid",
+						"isSingleUse",
+						"last4",
+						"name",
+						"paymentConfigurationId",
+						"properties",
+						"userId"
+					],
+					"deletePaymentInstrument": [
+						"id",
+						"userId",
+						"eraseGuid"
+					],
+					"getPaymentGatewayInfo": [
+						"added",
+						"description",
+						"gatewayConfigurationId",
+						"gatewayType",
+						"title",
+						"updated"
+					],
+					"updatePaymentInstrument": [
+						"expirationDate",
+						"expirationMonth",
+						"expirationYear",
+						"id",
+						"name",
+						"userId"
+					]
+				}
+			}
+		}
+	},
+	"User Data Service": {
+		"endpoints": {
+			"Authentication": {
+				"schema": "1.1",
+				"methods": {
+					"signIn": [
+						"username",
+						"password",
+						"idleTimeout",
+						"duration"
+					],
+					"signOut": [
+						"token"
+					]
+				}
+			}
+		},
+		"form": "json",
+		"url": "https://identity.auth.theplatform.com/idm",
+		"path": "web"
+	},
+	"Windows Media License Service": {
+		"path": "web",
+		"form": "json",
+		"endpoints": {
+			"License": {
+				"schema": "2.6",
+				"methods": {
+					"getLicense": [
+						"challenge",
+						"releaseId"
+					],
+					"getLicensesForDevice": [
+						"deviceId",
+						"deviceinfo",
+						"releases",
+						"releasePids"
+					]
+				}
+			}
+		}
+	}
+}
