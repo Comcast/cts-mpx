@@ -26,7 +26,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bump'
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "erubis"
-  spec.add_development_dependency "geminabox"
   spec.add_development_dependency "gli"
   spec.add_development_dependency "guard"
   spec.add_development_dependency "guard-bundler"
