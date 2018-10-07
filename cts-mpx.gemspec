@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name          = "cts-mpx"
   spec.version       = Cts::Mpx::VERSION
   spec.authors       = ["Ernie Brodeur"]
-  spec.email         = ["ernest.brodeur@cable.comcast.net"]
+  spec.email         = ["ernie.brodeur@comcast.com"]
 
   spec.summary       = "Ruby bindings for MPX services."
   spec.description   = "."
