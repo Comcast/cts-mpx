@@ -17,7 +17,7 @@ module Cts
       # @attribute headers
       #   @return [Hash] headers to transmit to the services along with the request
       class Request
-        extend Creatable
+        include Creatable
 
         attribute name: 'method', kind_of: Symbol
         attribute name: 'url', kind_of: String

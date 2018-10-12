@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name          = "cts-mpx"
   spec.version       = Cts::Mpx::VERSION
   spec.authors       = ["Ernie Brodeur"]
-  spec.email         = ["ernie.brodeur@comcast.com"]
+  spec.email         = ["ernest.brodeur@cable.comcast.net"]
 
   spec.summary       = "Ruby bindings for MPX services."
   spec.description   = "."
@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.required_ruby_version = '>= 2.4.0'
 
-  spec.add_runtime_dependency "creatable", "1.0.1"
+  spec.add_runtime_dependency "creatable"
   spec.add_runtime_dependency "excon"
   spec.add_runtime_dependency "oj", "3.5.0"
 

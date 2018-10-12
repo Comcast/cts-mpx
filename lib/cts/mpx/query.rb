@@ -26,8 +26,7 @@ module Cts
     # @attribute sort
     #   @return [String] string to sort in the service shell style
     class Query
-      extend Creatable
-      attr_accessor :sort
+      include Creatable
 
       attribute name: 'account', kind_of: String
       attribute name: 'endpoint', kind_of: String

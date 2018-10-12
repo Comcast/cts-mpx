@@ -7,7 +7,7 @@ module Cts
       # @attribute xmlns
       #   @return [Hash] active namespace received for this page
       class Page
-        extend Creatable
+        include Creatable
         include Enumerable
 
         attribute name: 'entries', kind_of: Array

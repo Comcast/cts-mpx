@@ -2,7 +2,7 @@ module Cts
   module Mpx
     # ORM style class to contain any entry from the data services.
     class Entry
-      extend Creatable
+      include Creatable
 
       attribute name: 'endpoint', kind_of: String
       attribute name: 'fields', kind_of: Fields

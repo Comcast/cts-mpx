@@ -6,7 +6,8 @@ module Cts
     class Entries
       include Enumerable
       include Driver
-      extend Creatable
+      include Creatable
+      extend Forwardable
 
       attribute name: 'collection', kind_of: Array
 

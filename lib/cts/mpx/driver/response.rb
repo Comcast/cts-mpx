@@ -5,7 +5,7 @@ module Cts
       # Class to contain a response from the services, has a few helper methods to make reading the data easier.
       #
       class Response
-        extend Creatable
+        include Creatable
 
         # @!attribute original
         #   @return [Excon::Response] copy of the original excon response.

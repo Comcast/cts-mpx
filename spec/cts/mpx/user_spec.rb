@@ -6,6 +6,8 @@ module Cts
       let(:user) { User.create username: 'a', password: 'b' }
       let(:token) { 'a_token' }
 
+      it { is_expected.to be_a_kind_of Creatable }
+
       describe "Attributes" do
         it { is_expected.to have_attributes(username: nil) }
         it { is_expected.to have_attributes(password: nil) }
