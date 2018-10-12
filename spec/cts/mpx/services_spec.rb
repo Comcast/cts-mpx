@@ -40,7 +40,7 @@ module Cts
       end
 
       describe '::from_url' do
-        let(:id) { 'http://data.media.theplatform.com/data/Media/1' }
+        let(:id) { 'http://data.media.theplatform.com/media/data/Media/1' }
 
         context "when the argument is not valid" do
           it "is expected to return nil" do

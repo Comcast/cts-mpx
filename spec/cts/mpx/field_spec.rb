@@ -36,14 +36,10 @@ module Cts
 
         describe '::type' do
           context "when xmlns is not nil" do
-            it "is expected to return :custom" do
-              expect(custom_field.type).to eq :custom
-            end
+            it { expect(custom_field.type).to eq :custom }
           end
 
-          it "is expected to return :internal" do
-            expect(guid_field.type).to eq :internal
-          end
+          it { expect(guid_field.type).to eq :internal }
         end
       end
     end

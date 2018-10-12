@@ -13,8 +13,10 @@ module Cts
       def [](key = nil)
         return @services unless key
         raise 'key must be a string' unless key.is_a? String
+
         service = @services.find { |e| e.name == key }
         raise "#{key} must be a service name." unless service
+
         service
       end
 
@@ -22,7 +24,8 @@ module Cts
       # @param [String] url url to parse
       # @return [Hash] including service and endpoint as string.
       def from_url(url)
-        service = Services[].find { |s| url.include? s.uri_hint if s.uri_hint }
+        type = 'data' if url.include? 'data'
+        service = Services[].find { |s| url.include?(s.uri_hint) if s.uri_hint && s.type == type }
         return nil unless service
 
         {

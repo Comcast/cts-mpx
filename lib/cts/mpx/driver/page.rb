@@ -18,6 +18,16 @@ module Cts
           @xmlns = {}
         end
 
+        def to_mpx_entries
+          c = @entries.map do |e|
+            r = Entry.new
+            r.fields = Fields.create_from_data(data: e, xmlns: xmlns)
+          end
+
+          e = Entries.create collection: c
+          e
+        end
+
         # return a json copy of the object, useful for later interpreation
         # @param [Object] indent_depth sets indent depth to 2 if not nil
         # @return [String] json serialized copy of the page

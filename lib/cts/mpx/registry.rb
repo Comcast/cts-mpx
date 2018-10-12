@@ -29,6 +29,7 @@ module Cts
       # @return [Hash] hash of the newly fetched domain
       def fetch_domain(user, account_id = 'urn:theplatform:auth:root')
         return domains['urn:theplatform:auth:root'] if account_id == 'urn:theplatform:auth:root'
+
         Driver::Exceptions.raise_unless_argument_error?(user, 'User') { user.is_a? User }
         Driver::Exceptions.raise_unless_argument_error?(account_id, 'account_id') { Validators.account_id? account_id }
         user.token!
@@ -46,6 +47,7 @@ module Cts
       def store_domain(data, account_id = 'urn:theplatform:auth:root')
         raise ArgumentError, "#{account_id} is not a valid account_id" unless Validators.account_id? account_id
         raise ArgumentError, "#{data} is not a valid Hash" unless data.is_a? Hash
+
         @domains.store account_id, data
         nil
       end

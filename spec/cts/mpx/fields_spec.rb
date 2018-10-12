@@ -12,7 +12,7 @@ module Cts
       end
 
       let(:endpoint) { 'Media' }
-      let(:id) { 'http://data.media.theplatform.com/data/Media/1' }
+      let(:id) { 'http://data.media.theplatform.com/media/data/Media/1' }
       let(:service) { 'Media Data Service' }
 
       let(:fields) { described_class.new }

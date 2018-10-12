@@ -22,8 +22,6 @@ module Cts
           msg = "#{data} is not a valid #{type}"
           if block
             raise ArgumentError, msg unless Validators.argument_error?(data, type, &block)
-          elsif Validators.argument_error?(data, type, &block)
-            raise ArgumentError, msg
           end
           nil
         end

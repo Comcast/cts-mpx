@@ -49,7 +49,7 @@ module Cts
         def get(user: nil, account: nil, service: nil, fields: nil, endpoint: nil, sort: nil, extra_path: nil, range: nil, ids: nil, query: {}, headers: {}, count: nil, entries: nil, method: :get)
           prep_call(user: user, account: account, service: service, query: query, headers: headers, required_arguments: ['user', 'service', 'endpoint'], binding: binding)
 
-          host = Driver::Assemblers.host user: user, service: service
+          host = Driver::Assemblers.host user: user, service: service, account_id: account
           path = Driver::Assemblers.path service: service, endpoint: endpoint, extra_path: extra_path, ids: ids
           query = Driver::Assemblers.query user: user, account: account, service: service, endpoint: endpoint, query: query
 
@@ -115,8 +115,7 @@ module Cts
           Driver::Helpers.raise_if_not_a_hash [args[:query], args[:headers]]
 
           Driver::Helpers.raise_if_not_a([args[:page]], Driver::Page) if args[:page]
-
-          Registry.fetch_and_store_domain(args[:user], args[:account]) unless self[args[:service]].url?
+          Registry.fetch_and_store_domain(args[:user], args[:account])
         end
       end
     end

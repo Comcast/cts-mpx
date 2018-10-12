@@ -36,8 +36,8 @@ module Cts
       attribute name: 'page', kind_of: Driver::Page
       attribute name: 'query', kind_of: Hash
       attribute name: 'range', kind_of: String
-      attribute name: 'return_count', kind_of: FalseClass
-      attribute name: 'return_entries', kind_of: TrueClass
+      attribute name: 'return_count'
+      attribute name: 'return_entries'
       attribute name: 'service', kind_of: String
       attribute name: 'sort', kind_of: String
 
@@ -81,9 +81,7 @@ module Cts
       # @param [Boolean] include_entries include the entries array or not
       # @return [Hash]
       def to_h(include_entries: true)
-        h = {
-          params: params
-        }
+        h = { params: params }
         h[:entries] = entries.to_h if include_entries
         h
       end
