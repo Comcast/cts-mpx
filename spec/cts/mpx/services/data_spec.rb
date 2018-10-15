@@ -6,7 +6,7 @@ module Cts
       describe Data do
         let(:request) { Driver::Request.new }
         let(:response) { Driver::Response.new }
-        let(:user) { Parameters.user }
+        let(:user) { User.create username: 'a@nowhere.org', password: 'no', token:'carpe diem' }
         let(:root_domain) { Driver.load_json_file('config/root_registry_sea1.json')['resolveDomainResponse'] }
         let(:params_data) do
           {

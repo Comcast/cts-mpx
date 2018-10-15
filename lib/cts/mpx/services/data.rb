@@ -111,10 +111,10 @@ module Cts
         # @private
         def prep_call(args = {})
           Driver::Helpers.required_arguments args[:required_arguments], args[:binding]
-          args[:user].token!
+          Driver::Helpers.raise_if_not_a([args[:user]], User) if args[:user]
           Driver::Helpers.raise_if_not_a_hash [args[:query], args[:headers]]
-
           Driver::Helpers.raise_if_not_a([args[:page]], Driver::Page) if args[:page]
+          args[:user].token!
           Registry.fetch_and_store_domain(args[:user], args[:account])
         end
       end
