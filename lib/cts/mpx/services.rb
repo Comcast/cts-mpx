@@ -25,12 +25,14 @@ module Cts
       # @return [Hash] including service and endpoint as string.
       def from_url(url)
         type = 'data' if url.include? 'data'
-        service = Services[].find { |s| url.include?(s.uri_hint) if s.uri_hint && s.type == type }
+        uri = URI.parse url
+
+        service = Services[].find { |s| uri.host.include?(s.uri_hint) if s.uri_hint && s.type == type }
         return nil unless service
 
         {
           service:  service.name,
-          endpoint: /data\/([A-Z].*)\//.match(url)[1]
+          endpoint: /data\/([a-zA-Z]*)\//.match(url)[1]
         }
       end
 

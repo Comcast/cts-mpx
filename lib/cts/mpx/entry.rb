@@ -67,7 +67,7 @@ module Cts
       # @param [User] user user to make calls with
       # @param [String] fields comma delimited list of fields to collect
       # @return [Driver::Response] Response of the call.
-      def load(user: nil, fields: nil, account_id: nil)
+      def load(user: nil, fields: nil, account_id: 'urn:theplatform:auth:root')
         Driver::Helpers.required_arguments %i[user], binding
 
         Driver::Exceptions.raise_unless_argument_error? user, User
