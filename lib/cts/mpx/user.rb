@@ -46,7 +46,7 @@ module Cts
       def sign_out
         arguments = { "token" => token }
         response = Services::Web.post user: self, service: 'User Data Service', endpoint: 'Authentication', method: 'signOut', arguments: arguments
-        self.token = nil if response.status == 200
+        @token = nil if response.status == 200
         nil
       end
 
