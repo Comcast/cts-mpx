@@ -16,6 +16,7 @@ module Cts
       # @raise (see #fetch_domain)
       # @return [Hash] hash of the newly fetched domain
       def fetch_and_store_domain(user, account_id = 'urn:theplatform:auth:root')
+        account_id ||= 'urn:theplatform:auth:root'
         result = fetch_domain user, account_id
         store_domain result, account_id
         domains[account_id]

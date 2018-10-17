@@ -78,7 +78,7 @@ module Cts
           host = Driver::Assemblers.host user: user, service: service
           path = Driver::Assemblers.path service: service, endpoint: endpoint, extra_path: extra_path
           payload = assemble_payload service: service, endpoint: endpoint, method: method, arguments: arguments
-          query = Driver::Assemblers.query user: user, account: account, service: service, endpoint: endpoint, query: query
+          query = Driver::Assemblers.query user: user, account_id: account, service: service, endpoint: endpoint, query: query
 
           ### Request
           request = Driver::Request.create(method: :post, url: [host, path].join, query: query, payload: Oj.dump(payload), headers: headers)

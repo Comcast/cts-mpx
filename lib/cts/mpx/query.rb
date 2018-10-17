@@ -28,7 +28,7 @@ module Cts
     class Query
       include Creatable
 
-      attribute name: 'account', kind_of: String
+      attribute name: 'account_id', kind_of: String
       attribute name: 'endpoint', kind_of: String
       attribute name: 'extra_path', kind_of: String
       attribute name: 'fields', kind_of: String
@@ -44,7 +44,7 @@ module Cts
       # List of attributes availble
       # @return [Symbol[]]
       def attributes
-        %i[account endpoint extra_path fields ids query range return_count return_entries service sort]
+        %i[account_id endpoint extra_path fields ids query range return_count return_entries service sort]
       end
 
       # Instiatiate a page and query, set return's to false.

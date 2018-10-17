@@ -56,7 +56,7 @@ module Cts
         # @raise [ArgumentError] if user, service or endpoint is not supplied
         # @raise [RuntimeError] if the user token is not set
         # @return [Hash] assembled query for a data call
-        def query(user: nil, account: nil, service: nil, endpoint: nil, query: {}, range: nil, count: nil, entries: nil, sort: nil)
+        def query(user: nil, account_id: nil, service: nil, endpoint: nil, query: {}, range: nil, count: nil, entries: nil, sort: nil)
           Helpers.required_arguments %i[user service endpoint], binding
           user.token!
 
@@ -70,7 +70,7 @@ module Cts
             h.merge!(token: user.token, schema: service.endpoints[endpoint]['schema'], form: service.form)
           end
 
-          h[:account] = account if account
+          h[:account] = account_id if account_id
           h.delete :token if user.token == 'sign_in_token'
           h.merge! query
           h

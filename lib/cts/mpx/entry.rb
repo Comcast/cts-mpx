@@ -75,7 +75,7 @@ module Cts
         Driver::Exceptions.raise_unless_reference? id
 
         Registry.fetch_and_store_domain user: user, account_id: account_id
-        response = Services::Data.get account: account_id, user: user, service: service, endpoint: endpoint, fields: fields, ids: id.split("/").last
+        response = Services::Data.get account_id: account_id, user: user, service: service, endpoint: endpoint, fields: fields, ids: id.split("/").last
 
         raise RuntimeError, 'could not load ' + id unless response.data['entries'].count.positive?
 

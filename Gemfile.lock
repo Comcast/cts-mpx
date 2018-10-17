@@ -15,7 +15,7 @@ GEM
       debug_inspector (>= 0.0.1)
     bump (0.6.1)
     coderay (1.1.2)
-    creatable (2.0.1)
+    creatable (2.1.1)
     debug_inspector (0.0.3)
     diff-lcs (1.3)
     docile (1.3.1)

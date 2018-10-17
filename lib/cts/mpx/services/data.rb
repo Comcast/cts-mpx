@@ -26,8 +26,8 @@ module Cts
         # @raise (see #get)
         # @param (see #get)
         # @return (see #get)
-        def delete(user: nil, account: nil, service: nil, endpoint: nil, sort: nil, extra_path: nil, range: nil, ids: nil, query: {}, headers: {}, count: nil, entries: nil)
-          get(user: user, account: account, service: service, endpoint: endpoint, sort: sort, extra_path: extra_path, range: range, ids: ids, query: query, headers: headers, count: count, entries: entries, method: :delete)
+        def delete(user: nil, account_id: nil, service: nil, endpoint: nil, sort: nil, extra_path: nil, range: nil, ids: nil, query: {}, headers: {}, count: nil, entries: nil)
+          get(user: user, account_id: account_id, service: service, endpoint: endpoint, sort: sort, extra_path: extra_path, range: range, ids: ids, query: query, headers: headers, count: count, entries: entries, method: :delete)
         end
 
         # Procedural method to GET data from the data services
@@ -46,12 +46,12 @@ module Cts
         # @param [String] sort set the sort field
         # @raise (see #prep_call)
         # @return [Response] Response of the call
-        def get(user: nil, account: nil, service: nil, fields: nil, endpoint: nil, sort: nil, extra_path: nil, range: nil, ids: nil, query: {}, headers: {}, count: nil, entries: nil, method: :get)
-          prep_call(user: user, account: account, service: service, query: query, headers: headers, required_arguments: ['user', 'service', 'endpoint'], binding: binding)
+        def get(user: nil, account_id: nil, service: nil, fields: nil, endpoint: nil, sort: nil, extra_path: nil, range: nil, ids: nil, query: {}, headers: {}, count: nil, entries: nil, method: :get)
+          prep_call(user: user, account_id: account_id, service: service, query: query, headers: headers, required_arguments: ['user', 'service', 'endpoint'], binding: binding)
 
-          host = Driver::Assemblers.host user: user, service: service, account_id: account
+          host = Driver::Assemblers.host user: user, service: service, account_id: account_id
           path = Driver::Assemblers.path service: service, endpoint: endpoint, extra_path: extra_path, ids: ids
-          query = Driver::Assemblers.query user: user, account: account, service: service, endpoint: endpoint, query: query
+          query = Driver::Assemblers.query user: user, account_id: account_id, service: service, endpoint: endpoint, query: query
 
           if Services[service].type == 'data'
             query.merge! Driver::Assemblers.query_data range: range, count: count, entries: entries, sort: sort
@@ -72,12 +72,12 @@ module Cts
         # @param [String] service title of a service
         # @raise (see #prep_call)
         # @return [Response] Response of the call
-        def post(user: nil, account: nil, service: nil, endpoint: nil, extra_path: nil, query: {}, page: nil, headers: {}, method: :post)
-          prep_call(user: user, account: account, service: service, query: query, headers: headers, required_arguments: ['user', 'service', 'endpoint', 'page'], page: page, binding: binding)
+        def post(user: nil, account_id: nil, service: nil, endpoint: nil, extra_path: nil, query: {}, page: nil, headers: {}, method: :post)
+          prep_call(user: user, account_id: account_id, service: service, query: query, headers: headers, required_arguments: ['user', 'service', 'endpoint', 'page'], page: page, binding: binding)
 
           host = Driver::Assemblers.host user: user, service: service
           path = Driver::Assemblers.path service: service, endpoint: endpoint, extra_path: extra_path
-          query = Driver::Assemblers.query user: user, account: account, service: service, endpoint: endpoint, query: query
+          query = Driver::Assemblers.query user: user, account_id: account_id, service: service, endpoint: endpoint, query: query
 
           request = Driver::Request.create(method: method, url: [host, path].join, query: query, headers: headers, payload: page.to_s)
           request.call
@@ -87,8 +87,8 @@ module Cts
         # @param (see #post)
         # @raise (see #post)
         # @return (see #post)
-        def put(user: nil, account: nil, service: nil, endpoint: nil, extra_path: nil, query: {}, page: nil, headers: {})
-          post(user: user, account: account, service: service, endpoint: endpoint, extra_path: extra_path, query: query, page: page, headers: headers, method: :put)
+        def put(user: nil, account_id: nil, service: nil, endpoint: nil, extra_path: nil, query: {}, page: nil, headers: {})
+          post(user: user, account_id: account_id, service: service, endpoint: endpoint, extra_path: extra_path, query: query, page: page, headers: headers, method: :put)
         end
 
         # Helper method to assure that everything is is ok to call the methods above
@@ -115,7 +115,7 @@ module Cts
           Driver::Helpers.raise_if_not_a_hash [args[:query], args[:headers]]
           Driver::Helpers.raise_if_not_a([args[:page]], Driver::Page) if args[:page]
           args[:user].token!
-          Registry.fetch_and_store_domain(args[:user], args[:account])
+          Registry.fetch_and_store_domain(args[:user], args[:account_id])
         end
       end
     end
