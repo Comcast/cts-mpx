@@ -32,8 +32,18 @@ module Cts
 
         {
           service:  service.name,
-          endpoint: /data\/([a-zA-Z]*\/Field)\//.match(url)&.[](1) || /data\/([a-zA-Z]*)\//.match(url)&.[](1)
+          endpoint: check_url(url)
         }
+      end
+
+      # check url structure for correct endpoint
+      # @param [String] url to parse for a match
+      # @return [String] results of regex matching
+      def check_url(url)
+        field = /data\/([a-zA-Z]*\/Field)\//.match(url)&.[](1)
+        object = /data\/([a-zA-Z]*)\//.match(url)&.[](1)
+
+        field || object
       end
 
       # Load references and services from disk.
@@ -49,6 +59,7 @@ module Cts
       def load_reference_file(file: nil, type: nil)
         raise ArgumentError, 'type must be supplied' unless type
         raise ArgumentError, 'file must be supplied' unless file
+
         @raw_reference.store(type, Driver.load_json_file(file))
         true
       end
@@ -105,6 +116,7 @@ module Cts
         return @raw_reference unless key
         raise 'key must be a string' unless key.is_a? String
         raise "#{key} is not in the reference library." unless @raw_reference.include? key
+
         @raw_reference[key]
       end
 
