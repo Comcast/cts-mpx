@@ -32,7 +32,7 @@ module Cts
 
         {
           service:  service.name,
-          endpoint: /data\/([a-zA-Z]*)\//.match(url)[1]
+          endpoint: /data\/([a-zA-Z]*\/Field)\//.match(url)&.[](1) || /data\/([a-zA-Z]*)\//.match(url)&.[](1)
         }
       end
 
