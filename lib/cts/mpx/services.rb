@@ -32,18 +32,15 @@ module Cts
 
         {
           service:  service.name,
-          endpoint: check_url(url)
+          endpoint: endpoint_regex(url)
         }
       end
 
       # check url structure for correct endpoint
       # @param [String] url to parse for a match
       # @return [String] results of regex matching
-      def check_url(url)
-        field = /data\/([a-zA-Z]*\/Field)\//.match(url)&.[](1)
-        object = /data\/([a-zA-Z]*)\//.match(url)&.[](1)
-
-        field || object
+      def endpoint_regex(url)
+        /data\/([a-zA-Z]*\/Field)|data\/([a-zA-Z]*)\//.match(url)&.[](1, 2)&.select { |e| e unless e.nil? }[0]
       end
 
       # Load references and services from disk.
