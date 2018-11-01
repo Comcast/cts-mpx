@@ -138,7 +138,7 @@ module Cts
         let(:user) { User.create username: 'a', password: 'b', token: 'token' }
 
         context "when the token is set to nil" do
-          before { user.token = nil }
+          before { user.instance_variable_set :@token, nil }
 
           it "is expected to raise an exception" do
             expect { user.token! }.to raise_error RuntimeError, "#{user.username} is not signed in, (token is set to nil)."

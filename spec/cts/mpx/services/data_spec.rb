@@ -44,10 +44,10 @@ module Cts
 
         describe "Module method signatures" do
           it { is_expected.to respond_to(:[]).with(0..1).arguments }
-          it { is_expected.to respond_to(:delete).with_keywords(:user, :account, :service, :endpoint, :sort, :extra_path, :range, :ids, :query, :headers, :count, :entries) }
-          it { is_expected.to respond_to(:get).with_keywords(:user, :account, :service, :endpoint, :sort, :extra_path, :range, :ids, :query, :headers, :count, :entries, :fields) }
-          it { is_expected.to respond_to(:post).with_keywords(:user, :account, :service, :endpoint, :extra_path, :query, :page, :headers) }
-          it { is_expected.to respond_to(:put).with_keywords(:user, :account, :service, :endpoint, :extra_path, :query, :page, :headers) }
+          it { is_expected.to respond_to(:delete).with_keywords(:user, :account_id, :service, :endpoint, :sort, :extra_path, :range, :ids, :query, :headers, :count, :entries) }
+          it { is_expected.to respond_to(:get).with_keywords(:user, :account_id, :service, :endpoint, :sort, :extra_path, :range, :ids, :query, :headers, :count, :entries, :fields) }
+          it { is_expected.to respond_to(:post).with_keywords(:user, :account_id, :service, :endpoint, :extra_path, :query, :page, :headers) }
+          it { is_expected.to respond_to(:put).with_keywords(:user, :account_id, :service, :endpoint, :extra_path, :query, :page, :headers) }
         end
 
         describe "::[] (addressable method)" do

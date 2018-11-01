@@ -30,7 +30,7 @@ module Cts
       it { is_expected.to be_a_kind_of Creatable }
 
       describe "Attributes" do
-        it { is_expected.to have_attributes(account: nil) }
+        it { is_expected.to have_attributes(account_id: nil) }
         it { is_expected.to have_attributes(endpoint: nil) }
         it { is_expected.to have_attributes(extra_path: nil) }
         it { is_expected.to have_attributes(fields: nil) }
@@ -77,7 +77,7 @@ module Cts
         it { expect { query.run user: 1 }.to raise_argument_error(1, User) }
 
         context "when service is not set" do
-          before { query.service = nil }
+          before { query.instance_variable_set :@service, nil }
 
           it "is expected to raise a runtime error with service must be set" do
             expect { query.run user: user }.to raise_error RuntimeError, /service must be set/
@@ -85,7 +85,7 @@ module Cts
         end
 
         context "when endpoint is not set" do
-          before { query.endpoint = nil }
+          before { query.instance_variable_set :@endpoint, nil }
 
           it "is expected to raise a runtime error with endpoint must be set" do
             expect { query.run user: user }.to raise_error RuntimeError, /endpoint must be set/

@@ -118,7 +118,7 @@ module Cts
           it "is expected to call Data.get with user, and fields set" do
             allow(Cts::Mpx::Services::Data).to receive(:get).and_return response
             entry.load user: user, fields: fields
-            expect(Cts::Mpx::Services::Data).to have_received(:get).with user: user, service: service, endpoint: endpoint, fields: fields, ids: '1'
+            expect(Cts::Mpx::Services::Data).to have_received(:get).with account_id: 'urn:theplatform:auth:root', user: user, service: service, endpoint: endpoint, fields: fields, ids: '1'
           end
 
           it "is expected to call Fields.parse data, xml" do
@@ -130,7 +130,7 @@ module Cts
 
           it "is expected to return a response" do
             allow(Cts::Mpx::Services::Data).to receive(:get).and_return response
-            expect(entry.load(user: user)).to be_a_kind_of Cts::Mpx::Driver::Response
+            expect(entry.load(user: user)).to be_a_kind_of Cts::Mpx::Entry
           end
         end
 
@@ -162,13 +162,13 @@ module Cts
           include_examples 'save_constraints'
 
           context "when service is not set" do
-            before { entry.service = nil }
+            before { entry.instance_variable_set :@service, nil }
 
             it { expect { entry.save user: user }.to raise_error ArgumentError, /is a required keyword/ }
           end
 
           context "when endpoint is not set" do
-            before { entry.endpoint = nil }
+            before { entry.instance_variable_set :@endpoint, nil }
 
             it { expect { entry.save user: user }.to raise_error ArgumentError, /is a required keyword/ }
           end

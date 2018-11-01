@@ -15,8 +15,8 @@ module Cts
         # @return [Service] a service
         def [](key = nil)
           return services unless key
-          Driver::Exceptions.raise_unless_argument_error?(key, String)
 
+          Driver::Exceptions.raise_unless_argument_error?(key, String)
           service = services.find { |e| e.name == key }
           Driver::Exceptions.raise_unless_argument_error?(service, Driver::Service)
 
@@ -40,9 +40,9 @@ module Cts
           service = Services[service]
           method_list = service.endpoints[endpoint]['methods']
           Driver::Exceptions.raise_unless_argument_error?(arguments, Hash)
-          Driver::Exceptions.raise_unless_argument_error?(method, 'method') { method_list.key?(method) }
+          Driver::Exceptions.raise_unless_argument_error?(method, 'method') { !method_list.key?(method) }
 
-          arguments.each_key { |k| Driver::Exceptions.raise_unless_argument_error?(arguments, 'argument') { method_list[method].include? k.to_s } }
+          arguments.each_key { |k| Driver::Exceptions.raise_unless_argument_error?(arguments, 'argument') { !method_list[method].include? k.to_s } }
 
           h = {}
           h[method] = arguments

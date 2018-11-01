@@ -22,15 +22,17 @@ module Cts
         end
 
         describe "::raise_unless_argument_error?" do
-          context "when the block is not provided" do
-            it "is expected to raise an ArgumentError if data is not of type" do
-              expect { described_class.raise_unless_argument_error?([], String) }.to raise_error ArgumentError, /is not a valid String/
-            end
+          it "is expected to raise an ArgumentError if the argument data is not of argument type's type." do
+            expect { described_class.raise_unless_argument_error?([], String) }.to raise_error ArgumentError, /\[\] is not a valid String/
           end
 
-          context "when the block returns false" do
-            it "is expected to raise a ArgumentError with 'this' is not a valid 'type'" do
-              expect { described_class.raise_unless_argument_error?("test", "this", &false_block) }.to raise_error ArgumentError, /test is not a valid this/
+          context "when a block is supplied" do
+            it "is expected to yield to the block" do
+              expect { |b| described_class.raise_unless_argument_error?("this is a string", String, &b) }.to yield_control.once
+            end
+
+            it "is expected to test the return of the block" do
+              expect { described_class.raise_unless_argument_error?([], String) { false } } .not_to raise_error
             end
           end
 
