@@ -5,7 +5,7 @@ module Cts
     #   @return [Field[]]
     class Fields
       include Enumerable
-      extend Creatable
+      include Creatable
 
       attribute name: 'collection', kind_of: Array
 
@@ -79,6 +79,7 @@ module Cts
       # @return [Field[]] returns a collection of fields
       def parse(xmlns: nil, data: nil)
         Driver::Exceptions.raise_unless_argument_error? data, Hash
+
         data.delete :service
         data.delete :endpoint
         reset

@@ -16,6 +16,7 @@ module Cts
       # @raise (see #fetch_domain)
       # @return [Hash] hash of the newly fetched domain
       def fetch_and_store_domain(user, account_id = 'urn:theplatform:auth:root')
+        account_id ||= 'urn:theplatform:auth:root'
         result = fetch_domain user, account_id
         store_domain result, account_id
         domains[account_id]
@@ -29,8 +30,9 @@ module Cts
       # @return [Hash] hash of the newly fetched domain
       def fetch_domain(user, account_id = 'urn:theplatform:auth:root')
         return domains['urn:theplatform:auth:root'] if account_id == 'urn:theplatform:auth:root'
-        Driver::Exceptions.raise_unless_argument_error?(user, 'User') { user.is_a? User }
-        Driver::Exceptions.raise_unless_argument_error?(account_id, 'account_id') { Validators.account_id? account_id }
+
+        Driver::Exceptions.raise_unless_argument_error?(user, 'User') { !user.is_a? User }
+        Driver::Exceptions.raise_unless_argument_error?(account_id, 'account_id') { !Validators.account_id? account_id }
         user.token!
 
         response = Services::Web.post user: user, service: 'Access Data Service', endpoint: 'Registry', method: 'resolveDomain', arguments: { 'accountId' => account_id }
@@ -46,6 +48,7 @@ module Cts
       def store_domain(data, account_id = 'urn:theplatform:auth:root')
         raise ArgumentError, "#{account_id} is not a valid account_id" unless Validators.account_id? account_id
         raise ArgumentError, "#{data} is not a valid Hash" unless data.is_a? Hash
+
         @domains.store account_id, data
         nil
       end

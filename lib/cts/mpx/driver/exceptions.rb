@@ -10,6 +10,7 @@ module Cts
         # @return [nil]
         def raise_unless_account_id(argument)
           raise ArgumentError, "#{argument} is not a valid account_id" unless Validators.account_id? argument
+
           nil
         end
 
@@ -19,12 +20,8 @@ module Cts
         # @raise [ArgumentError] if the argument is not of the correct type
         # @return [nil]
         def raise_unless_argument_error?(data, type = nil, &block)
-          msg = "#{data} is not a valid #{type}"
-          if block
-            raise ArgumentError, msg unless Validators.argument_error?(data, type, &block)
-          elsif Validators.argument_error?(data, type, &block)
-            raise ArgumentError, msg
-          end
+          raise(ArgumentError, "#{data} is not a valid #{type}") if Validators.argument_error?(data, type, &block)
+
           nil
         end
 
@@ -34,6 +31,7 @@ module Cts
         # @return [nil]
         def raise_unless_reference?(argument)
           raise ArgumentError, "#{argument} is not a valid reference" unless Validators.reference? argument
+
           nil
         end
 

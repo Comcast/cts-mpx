@@ -9,7 +9,7 @@ module Cts
       let(:new_entry) { described_class.new }
       let(:guid_field) { Field.create name: "guid", value: "abcdef" }
       let(:custom_field) { Field.create name: "$uuid", value: "abcdef", xmlns: { 'custom' => 'uuid' } }
-      let(:id) { 'http://data.media.theplatform.com/data/Media/1' }
+      let(:id) { 'http://data.media.theplatform.com/media/data/Media/1' }
       let(:loadable_hash) { { xmlns: xmlns, entry: data } }
       let(:service) { 'Media Data Service' }
       let(:body) { Oj.dump page_hash }
@@ -24,6 +24,8 @@ module Cts
         }
       end
 
+      it { is_expected.to be_a_kind_of Creatable }
+
       describe "Attributes" do
         it { is_expected.to have_attributes(endpoint: nil) }
         it { is_expected.to have_attributes(fields: Fields) }
@@ -32,12 +34,11 @@ module Cts
       end
 
       describe "Class methods" do
-        it { expect(described_class).to respond_to(:create) }
         it { expect(described_class).to respond_to(:load_by_id).with_keywords :user, :id }
 
         describe '::self.load_by_id' do
           let(:user) { Parameters.user }
-          let(:entries) { [{ "id" => "http://data.media.theplatform.com/data/Media/1", "guid" => "123" }] }
+          let(:entries) { [{ "id" => "http://data.media.theplatform.com/media/data/Media/1", "guid" => "123" }] }
           let(:params) { { user: user, id: id } }
 
           before do
@@ -82,7 +83,7 @@ module Cts
 
           it "is expected to set service" do
             new_entry.id = id
-            expect(new_entry.service).to eq 'Media Data Service'
+            expect(new_entry.service).to eq service
           end
 
           it "is expected to set endpoint" do
@@ -100,40 +101,36 @@ module Cts
           let(:fields) { 'id,guid' }
           let(:params) { { user: user, fields: fields } }
 
-          before do
-            new_entry.service = 'Media Data Service'
-            new_entry.endpoint = 'Media'
-            new_entry.id = id
-          end
+          before { entry.id = id }
 
           context "when the user is not provided" do
-            it { expect { new_entry.load user: nil, fields: 'abc' }.to raise_error ArgumentError, /is a required keyword/ }
+            it { expect { entry.load user: nil, fields: 'abc' }.to raise_error ArgumentError, /is a required keyword/ }
           end
 
           context "when user is not a valid user" do
-            it { expect { new_entry.load user: 1, fields: fields }.to raise_error ArgumentError, /is not a valid Cts::Mpx::User/ }
+            it { expect { entry.load user: 1, fields: fields }.to raise_error ArgumentError, /is not a valid Cts::Mpx::User/ }
           end
 
           context "when fields is not a valid String" do
-            it { expect { new_entry.load user: user, fields: [] }.to raise_error ArgumentError, /is not a valid String/ }
+            it { expect { entry.load user: user, fields: [] }.to raise_error ArgumentError, /is not a valid String/ }
           end
 
           it "is expected to call Data.get with user, and fields set" do
             allow(Cts::Mpx::Services::Data).to receive(:get).and_return response
-            new_entry.load user: user, fields: fields
-            expect(Cts::Mpx::Services::Data).to have_received(:get).with user: user, service: service, endpoint: endpoint, fields: fields, ids: '1'
+            entry.load user: user, fields: fields
+            expect(Cts::Mpx::Services::Data).to have_received(:get).with account_id: 'urn:theplatform:auth:root', user: user, service: service, endpoint: endpoint, fields: fields, ids: '1'
           end
 
           it "is expected to call Fields.parse data, xml" do
             allow(Cts::Mpx::Services::Data).to receive(:get).and_return response
-            allow(new_entry.fields).to receive(:parse).and_return nil
-            new_entry.load user: user, fields: fields
-            expect(new_entry.fields).to have_received(:parse).with(data: { "id" => id, "guid" => "1234" }, xmlns: nil)
+            allow(entry.fields).to receive(:parse).and_return nil
+            entry.load user: user, fields: fields
+            expect(entry.fields).to have_received(:parse).with(data: { "id" => id, "guid" => "1234" }, xmlns: nil)
           end
 
           it "is expected to return a response" do
             allow(Cts::Mpx::Services::Data).to receive(:get).and_return response
-            expect(entry.load(user: user)).to be_a_kind_of Cts::Mpx::Driver::Response
+            expect(entry.load(user: user)).to be_a_kind_of Cts::Mpx::Entry
           end
         end
 
@@ -153,7 +150,7 @@ module Cts
           let(:page) { Driver::Page.create entries: [entry], xmlns: entry.fields.xmlns }
 
           before do
-            entry.service = 'Media Data Service'
+            entry.service = service
             entry.endpoint = 'Media'
             entry.fields.add guid_field
             entry.fields.add custom_field
@@ -165,13 +162,13 @@ module Cts
           include_examples 'save_constraints'
 
           context "when service is not set" do
-            before { entry.service = nil }
+            before { entry.instance_variable_set :@service, nil }
 
             it { expect { entry.save user: user }.to raise_error ArgumentError, /is a required keyword/ }
           end
 
           context "when endpoint is not set" do
-            before { entry.endpoint = nil }
+            before { entry.instance_variable_set :@endpoint, nil }
 
             it { expect { entry.save user: user }.to raise_error ArgumentError, /is a required keyword/ }
           end
@@ -200,7 +197,7 @@ module Cts
 
           before do
             entry.id = id
-            entry.service = 'Media Data Service'
+            entry.service = service
             entry.endpoint = 'Media'
             entry.fields.add guid_field
             entry.fields.add custom_field
@@ -213,7 +210,7 @@ module Cts
 
           it "is expected to create a page populated with data" do
             entry.save user: user
-            expect(Driver::Page).to have_received(:create).with(entries: [{ "id" => "http://data.media.theplatform.com/data/Media/1", "guid" => "abcdef", "$uuid" => "abcdef" }], xmlns: { "custom"=>"uuid" })
+            expect(Driver::Page).to have_received(:create).with(entries: [{ "id" => "http://data.media.theplatform.com/media/data/Media/1", "guid" => "abcdef", "$uuid" => "abcdef" }], xmlns: { "custom"=>"uuid" })
           end
 
           it "is expected to call Data.post with with user, service, endpoint, and page" do

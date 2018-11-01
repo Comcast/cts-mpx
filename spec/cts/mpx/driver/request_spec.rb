@@ -4,9 +4,7 @@ module Cts
   module Mpx
     module Driver
       describe Request do
-        describe "Class method signatures" do
-          it { expect(described_class).to respond_to(:create) }
-        end
+        it { is_expected.to be_a_kind_of Creatable }
 
         describe "Instance method signatures" do
           it { is_expected.to respond_to(:call).with(0).argument }

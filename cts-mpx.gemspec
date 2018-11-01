@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.required_ruby_version = '>= 2.4.0'
 
-  spec.add_runtime_dependency "creatable", "1.0.1"
+  spec.add_runtime_dependency "creatable"
   spec.add_runtime_dependency "excon"
   spec.add_runtime_dependency "oj", "3.5.0"
 
@@ -39,5 +39,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rubocop-rspec"
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "simplecov-console"
+  spec.add_development_dependency "solargraph"
   spec.add_development_dependency "yard"
 end

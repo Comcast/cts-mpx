@@ -4,9 +4,6 @@ module Cts
   module Mpx
     module Driver
       describe Response do
-        metadata[:attributes] = { original: nil }
-        let(:attributes) { { original: nil } }
-
         let(:response) { Cts::Mpx::Driver::Response.create original: excon_response }
         let(:excon_response) { Excon::Response.new body: body, headers: headers, status: 200 }
         let(:headers) do
@@ -33,7 +30,7 @@ module Cts
         let(:page_hash) do
           {
             "$xmlns"       => {
-              "pl1" => "http://access.auth.theplatform.com/data/Account/2051509925"
+              "pl1" => "http://access.auth.theplatform.com/account/data/Account/2051509925"
             },
             "startIndex"   => 1,
             "itemsPerPage" => 1,
@@ -43,25 +40,13 @@ module Cts
                 "id"      => "http://data.media.theplatform.com/media/data/AccountSettings/357280835864",
                 "guid"    => "cxotgIy9yxyqcr6ccO8DCe56lDkbqTSe",
                 "added"   => 1_415_856_204_000,
-                "ownerId" => "http://access.auth.theplatform.com/data/Account/2460535675"
+                "ownerId" => "http://access.auth.theplatform.com/account/data/Account/2460535675"
               }
             ]
           }
         end
 
-        describe "Attributes" do
-          metadata[:attributes].each do |attrib, default_value|
-            it "is expected to have attribute #{attrib} set to #{default_value}" do
-              expect(subject).to have_attributes attrib => default_value
-            end
-          end
-        end
-
-        describe "Class method signatures" do
-          it "is expected to respond to :create with keywords #{metadata[:attributes].keys}" do
-            expect(described_class).to respond_to(:create)
-          end
-        end
+        it { is_expected.to be_a_kind_of Creatable }
 
         describe "Instance method signatures" do
           it { is_expected.to respond_to(:data).with(0).arguments }

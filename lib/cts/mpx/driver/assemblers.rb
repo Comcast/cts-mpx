@@ -19,7 +19,7 @@ module Cts
           user.token!
 
           service = Services[service]
-          u = URI.parse service.url
+          u = URI.parse service.url(account_id)
 
           [u.scheme, u.host].join('://')
         end
@@ -34,7 +34,7 @@ module Cts
         # @return [String] assembled path for a data call
         def path(service: nil, endpoint: nil, extra_path: nil, ids: nil, account_id: 'urn:theplatform:auth:root')
           Helpers.required_arguments %i[service endpoint], binding
-          service = Services[service]
+          service = Services[].find { |s| s.name == service && s.endpoints.include?(endpoint) }
 
           path = "#{URI.parse(service.url(account_id)).path}/#{service.path}/#{endpoint}"
           path += "/#{extra_path}" if extra_path
@@ -56,11 +56,11 @@ module Cts
         # @raise [ArgumentError] if user, service or endpoint is not supplied
         # @raise [RuntimeError] if the user token is not set
         # @return [Hash] assembled query for a data call
-        def query(user: nil, account: nil, service: nil, endpoint: nil, query: {}, range: nil, count: nil, entries: nil, sort: nil)
+        def query(user: nil, account_id: nil, service: nil, endpoint: nil, query: {}, range: nil, count: nil, entries: nil, sort: nil)
           Helpers.required_arguments %i[user service endpoint], binding
           user.token!
 
-          service = Services[service]
+          service = Services[].find { |s| s.name == service && s.endpoints.include?(endpoint) }
 
           h = {}
           if service.type == 'data'
@@ -70,7 +70,7 @@ module Cts
             h.merge!(token: user.token, schema: service.endpoints[endpoint]['schema'], form: service.form)
           end
 
-          h[:account] = account if account
+          h[:account] = account_id if account_id
           h.delete :token if user.token == 'sign_in_token'
           h.merge! query
           h

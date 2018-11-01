@@ -26,10 +26,9 @@ module Cts
     # @attribute sort
     #   @return [String] string to sort in the service shell style
     class Query
-      extend Creatable
-      attr_accessor :sort
+      include Creatable
 
-      attribute name: 'account', kind_of: String
+      attribute name: 'account_id', kind_of: String
       attribute name: 'endpoint', kind_of: String
       attribute name: 'extra_path', kind_of: String
       attribute name: 'fields', kind_of: String
@@ -37,15 +36,15 @@ module Cts
       attribute name: 'page', kind_of: Driver::Page
       attribute name: 'query', kind_of: Hash
       attribute name: 'range', kind_of: String
-      attribute name: 'return_count', kind_of: FalseClass
-      attribute name: 'return_entries', kind_of: TrueClass
+      attribute name: 'return_count'
+      attribute name: 'return_entries'
       attribute name: 'service', kind_of: String
       attribute name: 'sort', kind_of: String
 
       # List of attributes availble
       # @return [Symbol[]]
       def attributes
-        %i[account endpoint extra_path fields ids query range return_count return_entries service sort]
+        %i[account_id endpoint extra_path fields ids query range return_count return_entries service sort]
       end
 
       # Instiatiate a page and query, set return's to false.
@@ -82,9 +81,7 @@ module Cts
       # @param [Boolean] include_entries include the entries array or not
       # @return [Hash]
       def to_h(include_entries: true)
-        h = {
-          params: params
-        }
+        h = { params: params }
         h[:entries] = entries.to_h if include_entries
         h
       end

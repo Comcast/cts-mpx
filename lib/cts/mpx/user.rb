@@ -12,13 +12,13 @@ module Cts
     # @attribute token
     #   @return [String] the retrieved token
     class User
-      extend Creatable
+      include Creatable
 
-      attribute name: 'username', type: 'accessor', kind_of: String
-      attribute name: 'password', type: 'accessor', kind_of: String
-      attribute name: 'idle_timeout', type: 'accessor', kind_of: Integer
-      attribute name: 'duration', type: 'accessor', kind_of: Integer
-      attribute name: 'token', type: 'accessor', kind_of: String
+      attribute name: 'username', kind_of: String
+      attribute name: 'password', kind_of: String
+      attribute name: 'idle_timeout', kind_of: Integer
+      attribute name: 'duration', kind_of: Integer
+      attribute name: 'token', kind_of: String
 
       # Attempt to sign the user in with the provided credentials
       # @param [Numeric] idle_timeout how long the token will stay alive without communicating with the services
@@ -26,6 +26,7 @@ module Cts
       # @return [Self]
       def sign_in(idle_timeout: nil, duration: nil)
         raise 'token is already set, use sign_out first.' if token
+
         arguments = {}
 
         arguments['idleTimeout'] if idle_timeout
@@ -45,7 +46,7 @@ module Cts
       def sign_out
         arguments = { "token" => token }
         response = Services::Web.post user: self, service: 'User Data Service', endpoint: 'Authentication', method: 'signOut', arguments: arguments
-        self.token = nil if response.status == 200
+        @token = nil if response.status == 200
         nil
       end
 

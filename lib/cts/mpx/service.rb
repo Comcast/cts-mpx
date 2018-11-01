@@ -49,6 +49,7 @@ module Cts
         # @param [String] account_id long form account id (ownerId)
         # @return [String] the url string or nil if none available
         def url(account_id = 'urn:theplatform:auth:root')
+          account_id ||= 'urn:theplatform:auth:root'
           Exceptions.raise_unless_account_id account_id
           reg = Registry.domains[account_id]
           return reg[name] if reg

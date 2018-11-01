@@ -80,6 +80,17 @@ module Cts
 
         before { allow(Services::Web).to receive(:post).and_return response }
 
+        it { expect { described_class.fetch_domain user, account_id }.to raise_error_without_user_token(user) }
+
+        it "is expected to call Web.post" do
+          described_class.fetch_domain(user, account_id)
+          expect(Services::Web).to have_received(:post).with(post_params)
+        end
+
+        it "is expected to return the value of 'resolveDomainResponse'" do
+          expect(described_class.fetch_domain(user, account_id)).to eq Oj.load(post_response_string)["resolveDomainResponse"]
+        end
+
         context "when the user is not a Cts::Mpx::User object" do
           it { expect { described_class.fetch_domain '1', account_id }.to raise_argument_error(1, 'User') }
         end
@@ -92,17 +103,6 @@ module Cts
           it "is expected to return the root account_id (urn:theplatform:auth:root)" do
             expect(described_class.fetch_domain(user, root_account)).to eq described_class.domains[root_account]
           end
-        end
-
-        it { expect { described_class.fetch_domain user, account_id }.to raise_error_without_user_token(user) }
-
-        it "is expected to call Web.post" do
-          described_class.fetch_domain(user, account_id)
-          expect(Services::Web).to have_received(:post).with(post_params)
-        end
-
-        it "is expected to return the value of 'resolveDomainResponse'" do
-          expect(described_class.fetch_domain(user, account_id)).to eq Oj.load(post_response_string)["resolveDomainResponse"]
         end
       end
 

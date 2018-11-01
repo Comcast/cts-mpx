@@ -9,16 +9,12 @@ module Cts
       let(:guid_field) { described_class.create name: field_name, value: field_value }
       let(:custom_field) { described_class.create(name: custom_field_name, value: 'abcdef', xmlns: { "custom" => "http://1234a.com" }) }
 
-      it { is_expected.to be_a_kind_of described_class }
+      it { is_expected.to be_a_kind_of Creatable }
 
       describe "Attributes" do
         it { is_expected.to have_attributes(name: nil) }
         it { is_expected.to have_attributes(value: nil) }
         it { is_expected.to have_attributes(xmlns: nil) }
-      end
-
-      describe "Class methods" do
-        it { expect(described_class).to respond_to(:create) }
       end
 
       describe "Instance methods" do
@@ -40,14 +36,10 @@ module Cts
 
         describe '::type' do
           context "when xmlns is not nil" do
-            it "is expected to return :custom" do
-              expect(custom_field.type).to eq :custom
-            end
+            it { expect(custom_field.type).to eq :custom }
           end
 
-          it "is expected to return :internal" do
-            expect(guid_field.type).to eq :internal
-          end
+          it { expect(guid_field.type).to eq :internal }
         end
       end
     end

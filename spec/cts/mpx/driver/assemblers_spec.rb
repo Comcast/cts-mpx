@@ -4,12 +4,12 @@ module Cts
   module Mpx
     module Driver
       describe Assemblers do
-        let(:user) { Parameters.user }
+        let(:user) { User.create username: 'a', password: 'a', token: 'token' }
 
         describe "Module method signatures" do
           it { expect(described_class).to respond_to(:host).with_keywords :user, :service }
           it { expect(described_class).to respond_to(:path).with_keywords :service, :endpoint, :ids, :extra_path }
-          it { expect(described_class).to respond_to(:query).with_keywords :user, :account, :service, :endpoint, :query }
+          it { expect(described_class).to respond_to(:query).with_keywords :user, :account_id, :service, :endpoint, :query }
         end
 
         describe "::host" do
@@ -26,6 +26,7 @@ module Cts
           before { Registry.initialize }
 
           it { is_expected.to require_keyword_arguments(:host, params) }
+
           it { expect { described_class.host(params) }.to raise_error_without_user_token(params[:user]) }
 
           context "when the service reference does not present a url" do
@@ -71,10 +72,10 @@ module Cts
             end
           end
 
-          it "is expected to look up the service in the service reference" do
+          it "is expected to find the service in the service reference by name and endpoint" do
             allow(Services).to receive(:[]).and_call_original
             described_class.path params
-            expect(Services).to have_received(:[]).with params[:service]
+            expect(Services).to have_received(:[])
           end
 
           it "is expected to return the assembled path" do
@@ -102,10 +103,12 @@ module Cts
           end
 
           context "when account is provided" do
-            before { params[:account] = Parameters.account_context }
+            let(:account_id) { "http://access.auth.theplatform.com/data/Account/1" }
+
+            before { params[:account_id] = account_id }
 
             it "is expected to set account" do
-              expect(described_class.query(params)).to include(account: Parameters.account_context)
+              expect(described_class.query(params)).to include(account: account_id)
             end
           end
 
@@ -116,7 +119,7 @@ module Cts
           it "is expected to look up the service in the service reference" do
             allow(Services).to receive(:[]).and_call_original
             described_class.query params
-            expect(Services).to have_received(:[]).with params[:service]
+            expect(Services).to have_received(:[])
           end
 
           it "is expected to set token" do

@@ -8,7 +8,7 @@ module Cts
     # @attribute xmlns namespace of the field
     #   @return [Hash]
     class Field
-      extend Creatable
+      include Creatable
 
       attribute name: 'name', kind_of: String
       attribute name: 'value'

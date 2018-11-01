@@ -13,8 +13,10 @@ module Cts
       def [](key = nil)
         return @services unless key
         raise 'key must be a string' unless key.is_a? String
+
         service = @services.find { |e| e.name == key }
         raise "#{key} must be a service name." unless service
+
         service
       end
 
@@ -22,13 +24,23 @@ module Cts
       # @param [String] url url to parse
       # @return [Hash] including service and endpoint as string.
       def from_url(url)
-        service = Services[].find { |s| url.include? s.uri_hint if s.uri_hint }
+        type = 'data' if url.include? 'data'
+        uri = URI.parse url
+
+        service = Services[].find { |s| uri.host.include?(s.uri_hint) if s.uri_hint && s.type == type }
         return nil unless service
 
         {
           service:  service.name,
-          endpoint: /data\/([A-Z].*)\//.match(url)[1]
+          endpoint: endpoint_regex(url)
         }
+      end
+
+      # check url structure for correct endpoint
+      # @param [String] url to parse for a match
+      # @return [String] results of regex matching
+      def endpoint_regex(url)
+        /data\/([a-zA-Z]*\/Field)|data\/([a-zA-Z]*)\//.match(url)&.[](1, 2)&.select { |e| e unless e.nil? }[0]
       end
 
       # Load references and services from disk.
@@ -44,6 +56,7 @@ module Cts
       def load_reference_file(file: nil, type: nil)
         raise ArgumentError, 'type must be supplied' unless type
         raise ArgumentError, 'file must be supplied' unless file
+
         @raw_reference.store(type, Driver.load_json_file(file))
         true
       end
@@ -100,6 +113,7 @@ module Cts
         return @raw_reference unless key
         raise 'key must be a string' unless key.is_a? String
         raise "#{key} is not in the reference library." unless @raw_reference.include? key
+
         @raw_reference[key]
       end
 

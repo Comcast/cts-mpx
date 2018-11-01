@@ -7,7 +7,7 @@ module Cts
       # @attribute xmlns
       #   @return [Hash] active namespace received for this page
       class Page
-        extend Creatable
+        include Creatable
         include Enumerable
 
         attribute name: 'entries', kind_of: Array
@@ -16,6 +16,16 @@ module Cts
         def initialize
           @entries = []
           @xmlns = {}
+        end
+
+        def to_mpx_entries
+          c = @entries.map do |e|
+            r = Entry.new
+            r.fields = Fields.create_from_data(data: e, xmlns: xmlns)
+          end
+
+          e = Entries.create collection: c
+          e
         end
 
         # return a json copy of the object, useful for later interpreation

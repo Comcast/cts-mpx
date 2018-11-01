@@ -12,7 +12,7 @@ module Cts
       end
 
       let(:endpoint) { 'Media' }
-      let(:id) { 'http://data.media.theplatform.com/data/Media/1' }
+      let(:id) { 'http://data.media.theplatform.com/media/data/Media/1' }
       let(:service) { 'Media Data Service' }
 
       let(:fields) { described_class.new }
@@ -28,7 +28,7 @@ module Cts
       end
 
       it { is_expected.to be_a_kind_of Enumerable }
-      it { is_expected.to be_a_kind_of described_class }
+      it { is_expected.to be_a_kind_of Creatable }
 
       describe "Attributes" do
         it { is_expected.to have_attributes(collection: []) }

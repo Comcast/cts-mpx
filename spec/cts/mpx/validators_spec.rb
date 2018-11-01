@@ -15,7 +15,7 @@ module Cts
         end
 
         context "when it is not an account_id" do
-          let(:reference) { "http://media.data.theplatform.com/data/Media/1" }
+          let(:reference) { "http://media.data.theplatform.com/media/data/Media/1" }
 
           it { expect(described_class.account_id?(reference)).to eq false }
         end

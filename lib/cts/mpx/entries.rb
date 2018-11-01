@@ -6,7 +6,8 @@ module Cts
     class Entries
       include Enumerable
       include Driver
-      extend Creatable
+      include Creatable
+      extend Forwardable
 
       attribute name: 'collection', kind_of: Array
 
@@ -16,14 +17,11 @@ module Cts
       # @return [Entries] a new entries collection
       def self.create_from_page(page)
         Exceptions.raise_unless_argument_error? page, Page
-        entries = new
-        page.entries.each do |e|
-          entry = Entry.new
-          entry.fields = Fields.create_from_data(data: e, xmlns: page.xmlns)
+        entries = page.entries.each do |e|
+          entry = Entry.create(fields:  Fields.create_from_data(data: e, xmlns: page.xmlns))
           entry.id = entry.fields['id'] if entry.fields['id']
-          entries.add entry
         end
-        entries
+        Entries.create(collection: entries)
       end
 
       # Addressable method, indexed by entry object
@@ -31,7 +29,16 @@ module Cts
       # @return [Self.collection,Entry,nil] Can return the collection, a single entry, or nil if nothing found
       def [](key = nil)
         return @collection unless key
+
         @collection.find { |e| e.id == key }
+      end
+
+      def +(other)
+        Entries.create collection: @collection += other.collection
+      end
+
+      def -(other)
+        Entries.create collection: @collection += other.collection
       end
 
       # Add an entry object to the collection
@@ -40,6 +47,7 @@ module Cts
       # @return [Self]
       def add(entry)
         return self if @collection.include? entry
+
         Exceptions.raise_unless_argument_error? entry, Entry
         @collection.push entry
         self

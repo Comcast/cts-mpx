@@ -2,7 +2,7 @@ module Cts
   module Mpx
     # ORM style class to contain any entry from the data services.
     class Entry
-      extend Creatable
+      include Creatable
 
       attribute name: 'endpoint', kind_of: String
       attribute name: 'fields', kind_of: Fields
@@ -14,7 +14,7 @@ module Cts
       # @param [String] id long form id to look up
       # @param [String] fields comma delimited list of fields to collect
       # @return [Entry] the resulting entry
-      def self.load_by_id(user: nil, id: nil, fields: nil)
+      def self.load_by_id(user: nil, id: nil, fields: nil, account_id: nil)
         Driver::Helpers.required_arguments %i[user id], binding
 
         Driver::Exceptions.raise_unless_argument_error? user, User
@@ -22,7 +22,7 @@ module Cts
 
         e = new
         e.id = id
-        e.load user: user, fields: nil
+        e.load user: user, fields: fields, account_id: account_id
         e
       end
 
@@ -35,13 +35,17 @@ module Cts
       # Set the id of the entry, will check if it's a valid reference.
       # @param [String] account_id account_id to set the entry to
       # @return [Entry] the resulting entry
-      def id=(account_id)
-        Driver::Exceptions.raise_unless_reference? account_id
-        result = Services.from_url account_id
-        fields['id'] = account_id
-
-        @service = result[:service]
-        @endpoint = result[:endpoint]
+      def id=(id)
+        if id.nil?
+          fields.remove 'id'
+          @id, @service, @endpoint = nil
+        else
+          Driver::Exceptions.raise_unless_reference? id
+          result = Services.from_url id
+          fields['id'] = id
+          @service = result[:service]
+          @endpoint = result[:endpoint]
+        end
       end
 
       # Initialize an entry.
@@ -63,16 +67,20 @@ module Cts
       # @param [User] user user to make calls with
       # @param [String] fields comma delimited list of fields to collect
       # @return [Driver::Response] Response of the call.
-      def load(user: nil, fields: nil)
+      def load(user: nil, fields: nil, account_id: 'urn:theplatform:auth:root')
         Driver::Helpers.required_arguments %i[user], binding
 
         Driver::Exceptions.raise_unless_argument_error? user, User
         Driver::Exceptions.raise_unless_argument_error? fields, String if fields
         Driver::Exceptions.raise_unless_reference? id
 
-        response = Services::Data.get user: user, service: service, endpoint: endpoint, fields: fields, ids: id.split("/").last
+        Registry.fetch_and_store_domain user: user, account_id: account_id
+        response = Services::Data.get account_id: account_id, user: user, service: service, endpoint: endpoint, fields: fields, ids: id.split("/").last
+
+        raise 'could not load ' + id unless response.data['entries'].count.positive?
+
         self.fields.parse data: response.data['entries'].first, xmlns: response.data['xmlns']
-        response
+        self
       end
 
       # Save the entry to the remote services.

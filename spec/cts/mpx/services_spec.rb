@@ -40,7 +40,8 @@ module Cts
       end
 
       describe '::from_url' do
-        let(:id) { 'http://data.media.theplatform.com/data/Media/1' }
+        let(:media_id) { 'http://data.media.theplatform.com/media/data/Media/1' }
+        let(:field_id) { 'http://data.media.theplatform.com/media/data/Media/Field/1' }
 
         context "when the argument is not valid" do
           it "is expected to return nil" do
@@ -49,7 +50,11 @@ module Cts
         end
 
         it "is expected to return a hash with a service: ServiceObject and endpoint: String" do
-          expect(described_class.from_url(id)).to eq(service: 'Media Data Service', endpoint: 'Media')
+          expect(described_class.from_url(media_id)).to eq(service: 'Media Data Service', endpoint: 'Media')
+        end
+
+        it "is expected to return a hash with a service field: ServiceObject and endpoint: String" do
+          expect(described_class.from_url(field_id)).to eq(service: 'Media Data Service', endpoint: 'Media/Field')
         end
       end
 

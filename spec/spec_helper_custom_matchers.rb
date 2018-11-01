@@ -23,7 +23,7 @@ end
 RSpec::Matchers.define :raise_error_without_user_token do
   match do
     token = user.token
-    user.token = nil
+    user.instance_variable_set :@token, nil
     begin
       actual.call
     rescue RuntimeError => e
