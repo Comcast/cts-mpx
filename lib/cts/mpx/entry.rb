@@ -36,7 +36,7 @@ module Cts
       # @param [String] account_id account_id to set the entry to
       # @return [Entry] the resulting entry
       def id=(id)
-        if id == nil
+        if id.nil?
           fields.remove 'id'
           @id, @service, @endpoint = nil
         else
@@ -77,7 +77,7 @@ module Cts
         Registry.fetch_and_store_domain user: user, account_id: account_id
         response = Services::Data.get account_id: account_id, user: user, service: service, endpoint: endpoint, fields: fields, ids: id.split("/").last
 
-        raise RuntimeError, 'could not load ' + id unless response.data['entries'].count.positive?
+        raise 'could not load ' + id unless response.data['entries'].count.positive?
 
         self.fields.parse data: response.data['entries'].first, xmlns: response.data['xmlns']
         self
