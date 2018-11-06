@@ -20,8 +20,9 @@ module Cts
 
         def to_mpx_entries
           c = @entries.map do |e|
-            r = Entry.new
-            r.fields = Fields.create_from_data(data: e, xmlns: xmlns)
+            new_entry = Entry.create(fields: Fields.create_from_data(data: e, xmlns: xmlns))
+            new_entry.id = new_entry.fields['id']
+            new_entry
           end
 
           e = Entries.create collection: c
