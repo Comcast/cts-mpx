@@ -92,6 +92,7 @@ module Cts
         raise ArgumentError, "fields['ownerId'] must be set" unless fields['ownerId']
 
         p = Driver::Page.create entries: [fields.to_h], xmlns: fields.xmlns
+        Registry.fetch_and_store_domain user: user, account_id: fields["ownerId"]
 
         response_params = { account_id: fields['ownerId'], user: user, service: service, endpoint: endpoint, page: p }
 
