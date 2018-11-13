@@ -154,12 +154,34 @@ module Cts
             entry.endpoint = 'Media'
             entry.fields.add guid_field
             entry.fields.add custom_field
-
+            entry.fields['ownerId'] = Parameters.account_id
             allow(Services::Data).to receive(:post).and_return response
             allow(Driver::Page).to receive(:create).and_return page
           end
 
           include_examples 'save_constraints'
+
+          it "is expected to create a page populated with data" do
+            entry.save user: user
+            expect(Driver::Page).to have_received(:create).with(entries: [{ "guid" => "abcdef", "$uuid" => "abcdef", "ownerId" => Parameters.account_id }], xmlns: { "custom"=>"uuid" })
+          end
+
+          it "is expected to call Data.post with with user, service, endpoint, and page" do
+            allow(Services::Data).to receive(:post).and_return ''
+            entry.save user: user
+            expect(Services::Data).to have_received(:post).with(account_id: Parameters.account_id, user: user, service: service, endpoint: endpoint, page: page)
+          end
+
+          it "is expected to return a response" do
+            allow(Services::Data).to receive(:post).and_return response
+            expect(entry.save(user: user)).to be response
+          end
+
+          context "when fields['ownerId'] is not set" do
+            before { entry.fields['ownerId'] = nil }
+
+            it { expect { entry.save user: user }.to raise_error ArgumentError, "fields['ownerId'] must be set" }
+          end
 
           context "when service is not set" do
             before { entry.instance_variable_set :@service, nil }
@@ -171,22 +193,6 @@ module Cts
             before { entry.instance_variable_set :@endpoint, nil }
 
             it { expect { entry.save user: user }.to raise_error ArgumentError, /is a required keyword/ }
-          end
-
-          it "is expected to create a page populated with data" do
-            entry.save user: user
-            expect(Driver::Page).to have_received(:create).with(entries: [{ "guid" => "abcdef", "$uuid" => "abcdef" }], xmlns: { "custom"=>"uuid" })
-          end
-
-          it "is expected to call Data.post with with user, service, endpoint, and page" do
-            allow(Services::Data).to receive(:post).and_return ''
-            entry.save user: user
-            expect(Services::Data).to have_received(:post).with(user: user, service: service, endpoint: endpoint, page: page)
-          end
-
-          it "is expected to return a response" do
-            allow(Services::Data).to receive(:post).and_return response
-            expect(entry.save(user: user)).to be response
           end
         end
 
@@ -201,6 +207,7 @@ module Cts
             entry.endpoint = 'Media'
             entry.fields.add guid_field
             entry.fields.add custom_field
+            entry.fields['ownerId'] = Parameters.account_id
 
             allow(Services::Data).to receive(:put).and_return response
             allow(Driver::Page).to receive(:create).and_return page
@@ -210,13 +217,13 @@ module Cts
 
           it "is expected to create a page populated with data" do
             entry.save user: user
-            expect(Driver::Page).to have_received(:create).with(entries: [{ "id" => "http://data.media.theplatform.com/media/data/Media/1", "guid" => "abcdef", "$uuid" => "abcdef" }], xmlns: { "custom"=>"uuid" })
+            expect(Driver::Page).to have_received(:create).with(entries: [{ "id" => "http://data.media.theplatform.com/media/data/Media/1", "ownerId"=>Parameters.account_id, "guid" => "abcdef", "$uuid" => "abcdef" }], xmlns: { "custom"=>"uuid" })
           end
 
           it "is expected to call Data.post with with user, service, endpoint, and page" do
             allow(Services::Data).to receive(:put).and_return ''
             entry.save user: user
-            expect(Services::Data).to have_received(:put).with(user: user, service: service, endpoint: endpoint, page: page)
+            expect(Services::Data).to have_received(:put).with(account_id: Parameters.account_id, user: user, service: service, endpoint: endpoint, page: page)
           end
 
           it "is expected to return self" do

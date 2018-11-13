@@ -89,14 +89,11 @@ module Cts
       def save(user: nil)
         Driver::Helpers.required_arguments %i[user], binding
         Driver::Exceptions.raise_unless_argument_error? user, User
+        raise ArgumentError, "fields['ownerId'] must be set" unless fields['ownerId']
 
         p = Driver::Page.create entries: [fields.to_h], xmlns: fields.xmlns
 
-        response_params = {
-          user: user, service: service, endpoint: endpoint, page: p
-        }
-
-        response_params[:account] = fields['ownerId'] if fields['ownerId']
+        response_params = { account_id: fields['ownerId'], user: user, service: service, endpoint: endpoint, page: p }
 
         if id
           response = Services::Data.put response_params
