@@ -92,13 +92,19 @@ module Cts
 
         p = Driver::Page.create entries: [fields.to_h], xmlns: fields.xmlns
 
+        response_params = {
+          user: user, service: service, endpoint: endpoint, page: p
+        }
+
+        response_params[:account] = fields['ownerId'] if fields['ownerId']
+
         if id
-          response = Services::Data.put user: user, service: service, endpoint: endpoint, page: p
+          response = Services::Data.put response_params
         else
           raise ArgumentError, "service is a required keyword" unless service
           raise ArgumentError, "endpoint is a required keyword" unless endpoint
 
-          response = Services::Data.post user: user, service: service, endpoint: endpoint, page: p
+          response = Services::Data.post response_params
         end
 
         response
