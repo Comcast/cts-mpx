@@ -4,7 +4,7 @@ RSpec.shared_context "with basic parameters" do
   let(:account_id) { "http://access.auth.theplatform.com/data/Account/1" }
   let(:entries) { Cts::Mpx::Entries.create collection: [media_entry] }
   let(:media_endpoint) { 'Media' }
-  let(:media_entry) { Cts::Mpx::Entry.create(id: media_id) {|e| e.id = e.fields['id']} }
+  let(:media_entry) { Cts::Mpx::Entry.create(id: media_id) { |object| object.id = object.id } }
   let(:media_id) { 'http://data.media.theplatform.com/media/data/Media/1' }
   let(:media_service) { 'Media Data Service' }
   let(:root_account_id) { 'urn:theplatform:auth:root' }
@@ -47,9 +47,9 @@ RSpec.shared_context "with excon driver" do
   let(:populated_excon_response) { Excon::Response.new body: populated_excon_body, headers: excon_headers, status: excon_status }
   let(:populated_excon_response_hash) { { "xmlns" => {}, "entries" => [ "id" => media_id]}}
   let(:page) { Cts::Mpx::Driver::Page.create page_parameters }
-  let(:page_parameters) { { "entries" => [], "xmlns" => {} } }
-  let(:page_populated) { Cts::Mpx::Driver::Page.create populated_page_parameters }
-  let(:page_popluated_parameters) { { xmlns: xmlns, entries: entries } }
+  let(:page_parameters) { { xmlns: {}, entries: {} } }
+  let(:populated_page) { Cts::Mpx::Driver::Page.create populated_page_parameters }
+  let(:populated_page_parameters) { entries.to_h }
 end
 
 RSpec.shared_context "with request and response" do

@@ -81,7 +81,13 @@ module Cts
       # A hash of all available entries
       # @return [Hash]
       def to_h
-        map(&:to_h)
+        output = {xmlns: {}, entries: []}
+
+        each do |entry|
+          output[:entries].push entry.to_h[:entry]
+          output[:xmlns].merge! entry.fields.xmlns
+        end
+        output
       end
     end
   end

@@ -29,7 +29,7 @@ module Cts
       # Return the id of the entry.
       # @return [Entry] the resulting entry
       def id
-        fields['id']
+        @id
       end
 
       # Set the id of the entry, will check if it's a valid reference.
@@ -97,15 +97,14 @@ module Cts
         response_params = { account_id: fields['ownerId'], user: user, service: service, endpoint: endpoint, page: p }
 
         if id
-          response = Services::Data.put response_params
+          Services::Data.put response_params
         else
           raise ArgumentError, "service is a required keyword" unless service
           raise ArgumentError, "endpoint is a required keyword" unless endpoint
-
-          response = Services::Data.post response_params
+          Services::Data.post response_params
         end
 
-        response
+        self
       end
     end
   end

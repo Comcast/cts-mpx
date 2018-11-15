@@ -8,18 +8,6 @@ module Cts
 
       let(:data) { { id: media_id } }
       let(:empty_entry) { described_class.new }
-      # let(:loadable_hash) { { xmlns: xmlns, entry: data } }
-      # let(:body) { Oj.dump page_hash }
-      # let(:response) { Cts::Mpx::Driver::Response.create original: excon_response }
-      # let(:excon_response) { Excon::Response.new body: body, status: 200 }
-      # let(:page_hash) do
-      #   {
-      #     "entries" => [{
-      #       "id"   => media_id,
-      #       "guid" => "1234"
-      #     }]
-      #   }
-      # end
 
       it { is_expected.to be_a_kind_of Creatable }
 
@@ -41,15 +29,14 @@ module Cts
         include_context "with user"
         include_context "with request and response"
 
-        let(:entries) { [{ "id" => "http://data.media.theplatform.com/media/data/Media/1", "guid" => "123" }] }
-        let(:params) { { user: user, id: media_id } }
+        let(:entries) { [{ "id" => media_id, "guid" => "123" }] }
 
         before do
-          allow(described_class).to receive(:new).and_call_original
+          allow(described_class).to receive(:new).and_return media_entry
           allow(Cts::Mpx::Services::Data).to receive(:get).and_return(populated_response)
         end
 
-        it { is_expected.to require_keyword_arguments(:load_by_id, params) }
+        it { is_expected.to require_keyword_arguments(:load_by_id, user: user, id: nil) }
 
         it { expect { described_class.load_by_id user: 1, id: media_id }.to raise_argument_error(1, User) }
         it { expect { described_class.load_by_id user: user, id: 1 }.to raise_unless_reference(1, String) }
@@ -65,9 +52,9 @@ module Cts
         end
 
         it "is expected to call entry.load" do
-          allow(empty_entry).to receive(:load).and_return empty_entry
+          allow(empty_entry).to receive(:load).and_return media_entry
           described_class.load_by_id user: user, id: 'http://data.media.theplatform.com/media/data/Media/1'
-          expect(empty_entry).to have_received(:load)
+          expect(media_entry).to have_received(:load)
         end
 
         it { is_expected.to be_a_kind_of described_class }
@@ -95,6 +82,7 @@ module Cts
 
       describe '#load' do
         include_context "with user"
+        include_context "with request and response"
 
         let(:fields) { 'id,guid' }
         let(:params) { { user: user, fields: fields } }
@@ -112,20 +100,20 @@ module Cts
         end
 
         it "is expected to call Data.get with user, and fields set" do
-          allow(Cts::Mpx::Services::Data).to receive(:get).and_return response
+          allow(Cts::Mpx::Services::Data).to receive(:get).and_return populated_response
           media_entry.load user: user, fields: fields
           expect(Cts::Mpx::Services::Data).to have_received(:get).with account_id: 'urn:theplatform:auth:root', user: user, service: media_service, endpoint: media_endpoint, fields: fields, ids: '1'
         end
 
         it "is expected to call Fields.parse data, xml" do
-          allow(Cts::Mpx::Services::Data).to receive(:get).and_return response
+          allow(Cts::Mpx::Services::Data).to receive(:get).and_return populated_response
           allow(media_entry.fields).to receive(:parse).and_return nil
           media_entry.load user: user, fields: fields
-          expect(media_entry.fields).to have_received(:parse).with(data: { "id" => media_id, "guid" => "1234" }, xmlns: nil)
+          expect(media_entry.fields).to have_received(:parse).with(data: { "id" => media_id }, xmlns: {})
         end
 
         it "is expected to return a response" do
-          allow(Cts::Mpx::Services::Data).to receive(:get).and_return response
+          allow(Cts::Mpx::Services::Data).to receive(:get).and_return populated_response
           expect(media_entry.load(user: user)).to be_a_kind_of described_class
         end
       end
@@ -142,90 +130,86 @@ module Cts
 
       describe '#save (when ID is not set)' do
         include_context "with user"
+        include_context "with request and response"
 
-        let(:entry) { empty_entry }
-        let(:page) { Driver::Page.create entries: [entry], xmlns: entry.fields.xmlns }
+        let(:empty_entry) { Cts::Mpx::Entry.new }
 
         before do
-          entry.service = media_service
-          entry.endpoint = 'Media'
-          entry.fields.add field
-          entry.fields.add custom_field
-          entry.fields['ownerId'] = account_id
-          allow(Services::Data).to receive(:post).and_return response
+          media_entry.fields['ownerId'] = account_id
+          allow(Services::Data).to receive(:put).and_return populated_response
           allow(Driver::Page).to receive(:create).and_return page
         end
 
         include_examples 'save_constraints'
 
         it "is expected to create a page populated with data" do
-          entry.save user: user
-          expect(Driver::Page).to have_received(:create).with(entries: [{ field_name => field_value, custom_field_name => custom_field_value, "ownerId" => account_id }], xmlns: custom_field_xmlns)
+          media_entry.save user: user
+          expect(Driver::Page).to have_received(:create).with populated_page_parameters
         end
 
         it "is expected to call Data.post with with user, service, endpoint, and page" do
+          media_entry.instance_variable_set :@id, nil
           allow(Services::Data).to receive(:post).and_return ''
-          entry.save user: user
+          media_entry.save user: user
           expect(Services::Data).to have_received(:post).with(account_id: account_id, user: user, service: media_service, endpoint: media_endpoint, page: page)
         end
 
-        it "is expected to return a response" do
-          allow(Services::Data).to receive(:post).and_return response
-          expect(entry.save(user: user)).to be response
+        it "is expected to return self" do
+          expect(media_entry.save(user: user)).to be media_entry
         end
 
-        context "when fields['ownerId'] is not set" do
-          before { entry.fields['ownerId'] = nil }
 
-          it { expect { entry.save user: user }.to raise_error ArgumentError, "fields['ownerId'] must be set" }
+        context "when fields['ownerId'] is not set" do
+
+          before { empty_entry.fields['ownerId'] = nil }
+
+          it { expect { empty_entry.save user: user }.to raise_error ArgumentError, "fields['ownerId'] must be set" }
         end
 
         context "when service is not set" do
-          before { entry.instance_variable_set :@service, nil }
+          before do
+            empty_entry.fields['ownerId'] = account_id
+            empty_entry.instance_variable_set :@service, nil
+          end
 
-          it { expect { entry.save user: user }.to raise_error ArgumentError, /is a required keyword/ }
+          it { expect { empty_entry.save user: user }.to raise_error ArgumentError, /is a required keyword/ }
         end
 
         context "when endpoint is not set" do
-          before { entry.instance_variable_set :@endpoint, nil }
+          before do
+            empty_entry.fields['ownerId'] = account_id
+            empty_entry.instance_variable_set :@endpoint, nil
+          end
 
-          it { expect { entry.save user: user }.to raise_error ArgumentError, /is a required keyword/ }
+          it { expect { empty_entry.save user: user }.to raise_error ArgumentError, /is a required keyword/ }
         end
       end
 
       describe '#save (when ID is set)' do
         include_context "with user"
-
-        let(:entry) { empty_entry }
-        let(:page) { Driver::Page.create entries: [entry], xmlns: entry.fields.xmlns }
+        include_context "with request and response"
 
         before do
-          entry.id = media_id
-          entry.service = media_service
-          entry.endpoint = 'Media'
-          entry.fields.add field
-          entry.fields.add custom_field
-          entry.fields['ownerId'] = account_id
-
-          allow(Services::Data).to receive(:put).and_return response
+          media_entry.fields['ownerId'] = account_id
+          allow(Services::Data).to receive(:put).and_return populated_response
           allow(Driver::Page).to receive(:create).and_return page
         end
 
         include_examples 'save_constraints'
 
         it "is expected to create a page populated with data" do
-          entry.save user: user
-          expect(Driver::Page).to have_received(:create).with(entries: [{ "id" => media_id, "ownerId" => account_id, custom_field_name => custom_field_value, field_name => field_value }], xmlns: custom_field_xmlns)
+          media_entry.save user: user
+          expect(Driver::Page).to have_received(:create).with(entries: [media_entry.to_h[:entry]], xmlns: media_entry.fields.xmlns)
         end
 
         it "is expected to call Data.post with with user, service, endpoint, and page" do
           allow(Services::Data).to receive(:put).and_return ''
-          entry.save user: user
+          media_entry.save user: user
           expect(Services::Data).to have_received(:put).with(account_id: account_id, user: user, service: media_service, endpoint: media_endpoint, page: page)
         end
 
         it "is expected to return self" do
-          expect(entry.save(user: user)).to be response
+          expect(media_entry.save(user: user)).to eq media_entry
         end
       end
     end
