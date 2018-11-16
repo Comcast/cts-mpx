@@ -3,7 +3,7 @@ require 'spec_helper'
 module Cts
   module Mpx
     describe Services do
-      let(:user) { user }
+      include_context "with user objects"
       let(:service_name) { 'Access Data Service' }
 
       describe "Attributes" do
@@ -40,9 +40,7 @@ module Cts
       end
 
       describe '::from_url' do
-        let(:media_id) { 'http://data.media.theplatform.com/media/data/Media/1' }
-        let(:field_id) { 'http://data.media.theplatform.com/media/data/Media/Field/1' }
-
+        include_context "with media parameters"
         context "when the argument is not valid" do
           it "is expected to return nil" do
             expect(described_class.from_url('askjfdaldfkj')).to eq nil
@@ -54,7 +52,7 @@ module Cts
         end
 
         it "is expected to return a hash with a service field: ServiceObject and endpoint: String" do
-          expect(described_class.from_url(field_id)).to eq(service: 'Media Data Service', endpoint: 'Media/Field')
+          expect(described_class.from_url(media_field_id)).to eq(service: 'Media Data Service', endpoint: 'Media/Field')
         end
       end
 

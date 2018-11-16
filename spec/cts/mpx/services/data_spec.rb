@@ -4,9 +4,9 @@ module Cts
   module Mpx
     module Services
       describe Data do
-        include_context "with request and response"
-        include_context "with media entry"
-        include_context "with user"
+        include_context "with request and response objects"
+        include_context "with media objects"
+        include_context "with user objects"
 
         let(:root_domain) { Driver.load_json_file('config/root_registry_sea1.json')['resolveDomainResponse'] }
         let(:call_params) { { user: user, service: media_service, endpoint: media_endpoint, query: {} } }

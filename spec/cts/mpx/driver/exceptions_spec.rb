@@ -4,12 +4,14 @@ module Cts
   module Mpx
     module Driver
       describe Exceptions do
+        include_context "with parameters"
+
         let(:false_block) { proc { false } }
         let(:true_block) { proc { true } }
+        let(:reference) { 1234 }
 
         describe "::raise_unless_account_id" do
           context "when the argument is not an account_id" do
-            let(:reference) { 1234 }
 
             it "is expected to raise a ArgumentError with is not a valid account_id " do
               expect { described_class.raise_unless_account_id(reference) }.to raise_error ArgumentError, /#{reference} is not a valid account_id/
@@ -44,7 +46,6 @@ module Cts
         describe "::raise_unless_reference?" do
           it { expect(described_class).to respond_to(:raise_unless_reference?).with(1).argument }
           context "when the argument is not a reference" do
-            let(:reference) { 1234 }
 
             it "is expected to raise a ArgumentError with is not a valid reference " do
               expect { described_class.raise_unless_reference?(reference) }.to raise_error ArgumentError, /#{reference} is not a valid reference/

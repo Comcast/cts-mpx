@@ -3,11 +3,7 @@ require 'spec_helper'
 module Cts
   module Mpx
     describe Field do
-      let(:field_name) { 'guid' }
-      let(:field_value) { '12345' }
-      let(:custom_field_name) { 'custom$guid' }
-      let(:guid_field) { described_class.create name: field_name, value: field_value }
-      let(:custom_field) { described_class.create(name: custom_field_name, value: 'abcdef', xmlns: { "custom" => "http://1234a.com" }) }
+      include_context "with field objects"
 
       it { is_expected.to be_a_kind_of Creatable }
 
@@ -23,14 +19,12 @@ module Cts
         it { is_expected.to respond_to(:type).with(0).argument }
 
         describe '::to_h' do
-          let(:result) { guid_field }
-
           it "is expected to have a key set to name" do
-            expect(result.to_h.keys.first).to eq field_name
+            expect(field.name).to eq field_name
           end
 
           it "is expected to have a value set to value" do
-            expect(result.to_h.values.first).to eq field_value
+            expect(field.value).to eq field_value
           end
         end
 
@@ -39,7 +33,7 @@ module Cts
             it { expect(custom_field.type).to eq :custom }
           end
 
-          it { expect(guid_field.type).to eq :internal }
+          it { expect(field.type).to eq :internal }
         end
       end
     end

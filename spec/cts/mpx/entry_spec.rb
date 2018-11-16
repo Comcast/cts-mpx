@@ -3,13 +3,13 @@ require 'spec_helper'
 module Cts
   module Mpx
     describe Entry do
-      include_context "with basic parameters"
-      include_context "with field"
-      include_context "with media entry"
-      include_context "with page"
+      include_context "with parameters"
+      include_context "with field objects"
+      include_context "with media objects"
+      include_context "with page objects"
+      include_context "with empty objects"
 
       let(:data) { { id: media_id } }
-      let(:empty_entry) { described_class.new }
 
       it { is_expected.to be_a_kind_of Creatable }
 
@@ -28,8 +28,8 @@ module Cts
       end
 
       describe '::self.load_by_id' do
-        include_context "with user"
-        include_context "with request and response"
+        include_context "with user objects"
+        include_context "with request and response objects"
 
         let(:entries) { [{ "id" => media_id, "guid" => "123" }] }
 
@@ -54,7 +54,7 @@ module Cts
         end
 
         it "is expected to call entry.load" do
-          allow(empty_entry).to receive(:load).and_return media_entry
+          allow(entry).to receive(:load).and_return media_entry
           described_class.load_by_id user: user, id: 'http://data.media.theplatform.com/media/data/Media/1'
           expect(media_entry).to have_received(:load)
         end
@@ -64,27 +64,27 @@ module Cts
 
       describe '#id' do
         context "when the argument is not a reference" do
-          it { expect { empty_entry.id = 'no' }.to raise_error ArgumentError, /is not a valid reference/ }
+          it { expect { entry.id = 'no' }.to raise_error ArgumentError, /is not a valid reference/ }
         end
 
         it "is expected to set service" do
-          empty_entry.id = media_id
-          expect(empty_entry.service).to eq media_service
+          entry.id = media_id
+          expect(entry.service).to eq media_service
         end
 
         it "is expected to set endpoint" do
-          empty_entry.id = media_id
-          expect(empty_entry.endpoint).to eq 'Media'
+          entry.id = media_id
+          expect(entry.endpoint).to eq 'Media'
         end
         it "is expected to build an id field" do
-          empty_entry.id = media_id
-          expect(empty_entry.fields['id']).to eq media_id
+          entry.id = media_id
+          expect(entry.fields['id']).to eq media_id
         end
       end
 
       describe '#load' do
-        include_context "with user"
-        include_context "with request and response"
+        include_context "with user objects"
+        include_context "with request and response objects"
 
         let(:fields) { 'id,guid' }
         let(:params) { { user: user, fields: fields } }
@@ -131,10 +131,8 @@ module Cts
       end
 
       describe '#save (when ID is not set)' do
-        include_context "with user"
-        include_context "with request and response"
-
-        let(:empty_entry) { Cts::Mpx::Entry.new }
+        include_context "with user objects"
+        include_context "with request and response objects"
 
         before do
           media_entry.fields['ownerId'] = account_id
@@ -163,33 +161,33 @@ module Cts
 
         context "when fields['ownerId'] is not set" do
 
-          before { empty_entry.fields['ownerId'] = nil }
+          before { entry.fields['ownerId'] = nil }
 
-          it { expect { empty_entry.save user: user }.to raise_error ArgumentError, "fields['ownerId'] must be set" }
+          it { expect { entry.save user: user }.to raise_error ArgumentError, "fields['ownerId'] must be set" }
         end
 
         context "when service is not set" do
           before do
-            empty_entry.fields['ownerId'] = account_id
-            empty_entry.instance_variable_set :@service, nil
+            entry.fields['ownerId'] = account_id
+            entry.instance_variable_set :@service, nil
           end
 
-          it { expect { empty_entry.save user: user }.to raise_error ArgumentError, /is a required keyword/ }
+          it { expect { entry.save user: user }.to raise_error ArgumentError, /is a required keyword/ }
         end
 
         context "when endpoint is not set" do
           before do
-            empty_entry.fields['ownerId'] = account_id
-            empty_entry.instance_variable_set :@endpoint, nil
+            entry.fields['ownerId'] = account_id
+            entry.instance_variable_set :@endpoint, nil
           end
 
-          it { expect { empty_entry.save user: user }.to raise_error ArgumentError, /is a required keyword/ }
+          it { expect { entry.save user: user }.to raise_error ArgumentError, /is a required keyword/ }
         end
       end
 
       describe '#save (when ID is set)' do
-        include_context "with user"
-        include_context "with request and response"
+        include_context "with user objects"
+        include_context "with request and response objects"
 
         before do
           media_entry.fields['ownerId'] = account_id

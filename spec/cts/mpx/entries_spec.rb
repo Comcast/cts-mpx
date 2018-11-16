@@ -3,8 +3,8 @@ require 'spec_helper'
 module Cts
   module Mpx
     describe Entries do
-      include_context "with media entries"
-      include_context "with field"
+      include_context "with entries objects"
+      include_context "with field objects"
 
       let(:other_entries) { Entries.create(collection: [other_entry]) }
       let(:other_entry) { Entry.new }

@@ -4,6 +4,8 @@ module Cts
   module Mpx
     module Driver
       describe Request do
+        include_context "with parameters"
+
         it { is_expected.to be_a_kind_of Creatable }
 
         describe "Instance method signatures" do

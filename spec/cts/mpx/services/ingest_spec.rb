@@ -4,7 +4,7 @@ module Cts
   module Mpx
     module Services
       describe Ingest do
-        let(:user) { user }
+        include_context "with user objects"
 
         it { expect(described_class.class).to be Module }
 

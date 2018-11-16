@@ -3,6 +3,9 @@ require 'spec_helper'
 module Cts
   module Mpx
     describe Validators do
+      include_context "with parameters"
+      include_context "with media parameters"
+
       let(:reference) { account_id }
 
       describe "::account_id?" do
@@ -15,7 +18,7 @@ module Cts
         end
 
         context "when it is not an account_id" do
-          let(:reference) { "http://media.data.theplatform.com/media/data/Media/1" }
+          let(:reference) { media_id }
 
           it { expect(described_class.account_id?(reference)).to eq false }
         end

@@ -4,10 +4,9 @@ module Cts
   module Mpx
     module Driver
       describe Service do
-        let(:account_id) { account_id }
-        let(:root_account_id) { 'urn:theplatform:auth:root' }
-        let(:service) { Services['User Data Service'] }
-        let(:url) { "https://identity.auth.theplatform.com/idm" }
+        include_context "with parameters"
+        let(:service) { Services[ident_service] }
+        let(:url) { ident_endpoint }
 
         describe "Attributes" do
           it { is_expected.to have_attributes(endpoints: []) }

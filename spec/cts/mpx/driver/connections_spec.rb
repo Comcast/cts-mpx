@@ -4,7 +4,7 @@ module Cts
   module Mpx
     module Driver
       describe Connections do
-        include_context "with basic parameters"
+        include_context "with parameters"
         let(:uri) { account_id }
         let(:connection) { Excon.new uri }
 

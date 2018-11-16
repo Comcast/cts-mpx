@@ -3,16 +3,12 @@ require 'spec_helper'
 module Cts
   module Mpx
     describe Registry do
-      let(:user) { user }
-      let(:account_id) { account_id }
-      let(:root_account) { 'urn:theplatform:auth:root' }
+      include_context "with user objects"
+      include_context "with parameters"
+
       let(:root_domain) { Driver.load_json_file('config/root_registry_sea1.json')['resolveDomainResponse'] }
+      let(:result_hash) { { 'resolveDomainResponse' => root_domain } }
 
-      let(:result_hash) do
-        { 'resolveDomainResponse' => root_domain }
-      end
-
-      # before { described_class.initialize }
       describe "Attributes" do
         it { is_expected.to have_attributes(domains: an_instance_of(Hash)) }
       end
@@ -26,7 +22,7 @@ module Cts
       describe "::fetch_and_store_domain" do
         before do
           allow(described_class).to receive(:fetch_domain).and_return(root_domain)
-          Registry.instance_variable_set(:@domains, root_account => root_domain)
+          Registry.instance_variable_set(:@domains, root_account_id => root_domain)
         end
 
         it "is expected to call fetch_domain" do
@@ -41,8 +37,8 @@ module Cts
         end
 
         it "is expected to store the domain in domains" do
-          described_class.fetch_and_store_domain user, root_account
-          expect(described_class.domains).to eq root_account => result_hash["resolveDomainResponse"]
+          described_class.fetch_and_store_domain user, root_account_id
+          expect(described_class.domains).to eq root_account_id => result_hash["resolveDomainResponse"]
         end
 
         it "is expected to return the domain" do
@@ -51,6 +47,9 @@ module Cts
       end
 
       describe "::fetch_domain" do
+        include_context "with response objects"
+        include_context "with user objects"
+
         let(:post_params) do
           {
             user:      user,
@@ -70,15 +69,10 @@ module Cts
           }'
         end
 
-        let(:response) do
-          r = Driver::Response.new
-          r.instance_variable_set :@data, Oj.load(post_response_string)
-          r.instance_variable_set :@status, 200
-          r
+        before do
+          response.instance_variable_set :@data, Oj.load(post_response_string)
+          allow(Services::Web).to receive(:post).and_return response
         end
-        let(:user) { user }
-
-        before { allow(Services::Web).to receive(:post).and_return response }
 
         it { expect { described_class.fetch_domain user, account_id }.to raise_error_without_user_token(user) }
 
@@ -101,7 +95,7 @@ module Cts
 
         context "when no account_id is supplied" do
           it "is expected to return the root account_id (urn:theplatform:auth:root)" do
-            expect(described_class.fetch_domain(user, root_account)).to eq described_class.domains[root_account]
+            expect(described_class.fetch_domain(user, root_account_id)).to eq described_class.domains[root_account_id]
           end
         end
       end
@@ -110,7 +104,7 @@ module Cts
         let(:file) { 'config/root_registry.sea1.json' }
 
         # this effectively re-initializes things without calling initialize or store_domain.
-        after { Registry.instance_variable_set(:@domains, root_account => root_domain) }
+        after { Registry.instance_variable_set(:@domains, root_account_id => root_domain) }
 
         before do
           allow(Driver).to receive(:load_json_file).with(/#{file}/).and_return(result_hash)
@@ -121,10 +115,10 @@ module Cts
           expect(Driver).to have_received(:load_json_file)
         end
 
-        it "is expected to call store_domain with root_account and the hash" do
+        it "is expected to call store_domain with root_account_id and the hash" do
           allow(described_class).to receive(:store_domain).and_return(result_hash)
           described_class.initialize
-          expect(described_class).to have_received(:store_domain).with(root_domain, root_account)
+          expect(described_class).to have_received(:store_domain).with(root_domain, root_account_id)
         end
       end
 

@@ -4,7 +4,7 @@ module Cts
   module Mpx
     module Driver
       describe Response do
-        include_context "with request and response"
+        include_context "with request and response objects"
 
         it { is_expected.to be_a_kind_of Creatable }
 

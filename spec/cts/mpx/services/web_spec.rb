@@ -4,9 +4,9 @@ module Cts
   module Mpx
     module Services
       describe Web do
-        include_context "with user"
+        include_context "with user objects"
         include_context "with web parameters"
-        include_context "with request and response"
+        include_context "with request and response objects"
 
         it { expect(described_class.class).to be Module }
 

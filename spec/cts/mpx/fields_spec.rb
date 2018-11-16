@@ -26,8 +26,8 @@ module Cts
       #     entry: data
       #   }
       # end
-      include_context "with field"
-      include_context "with basic objects"
+      include_context "with field objects"
+      include_context "with empty objects"
 
       it { is_expected.to be_a_kind_of Enumerable }
       it { is_expected.to be_a_kind_of Creatable }
@@ -137,7 +137,7 @@ module Cts
       end
 
       describe '::parse' do
-        include_context "with media entry"
+        include_context "with media objects"
 
         let(:data) { { id: media_id, service: media_service, endpoint: media_endpoint } }
 

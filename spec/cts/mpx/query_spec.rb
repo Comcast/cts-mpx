@@ -4,15 +4,13 @@ module Cts
   module Mpx
     describe Query do
       include_context "with fields"
-      include_context "with media entry"
-      include_context "with request and response"
-      include_context "with user"
-
-      let(:new_entry) { described_class.new }
-      let(:query) { described_class.new }
+      include_context "with media objects"
+      include_context "with user objects"
+      include_context "with empty objects"
+      include_context "with request and response objects"
 
       before do
-        allow(described_class).to receive(:new).and_return new_entry
+        allow(described_class).to receive(:new).and_return query
         allow(Cts::Mpx::Services::Data).to receive(:get).and_return(populated_response)
       end
 
@@ -33,11 +31,8 @@ module Cts
         it { is_expected.to have_attributes(sort: nil) }
       end
 
-      describe "Class methods" do
+      describe "Responds to" do
         it { expect(described_class).to respond_to(:create) }
-      end
-
-      describe "Instance methods" do
         it { is_expected.to respond_to(:entries).with(0).arguments }
         it { is_expected.to respond_to(:to_h).with(0).arguments.and_keywords(:include_entries) }
         it { is_expected.to respond_to(:run).with(0).arguments.and_keywords(:user) }
