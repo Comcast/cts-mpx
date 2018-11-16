@@ -3,8 +3,8 @@ require 'spec_helper'
 module Cts
   module Mpx
     describe Registry do
-      let(:user) { Parameters.user }
-      let(:account_id) { Parameters.account_id }
+      let(:user) { user }
+      let(:account_id) { account_id }
       let(:root_account) { 'urn:theplatform:auth:root' }
       let(:root_domain) { Driver.load_json_file('config/root_registry_sea1.json')['resolveDomainResponse'] }
 
@@ -31,7 +31,7 @@ module Cts
 
         it "is expected to call fetch_domain" do
           described_class.fetch_and_store_domain user, account_id
-          expect(described_class).to have_received(:fetch_domain).with(Parameters.user, account_id)
+          expect(described_class).to have_received(:fetch_domain).with(user, account_id)
         end
 
         it "is expected to call store_domain with the output from fetch_domain" do
@@ -76,7 +76,7 @@ module Cts
           r.instance_variable_set :@status, 200
           r
         end
-        let(:user) { Parameters.user }
+        let(:user) { user }
 
         before { allow(Services::Web).to receive(:post).and_return response }
 

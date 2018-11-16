@@ -11,19 +11,6 @@ module Cts
 
       attribute name: 'collection', kind_of: Array
 
-      # Create a new entries collection from a page
-      # @param [Page] page the page object to process
-      # @raise [ArgumentError] if :page is not available
-      # @return [Entries] a new entries collection
-      def self.create_from_page(page)
-        Exceptions.raise_unless_argument_error? page, Page
-        entries = page.entries.each do |e|
-          entry = Entry.create(fields:  Fields.create_from_data(data: e, xmlns: page.xmlns))
-          entry.id = entry.fields['id'] if entry.fields['id']
-        end
-        Entries.create(collection: entries)
-      end
-
       # Addressable method, indexed by entry object
       # @param [Entry] key the entry to return
       # @return [Self.collection,Entry,nil] Can return the collection, a single entry, or nil if nothing found

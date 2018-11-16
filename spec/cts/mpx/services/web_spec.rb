@@ -4,7 +4,9 @@ module Cts
   module Mpx
     module Services
       describe Web do
-        let(:user) { Parameters.user }
+        include_context "with user"
+        include_context "with web parameters"
+        include_context "with request and response"
 
         it { expect(described_class.class).to be Module }
 
@@ -38,70 +40,55 @@ module Cts
         end
 
         describe "::assemble_payload" do
-          let(:params) { { service: Parameters.web_service, endpoint: Parameters.web_endpoint, method: Parameters.web_method, arguments: Parameters.web_arguments } }
-
           it "is expected to look up the service in the service reference" do
             allow(Services).to receive(:[]).and_call_original
-            described_class.assemble_payload params
-            expect(Services).to have_received(:[]).with params[:service]
+            described_class.assemble_payload web_assembler_parameters
+            expect(Services).to have_received(:[]).with web_assembler_parameters[:service]
           end
 
-          it { is_expected.to require_keyword_arguments(:assemble_payload, params) }
+          it { is_expected.to require_keyword_arguments(:assemble_payload, web_assembler_parameters) }
 
           context "when the method is not valid" do
-            before { params[:method] = 'yabadabado' }
+            before { web_assembler_parameters[:method] = 'yabadabado' }
 
-            it { expect { described_class.assemble_payload params }.to raise_error ArgumentError, /is not a valid method/ }
+            it { expect { described_class.assemble_payload web_assembler_parameters }.to raise_error ArgumentError, /is not a valid method/ }
           end
 
           context "when any argument is not valid" do
-            before { params[:arguments] = { yaba: 'daba', doo: 'doo' } }
+            before { web_assembler_parameters[:arguments] = { yaba: 'daba', doo: 'doo' } }
 
-            it { expect { described_class.assemble_payload params }.to raise_error ArgumentError, /is not a valid argument/ }
+            it { expect { described_class.assemble_payload web_assembler_parameters }.to raise_error ArgumentError, /is not a valid argument/ }
           end
 
           it "is expected to embed the method on the first tier as a hash" do
-            expect(described_class.assemble_payload(params).keys).to eq [params[:method]]
+            expect(described_class.assemble_payload(web_assembler_parameters).keys).to eq [web_assembler_parameters[:method]]
           end
 
           it "is expected to embed the argument on the second tier" do
-            expect(described_class.assemble_payload(params)[params[:method]]).to eq params[:arguments]
+            expect(described_class.assemble_payload(web_assembler_parameters)[web_assembler_parameters[:method]]).to eq web_assembler_parameters[:arguments]
           end
 
           it "is expected to return a hash" do
-            expect(described_class.assemble_payload(params)).to be_a_kind_of Hash
+            expect(described_class.assemble_payload(web_assembler_parameters)).to be_a_kind_of Hash
           end
         end
 
+
         describe "::post" do
           let(:call_method) { :post }
-          let(:call_params) do
-            {
-              user:      Parameters.user,
-              service:   Parameters.web_service,
-              endpoint:  Parameters.web_endpoint,
-              method:    Parameters.web_method,
-              arguments: Parameters.web_arguments,
-              query:     {}
-            }
-          end
-
           let(:request_params) do
             {
-              method:  :post,
+              method:  call_method,
               url:     "https://identity.auth.theplatform.com/idm/web/Authentication",
               query:   {
-                token:  "token",
+                token:  user_token,
                 schema: "1.1",
                 form:   "json"
               },
-              payload: "{\"signIn\":{\"username\":\"username\",\"password\":\"password\"}}",
+              payload: "{\"signIn\":{\"username\":\"#{user_name}\",\"password\":\"#{user_password}\"}}",
               headers: {}
             }
           end
-
-          let(:request) { Driver::Request.new }
-          let(:response) { Driver::Response.new }
 
           before do
             allow(Driver::Request).to receive(:new).and_return request
@@ -109,8 +96,8 @@ module Cts
             Registry.initialize
           end
 
-          it { expect { described_class.post(call_params) }.to raise_error_without_user_token(call_params[:user]) }
-          it { is_expected.to require_keyword_arguments(:post, call_params) }
+          it { expect { described_class.post(web_post_parameters) }.to raise_error_without_user_token }
+          it { is_expected.to require_keyword_arguments(:post, web_post_parameters) }
 
           include_examples 'registry_check', :post
 
@@ -120,17 +107,17 @@ module Cts
 
           it "is expected to call Request.create with POST with url, query, and payload" do
             allow(Driver::Request).to receive(:create).and_call_original
-            described_class.post call_params
+            described_class.post web_post_parameters
             expect(Driver::Request).to have_received(:create).with(request_params)
           end
 
           it "is expected to call request.call" do
-            described_class.post call_params
+            described_class.post web_post_parameters
             expect(request).to have_received(:call)
           end
 
           it "is expected to return a Response object" do
-            expect(described_class.post(call_params)).to be_a_kind_of Driver::Response
+            expect(described_class.post(web_post_parameters)).to be_a_kind_of Driver::Response
           end
         end
 

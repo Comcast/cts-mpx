@@ -3,7 +3,7 @@ require 'spec_helper'
 module Cts
   module Mpx
     describe Validators do
-      let(:reference) { Parameters.account_id }
+      let(:reference) { account_id }
 
       describe "::account_id?" do
         it { expect(described_class).to respond_to(:account_id?).with(1).arguments }
@@ -51,7 +51,7 @@ module Cts
       end
 
       describe "::reference?" do
-        let(:reference) { Parameters.account_id }
+        let(:reference) { account_id }
 
         it { expect(described_class).to respond_to(:reference?).with(1).arguments }
 

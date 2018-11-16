@@ -4,7 +4,7 @@ module Cts
   module Mpx
     module Services
       describe Ingest do
-        let(:user) { Parameters.user }
+        let(:user) { user }
 
         it { expect(described_class.class).to be Module }
 
@@ -40,7 +40,7 @@ module Cts
           let(:call_method) { :post }
           let(:call_params) do
             {
-              user:     Parameters.user,
+              user:     user,
               service:  'Ingest Service',
               endpoint: 'Publish',
               payload:  '<mrss> ... <mrss>'

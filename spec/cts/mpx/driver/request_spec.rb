@@ -12,8 +12,8 @@ module Cts
 
         describe '#call' do
           let(:request_method) { :get }
-          let(:request) { Request.create method: request_method, url: Parameters.account_id }
-          let(:socket) { Excon.new Parameters.account_id }
+          let(:request) { Request.create method: request_method, url: account_id }
+          let(:socket) { Excon.new account_id }
           let(:excon_response) { Excon::Response.new }
 
           before do
@@ -60,7 +60,7 @@ module Cts
           it "is expected to call Connections[] for a connection" do
             allow(Connections).to receive(:[]).and_call_original
             request.call
-            expect(Connections).to have_received(:[]).with Parameters.account_id
+            expect(Connections).to have_received(:[]).with account_id
           end
 
           it "is expected to call connection with the provided method" do

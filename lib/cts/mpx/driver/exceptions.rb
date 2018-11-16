@@ -40,7 +40,7 @@ module Cts
         # @raise [ArgumentError] if the keyword is not suppplied
         # @return [nil]
         def raise_unless_required_keyword?(keyword: nil)
-          raise ArgumentError, "#{keyword} is a required keyword." unless keyword && keyword
+          raise ArgumentError, "#{keyword} is a required keyword." unless keyword
         end
       end
     end

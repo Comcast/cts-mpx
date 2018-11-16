@@ -4,34 +4,13 @@ module Cts
   module Mpx
     module Services
       describe Data do
-        let(:request) { Driver::Request.new }
-        let(:response) { Driver::Response.new }
-        let(:user) { User.create username: 'a@nowhere.org', password: 'no', token: 'carpe diem' }
+        include_context "with request and response"
+        include_context "with media entry"
+        include_context "with user"
+
         let(:root_domain) { Driver.load_json_file('config/root_registry_sea1.json')['resolveDomainResponse'] }
-        let(:params_data) do
-          {
-            range:   '1-1',
-            entries: true,
-            count:   true,
-            sort:    'DESC'
-          }
-        end
-        let(:call_params) do
-          {
-            user:     user,
-            service:  'Media Data Service',
-            endpoint: 'Media',
-            query:    {}
-          }
-        end
-        let(:with_params) do
-          { method:  call_method,
-            url:     "http://data.media.theplatform.com/media/data/Media/feed",
-            query:   { token:  "token",
-                       schema: "1.7.0",
-                       form:   "json" },
-            headers: {} }
-        end
+        let(:call_params) { { user: user, service: media_service, endpoint: media_endpoint, query: {} } }
+        let(:with_params) { { method: call_method, url: "http://data.media.theplatform.com/media/data/Media/feed", query: {}, headers: {} } }
 
         before do
           allow(Driver::Request).to receive(:new).and_return request
@@ -42,7 +21,7 @@ module Cts
 
         it { expect(described_class.class).to be Module }
 
-        describe "Module method signatures" do
+        describe "Responds to" do
           it { is_expected.to respond_to(:[]).with(0..1).arguments }
           it { is_expected.to respond_to(:delete).with_keywords(:user, :account_id, :service, :endpoint, :sort, :extra_path, :range, :ids, :query, :headers, :count, :entries) }
           it { is_expected.to respond_to(:get).with_keywords(:user, :account_id, :service, :endpoint, :sort, :extra_path, :range, :ids, :query, :headers, :count, :entries, :fields) }
@@ -72,7 +51,7 @@ module Cts
           it { expect(described_class[service]).to be_instance_of Driver::Service }
         end
 
-        describe '::delete' do
+        describe '::delete', focus: true do
           let(:call_method) { :delete }
 
           include_examples 'call_constraints'

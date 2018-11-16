@@ -3,7 +3,7 @@ require 'spec_helper'
 module Cts
   module Mpx
     describe Services do
-      let(:user) { Parameters.user }
+      let(:user) { user }
       let(:service_name) { 'Access Data Service' }
 
       describe "Attributes" do

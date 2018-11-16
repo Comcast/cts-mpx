@@ -4,7 +4,9 @@ module Cts
   module Mpx
     describe Entry do
       include_context "with basic parameters"
-      include_context "with field and fields"
+      include_context "with field"
+      include_context "with media entry"
+      include_context "with page"
 
       let(:data) { { id: media_id } }
       let(:empty_entry) { described_class.new }

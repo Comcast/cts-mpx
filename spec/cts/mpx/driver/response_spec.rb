@@ -4,47 +4,7 @@ module Cts
   module Mpx
     module Driver
       describe Response do
-        let(:response) { Cts::Mpx::Driver::Response.create original: excon_response }
-        let(:excon_response) { Excon::Response.new body: body, headers: headers, status: 200 }
-        let(:headers) do
-          { "Access-Control-Allow-Origin" => "*",
-            "X-Cache"                     => "MISS from data.media.theplatform.com:80",
-            "Cache-Control"               => "max-age=0",
-            "Date"                        => "Tue, 15 May 2018 00:25:24 GMT",
-            "Content-Type"                => "application/json; charset=UTF-8",
-            "Content-Length"              => "2050",
-            "Server"                      => "Jetty(8.1.16.2)" }
-        end
-        let(:service_exception) do
-          {
-            "title"            => "ObjectNotFoundException",
-            "description"      => "Could not find object with ID q",
-            "isException"      => true,
-            "responseCode"     => 404,
-            "correlationId"    => "9a23ea0a-0975-4633-9af0-5f7fe3e83f2b",
-            "serverStackTrace" => "com.theplatform.data.api.exception.ObjectNotFoundException: ..."
-          }
-        end
-
-        let(:body) { Oj.dump page_hash }
-        let(:page_hash) do
-          {
-            "$xmlns"       => {
-              "pl1" => "http://access.auth.theplatform.com/account/data/Account/2051509925"
-            },
-            "startIndex"   => 1,
-            "itemsPerPage" => 1,
-            "entryCount"   => 1,
-            "entries"      => [
-              {
-                "id"      => "http://data.media.theplatform.com/media/data/AccountSettings/357280835864",
-                "guid"    => "cxotgIy9yxyqcr6ccO8DCe56lDkbqTSe",
-                "added"   => 1_415_856_204_000,
-                "ownerId" => "http://access.auth.theplatform.com/account/data/Account/2460535675"
-              }
-            ]
-          }
-        end
+        include_context "with request and response"
 
         it { is_expected.to be_a_kind_of Creatable }
 
@@ -75,7 +35,7 @@ module Cts
           it "is expected to call Oj.load against original.body" do
             allow(Oj).to receive(:load).and_call_original
             response.data
-            expect(Oj).to have_received(:load).with(body)
+            expect(Oj).to have_received(:load).with(excon_body)
           end
 
           it "is expected to return a hash" do
@@ -123,7 +83,7 @@ module Cts
           it "is expected to call Page.create with the entries and xmlns values extracted from the body." do
             allow(Page).to receive(:create)
             response.page
-            expect(Page).to have_received(:create).with entries: page_hash['entries'], xmlns: page_hash['$xmlns']
+            expect(Page).to have_received(:create).with entries: [], xmlns: nil
           end
 
           it "is expected to return an instance of Page" do

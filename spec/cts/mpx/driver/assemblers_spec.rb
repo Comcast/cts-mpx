@@ -4,6 +4,8 @@ module Cts
   module Mpx
     module Driver
       describe Assemblers do
+        include_context "with web parameters"
+
         let(:user) { User.create username: 'a', password: 'a', token: 'token' }
 
         describe "Module method signatures" do
@@ -26,7 +28,6 @@ module Cts
           before { Registry.initialize }
 
           it { is_expected.to require_keyword_arguments(:host, params) }
-
           it { expect { described_class.host(params) }.to raise_error_without_user_token(params[:user]) }
 
           context "when the service reference does not present a url" do
@@ -41,7 +42,7 @@ module Cts
         end
 
         describe "::path" do
-          let(:params) { { service: Parameters.web_service, endpoint: Parameters.web_endpoint } }
+          let(:params) { { service: web_service, endpoint: web_endpoint } }
 
           it { is_expected.to require_keyword_arguments(:path, params) }
 
@@ -84,7 +85,7 @@ module Cts
         end
 
         describe "::query" do
-          let(:params) { { user: user, service: Parameters.web_service, endpoint: Parameters.web_endpoint } }
+          let(:params) { { user: user, service: web_service, endpoint: web_endpoint } }
 
           it { expect { described_class.query(params) }.to raise_error_without_user_token(params[:user]) }
           it { is_expected.to require_keyword_arguments(:query, params) }

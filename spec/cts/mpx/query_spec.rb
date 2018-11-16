@@ -3,28 +3,17 @@ require 'spec_helper'
 module Cts
   module Mpx
     describe Query do
-      let(:endpoint) { 'Media' }
-      let(:id) { 'http://data.media.theplatform.com/media/data/Media/1' }
-      let(:service) { 'Media Data Service' }
+      include_context "with fields"
+      include_context "with media entry"
+      include_context "with request and response"
+      include_context "with user"
 
-      let(:body) { Oj.dump page_hash }
-      let(:excon_response) { Excon::Response.new body: body, status: 200 }
       let(:new_entry) { described_class.new }
-      let(:page_hash) do
-        {
-          "entries" => [{
-            "id"   => id,
-            "guid" => "1234"
-          }]
-        }
-      end
       let(:query) { described_class.new }
-      let(:response) { Cts::Mpx::Driver::Response.create original: excon_response }
-      let(:user) { Parameters.user }
 
       before do
         allow(described_class).to receive(:new).and_return new_entry
-        allow(Cts::Mpx::Services::Data).to receive(:get).and_return(response)
+        allow(Cts::Mpx::Services::Data).to receive(:get).and_return(populated_response)
       end
 
       it { is_expected.to be_a_kind_of Creatable }
@@ -56,22 +45,25 @@ module Cts
 
       describe "::entries" do
         before do
-          query.service = service
-          query.endpoint = endpoint
+          query.service = media_service
+          query.endpoint = media_endpoint
         end
 
-        it "is expected to call Entries.create_from_page with page" do
-          allow(Entries).to receive(:create_from_page).and_call_original
+        it "is expected to return an Entries class" do
           query.run user: user
-          query.entries
-          expect(Entries).to have_received(:create_from_page).with a_kind_of Driver::Page
+          expect(query.entries).to be_a_kind_of Entries
+        end
+
+        it "is expected to include the entries from the page" do
+          query.run user: user
+          expect(query.page.to_mpx_entries.first.to_h).to eq media_entry.to_h
         end
       end
 
       describe "::run" do
         before do
-          query.service = service
-          query.endpoint = endpoint
+          query.service = media_service
+          query.endpoint = media_endpoint
         end
 
         it { expect { query.run user: 1 }.to raise_argument_error(1, User) }
@@ -95,7 +87,7 @@ module Cts
         it "is expected to call Data.get with ..." do
           allow(Services::Data).to receive(:get).and_return response
           query.run user: user
-          expect(Services::Data).to have_received(:get).with(user: user, count: false, entries: true, endpoint: endpoint, service: service, query: {})
+          expect(Services::Data).to have_received(:get).with(user: user, count: false, entries: true, endpoint: media_endpoint, service: media_service, query: {})
         end
 
         it "is expected to set the response.page to @page" do
@@ -104,13 +96,7 @@ module Cts
       end
 
       describe "::to_h" do
-        before { Query.create(service: service, endpoint: endpoint).run(user: user) }
-
-        context "when include_entries is false" do
-          it "is expected to not include key entries" do
-            expect(query.to_h(include_entries: false)).not_to include(:entries)
-          end
-        end
+        before { Query.create(service: media_service, endpoint: media_endpoint).run(user: user) }
 
         it "is expected to include key params with currently set params" do
           expect(query.to_h[:params]).to eq query.send :params
@@ -122,6 +108,12 @@ module Cts
 
         it "is expected to be a hash" do
           expect(query.to_h).to be_a_kind_of Hash
+        end
+
+        context "when include_entries is false" do
+          it "is expected to not include key entries" do
+            expect(query.to_h(include_entries: false)).not_to include(:entries)
+          end
         end
       end
     end

@@ -4,7 +4,7 @@ module Cts
   module Mpx
     module Driver
       describe Service do
-        let(:account_id) { Parameters.account_id }
+        let(:account_id) { account_id }
         let(:root_account_id) { 'urn:theplatform:auth:root' }
         let(:service) { Services['User Data Service'] }
         let(:url) { "https://identity.auth.theplatform.com/idm" }
@@ -43,7 +43,7 @@ module Cts
 
           context "when the Registry.domain does not contain the account_id" do
             it "is expected to return nil"  do
-              expect(service.url(Parameters.account_id)).to eq nil
+              expect(service.url(account_id)).to eq nil
             end
           end
 

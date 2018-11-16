@@ -17,7 +17,7 @@ module Cts
           end
 
           it "is expected to return nil" do
-            expect(described_class.raise_unless_account_id(Parameters.account_id)).to be nil
+            expect(described_class.raise_unless_account_id(account_id)).to be nil
           end
         end
 
@@ -52,7 +52,7 @@ module Cts
           end
 
           it "is expected to return nil" do
-            expect(described_class.raise_unless_reference?(Parameters.account_id)).to be nil
+            expect(described_class.raise_unless_reference?(account_id)).to be nil
           end
         end
 

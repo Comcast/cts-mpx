@@ -59,7 +59,7 @@ module Cts
       # List of entries created from the page
       # @return [Entries] populated Entries object
       def entries
-        Entries.create_from_page @page
+        @page.to_mpx_entries
       end
 
       # Run the query
