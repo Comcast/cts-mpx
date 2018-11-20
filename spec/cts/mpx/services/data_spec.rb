@@ -50,133 +50,100 @@ module Cts::Mpx::Services
       it { expect(described_class[service]).to be_instance_of Driver::Service }
     end
 
-    describe '::delete' do
-      let(:call_method) { :delete }
-
-      include_examples 'call_constraints'
-      include_examples 'call_request', :delete
+    shared_context "with data call setup" do
+      let(:call_params) { { user: user, service: service, endpoint: endpoint, query: {} } }
+      let(:parent_class) { Cts::Mpx::Services::Data }
+      let(:with_parameters) { { method: described_class, url: "http://data.media.theplatform.com/media/data/Media/feed", query: { form: "cjson", schema: "1.7.0", token: "carpe diem" }, headers: {} } }
     end
 
-    describe "::get" do
+    shared_context "with put" do
+      include_context "with post"
+
+      let(:call_method) { :put }
+    end
+
+    shared_context "with post" do
+      include_context "with page objects"
+
+      let(:call_method) { :post }
+      metadata[:required_keywords].push 'page'
+      metadata[:keyword_types][:page] = Cts::Mpx::Driver::Page
+
+      before do
+        call_params[:page] = page
+        with_parameters[:payload] = Oj.dump(page_parameters)
+      end
+
+      it "is expected to call assembler_payload"
+    end
+
+    shared_context "with get" do
       let(:call_method) { :get }
 
       context "when fields is provided" do
-        before { call_params[:fields] = 'id,guid' }
+        before do
+          call_params[:fields] = 'id,guid'
+        end
 
         it "is expected to pass them to Request.call" do
           allow(Driver::Request).to receive(:create).and_call_original
-          described_class.send call_method, call_params
+          parent_class.send call_method, call_params
           expect(Driver::Request).to have_received(:create).with(a_hash_including(query: a_hash_including(fields: call_params[:fields])))
         end
       end
-
-      include_examples 'call_constraints'
-      include_examples 'call_request', :get
     end
 
-    shared_context "with data call setup" do
-      let(:call_params) { { user: user, service: service, endpoint: endpoint, query: {} } }
-      let(:call_parent) { Cts::Mpx::Services::Data }
-      let(:create_with_params) { { method: described_class, url: "http://data.media.theplatform.com/media/data/Media/feed", query: { form: "cjson", schema: "1.7.0", token: "carpe diem" }, headers: {} } }
-
-      before do
-        call_params[:page] = Driver::Page.create
-        create_with_params[:payload] = Oj.dump('xmlns' => {}, 'entries' => [])
-      end
+    shared_context "with delete" do
+      let(:call_method) { :delete }
     end
 
-    [:put, :post].each do |verb|
-      describe verb, method: verb, focus: true, required_keywords: ['user', 'service', 'endpoint', 'page'], keyword_types: { user: User, query: Hash, page: Driver::Page } do
+    describe_hash = {
+      required_keywords: ['user', 'service', 'endpoint'],
+      keyword_types:     { user: User, query: Hash, headers: Hash }
+    }
+
+    %i[delete get put post].each do |verb|
+      describe(verb,
+               method:            verb,
+               required_keywords: describe_hash[:required_keywords],
+               keyword_types:     describe_hash[:keyword_types]) do
         include_context "with data call setup", described_class
+        include_context "with #{verb}"
         include_examples "when the user is not logged in", described_class
         include_examples "when a required keyword isn't set", described_class
         include_examples "when a keyword is not a type of", described_class
 
-        it { expect(call_parent.send described_class, (call_params)).to be_a_kind_of(Driver::Response) }
+        it { expect(parent_class.send(described_class, call_params)).to be_a_kind_of(Driver::Response) }
 
         it "is expected to call Assemblers::host with user, service" do
           allow(Driver::Assemblers).to receive(:host).and_call_original
-          call_parent.send described_class,  call_params
-          expect(Driver::Assemblers).to have_received(:host).with service: service, user: user
+          parent_class.send described_class, call_params
+          expect(Driver::Assemblers).to have_received(:host).with a_hash_including(service: service, user: user)
         end
 
         it "is expected to call Assemblers::path with service, endpoint, and extra_path" do
           allow(Driver::Assemblers).to receive(:path).and_call_original
-          call_parent.send described_class,  call_params
-          expect(Driver::Assemblers).to have_received(:path).with service: service, endpoint: endpoint, extra_path: nil
+          parent_class.send described_class, call_params
+          expect(Driver::Assemblers).to have_received(:path).with a_hash_including(service: service, endpoint: endpoint)
         end
 
         it "is expected to call Assemblers::query with user, service, endpoint, query" do
           allow(Driver::Assemblers).to receive(:query).and_call_original
-          call_parent.send described_class,  call_params
-          expect(Driver::Assemblers).to have_received(:query).with account_id: nil, service: service, user: user, endpoint: endpoint, query: {}
+          parent_class.send described_class, call_params
+          expect(Driver::Assemblers).to have_received(:query).with a_hash_including(service: service, user: user, endpoint: endpoint, query: {})
         end
-
-        it "is expected to call assembler_payload"
 
         it "is expected to call Request.create with '...'" do
           allow(Driver::Request).to receive(:create).and_call_original
-          call_parent.send described_class, call_params
-          expect(Driver::Request).to have_received(:create).with create_with_params
+          parent_class.send described_class, call_params
+          expect(Driver::Request).to have_received(:create).with with_parameters
         end
 
         it "is expected to call request.call" do
-          call_parent.send described_class, call_params
+          parent_class.send described_class, call_params
           expect(request).to have_received(:call).with(no_args)
         end
       end
-    end
-
-    describe "::post", method: :post, required_keywords: ['user', 'service', 'endpoint', 'page'], keyword_types: { user: User, query: Hash, page: Driver::Page } do
-      include_context "with data call setup", metadata[:method]
-      include_examples "when the user is not logged in"
-      include_examples "when a required keyword isn't set"
-      include_examples "when a keyword is not a type of"
-
-      it { expect(Data.post(call_params)).to be_a_kind_of(Driver::Response) }
-
-      it "is expected to call Assemblers::host with user, service" do
-        allow(Driver::Assemblers).to receive(:host).and_call_original
-        Data.post call_params
-        expect(Driver::Assemblers).to have_received(:host).with service: service, user: user
-      end
-
-      it "is expected to call Assemblers::path with service, endpoint, and extra_path" do
-        allow(Driver::Assemblers).to receive(:path).and_call_original
-        Data.post call_params
-        expect(Driver::Assemblers).to have_received(:path).with service: service, endpoint: endpoint, extra_path: nil
-      end
-
-      it "is expected to call Assemblers::query with user, service, endpoint, query" do
-        allow(Driver::Assemblers).to receive(:query).and_call_original
-        Data.post call_params
-        expect(Driver::Assemblers).to have_received(:query).with account_id: nil, service: service, user: user, endpoint: endpoint, query: {}
-      end
-
-      it "is expected to call assembler_payload"
-
-      it "is expected to call Request.create with '...'" do
-        allow(Driver::Request).to receive(:create).and_call_original
-        Data.post call_params
-        expect(Driver::Request).to have_received(:create).with create_with_params
-      end
-
-      it "is expected to call request.call" do
-        Data.post call_params
-        expect(request).to have_received(:call).with(no_args)
-      end
-    end
-
-    describe "::put" do
-      let(:call_method) { :put }
-
-      before do
-        call_params[:page] = Driver::Page.create
-        create_with_params[:payload] = Oj.dump(xmlns: {}, entries: [])
-      end
-
-      include_examples 'call_constraints'
-      include_examples 'call_request', :put
     end
   end
 end

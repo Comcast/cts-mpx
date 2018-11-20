@@ -83,7 +83,7 @@ RSpec.shared_examples "when a required keyword isn't set" do
     metadata[:required_keywords].each do |keyword|
       it "#{keyword} is expected to raise a specific message" do
         call_params.delete keyword
-        expect(Services::Data.send(described_class, call_params)).to require_keyword_arguments call_parent, described_class, call_params
+        expect(Services::Data.send(described_class, call_params)).to require_keyword_arguments parent_class, described_class, call_params
       end
     end
   end
