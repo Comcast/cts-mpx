@@ -56,27 +56,6 @@ module Cts::Mpx::Services
       let(:with_parameters) { { method: described_class, url: "http://data.media.theplatform.com/media/data/Media/feed", query: { form: "cjson", schema: "1.7.0", token: "carpe diem" }, headers: {} } }
     end
 
-    shared_context "with put" do
-      include_context "with post"
-
-      let(:call_method) { :put }
-    end
-
-    shared_context "with post" do
-      include_context "with page objects"
-
-      let(:call_method) { :post }
-      metadata[:required_keywords].push 'page'
-      metadata[:keyword_types][:page] = Cts::Mpx::Driver::Page
-
-      before do
-        call_params[:page] = page
-        with_parameters[:payload] = Oj.dump(page_parameters)
-      end
-
-      it "is expected to call assembler_payload"
-    end
-
     shared_context "with get" do
       let(:call_method) { :get }
 
@@ -93,6 +72,29 @@ module Cts::Mpx::Services
       end
     end
 
+
+    shared_context "with post" do
+      include_context "with page objects"
+
+      let(:call_method) { :post }
+
+      metadata[:required_keywords].push 'page'
+      metadata[:keyword_types][:page] = Cts::Mpx::Driver::Page
+
+      before do
+        call_params[:page] = page
+        with_parameters[:payload] = Oj.dump(page_parameters)
+      end
+
+      it "is expected to call assembler_payload"
+    end
+
+    shared_context "with put" do
+      include_context "with post"
+
+      let(:call_method) { :put }
+    end
+
     shared_context "with delete" do
       let(:call_method) { :delete }
     end
@@ -103,14 +105,11 @@ module Cts::Mpx::Services
     }
 
     %i[delete get put post].each do |verb|
-      describe(verb,
-               method:            verb,
-               required_keywords: describe_hash[:required_keywords],
-               keyword_types:     describe_hash[:keyword_types]) do
+      describe verb, method: verb, required_keywords: describe_hash[:required_keywords], keyword_types: describe_hash[:keyword_types]  do
         include_context "with data call setup", described_class
         include_context "with #{verb}"
         include_examples "when the user is not logged in", described_class
-        include_examples "when a required keyword isn't set", described_class
+        include_examples "when a required keyword isn't set"
         include_examples "when a keyword is not a type of", described_class
 
         it { expect(parent_class.send(described_class, call_params)).to be_a_kind_of(Driver::Response) }

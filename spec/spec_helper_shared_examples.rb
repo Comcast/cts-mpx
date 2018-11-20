@@ -70,20 +70,19 @@ RSpec.shared_examples "call_request" do |method|
   end
 end
 
-RSpec.shared_examples "when the user is not logged in" do |method|
+RSpec.shared_examples "when the user is not logged in" do
   context "when the user is not logged in" do
     before { user.instance_variable_set :@token, nil }
 
-    it { expect { Services::Data.send method.to_sym, call_params }.to raise_error_without_user_token }
+    it { expect { parent_class.send described_class.to_sym, call_params }.to raise_error_without_user_token }
   end
 end
 
 RSpec.shared_examples "when a required keyword isn't set" do
-  context "when a required keyword isn't set" do
-    metadata[:required_keywords].each do |keyword|
-      it "#{keyword} is expected to raise a specific message" do
-        call_params.delete keyword
-        expect(Services::Data.send(described_class, call_params)).to require_keyword_arguments parent_class, described_class, call_params
+  metadata[:required_keywords].each do |keyword|
+    context "when a #{keyword} is not provided" do
+      it "is expected to raise an ArguementError with: #{keyword} is a required keyword." do
+        expect(parent_class.send(described_class, call_params)).to require_keyword_arguments described_class, call_params
       end
     end
   end
@@ -94,7 +93,7 @@ RSpec.shared_examples "when a keyword is not a type of" do |method|
     context "when #{k} is not a type of #{v}" do
       before { call_params[k] = '' }
 
-      it { expect { Services::Data.send method, call_params }.to raise_argument_exception call_params[k], v }
+      it { expect { parent_class.send method, call_params }.to raise_argument_exception call_params[k], v }
     end
   end
 end

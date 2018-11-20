@@ -1,17 +1,18 @@
-RSpec::Matchers.define :require_keyword_arguments do |call_class, method, params|
+RSpec::Matchers.define :require_keyword_arguments do |method, params|
   match do
-    params.each do |_arg|
+    params.each do |param|
       dup_params = Oj.load Oj.dump params
+      dup_params.delete param
       begin
-        call_class.send(method, dup_params)
+        parent_class.send(method, dup_params)
       rescue ArgumentError => e
-        return e.message.match?(/is a required keyword./)
+        return e.message.match?(/#{param} is a required keyword./)
       end
     end
   end
 
   description do
-    "raise an error if a required keyword #{params.keys} is missing."
+    "raise an error if a required keyword from #{params.keys} is missing."
   end
 
   failure_message do

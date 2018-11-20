@@ -1,25 +1,3 @@
-RSpec::Matchers.define :require_keyword_arguments do |method, params|
-  match do
-    params.each do |arg|
-      dup_params = Oj.load Oj.dump params
-      dup_params.delete arg[0]
-      begin
-        described_class.send(method, dup_params)
-      rescue ArgumentError => e
-        return e.message.match?(/#{arg} is a required keyword./)
-      end
-    end
-  end
-
-  description do
-    "raise an error if a required keyword #{params.keys} is missing."
-  end
-
-  failure_message do
-    "A required keyword from #{params.keys} failed to raise an ArgumentError with message 'is a required keyword.'"
-  end
-end
-
 RSpec::Matchers.define :raise_error_without_user_token do
   match do
     token = user.token

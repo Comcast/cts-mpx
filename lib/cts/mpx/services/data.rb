@@ -17,8 +17,10 @@ module Cts
           services = Services[].select { |s| s.type == 'data' }
           return services unless key
           raise ArgumentError, 'key must be a string' unless key.is_a? String
+
           service = services.find { |e| e.name == key }
           raise ArgumentError, "#{key} must be a service name." unless service
+
           service
         end
 
