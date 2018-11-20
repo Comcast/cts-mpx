@@ -158,9 +158,7 @@ module Cts
           expect(media_entry.save(user: user)).to be media_entry
         end
 
-
         context "when fields['ownerId'] is not set" do
-
           before { entry.fields['ownerId'] = nil }
 
           it { expect { entry.save user: user }.to raise_error ArgumentError, "fields['ownerId'] must be set" }

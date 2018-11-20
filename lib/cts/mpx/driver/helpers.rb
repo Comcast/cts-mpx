@@ -58,7 +58,7 @@ module Cts
         # @return [nil] nil
         #
         def required_arguments(keywords, a_binding)
-          keywords.each { |arg| Exceptions.raise_unless_required_keyword?(keyword: a_binding.local_variable_get(arg)) }
+          keywords.each { |keyword| Exceptions.raise_unless_required_keyword?(a_binding, keyword) }
           nil
         end
       end

@@ -5,10 +5,10 @@ RSpec::Matchers.define :raise_error_without_user_token do
     begin
       actual.call
     rescue RuntimeError => e
-      user.token = token
+      user.instance_variable_set :@token, token
       return e.message.match?(/#{user.username} is not signed in, \(token is set to nil\)\./)
     end
-    user.token = token
+    user.instance_variable_set :@token, token
     false
   end
 

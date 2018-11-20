@@ -74,7 +74,6 @@ module Cts
         # @return [Response] Response of the call
         def post(user: nil, account_id: nil, service: nil, endpoint: nil, extra_path: nil, query: {}, page: nil, headers: {}, method: :post)
           prep_call(user: user, account_id: account_id, service: service, query: query, headers: headers, required_arguments: ['user', 'service', 'endpoint', 'page'], page: page, binding: binding)
-
           host = Driver::Assemblers.host user: user, service: service
           path = Driver::Assemblers.path service: service, endpoint: endpoint, extra_path: extra_path
           query = Driver::Assemblers.query user: user, account_id: account_id, service: service, endpoint: endpoint, query: query

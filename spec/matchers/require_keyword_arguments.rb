@@ -1,9 +1,9 @@
-RSpec::Matchers.define :require_keyword_arguments do |method, params|
+RSpec::Matchers.define :require_keyword_arguments do |call_class, method, params|
   match do
     params.each do |_arg|
       dup_params = Oj.load Oj.dump params
       begin
-        described_class.send(method, dup_params)
+        call_class.send(method, dup_params)
       rescue ArgumentError => e
         return e.message.match?(/is a required keyword./)
       end

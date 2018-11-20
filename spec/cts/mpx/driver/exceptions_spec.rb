@@ -12,7 +12,6 @@ module Cts
 
         describe "::raise_unless_account_id" do
           context "when the argument is not an account_id" do
-
             it "is expected to raise a ArgumentError with is not a valid account_id " do
               expect { described_class.raise_unless_account_id(reference) }.to raise_error ArgumentError, /#{reference} is not a valid account_id/
             end
@@ -46,7 +45,6 @@ module Cts
         describe "::raise_unless_reference?" do
           it { expect(described_class).to respond_to(:raise_unless_reference?).with(1).argument }
           context "when the argument is not a reference" do
-
             it "is expected to raise a ArgumentError with is not a valid reference " do
               expect { described_class.raise_unless_reference?(reference) }.to raise_error ArgumentError, /#{reference} is not a valid reference/
             end

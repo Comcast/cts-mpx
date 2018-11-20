@@ -1,4 +1,4 @@
-RSpec::Matchers.define :raise_argument_error do |variable, variable_type|
+RSpec::Matchers.define :raise_argument_exception do |variable, variable_type|
   match do
     begin
       actual.call

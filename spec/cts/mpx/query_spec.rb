@@ -3,7 +3,7 @@ require 'spec_helper'
 module Cts
   module Mpx
     describe Query do
-      include_context "with fields"
+      include_context "with fields objects"
       include_context "with media objects"
       include_context "with user objects"
       include_context "with empty objects"

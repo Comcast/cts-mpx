@@ -39,8 +39,9 @@ module Cts
         # @param [Object] keyword keyword to assure is supplied
         # @raise [ArgumentError] if the keyword is not suppplied
         # @return [nil]
-        def raise_unless_required_keyword?(keyword: nil)
-          raise ArgumentError, "#{keyword} is a required keyword." unless keyword
+        def raise_unless_required_keyword?(a_binding, keyword)
+          value = a_binding.local_variable_get(keyword)
+          raise ArgumentError, "#{keyword} is a required keyword." unless value
         end
       end
     end

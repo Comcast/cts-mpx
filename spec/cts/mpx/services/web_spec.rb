@@ -73,7 +73,6 @@ module Cts
           end
         end
 
-
         describe "::post" do
           let(:call_method) { :post }
           let(:request_params) do
