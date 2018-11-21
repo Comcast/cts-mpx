@@ -78,22 +78,26 @@ RSpec.shared_examples "when the user is not logged in" do
   end
 end
 
-RSpec.shared_examples "when a required keyword isn't set" do
-  metadata[:required_keywords].each do |keyword|
-    context "when a #{keyword} is not provided" do
-      it "is expected to raise an ArguementError with: #{keyword} is a required keyword." do
-        expect(parent_class.send(described_class, call_params)).to require_keyword_arguments described_class, call_params
-      end
-    end
-  end
-end
-
 RSpec.shared_examples "when a keyword is not a type of" do |method|
   metadata[:keyword_types].each do |k, v|
     context "when #{k} is not a type of #{v}" do
       before { call_params[k] = '' }
 
       it { expect { parent_class.send method, call_params }.to raise_argument_exception call_params[k], v }
+    end
+  end
+end
+
+# metadata[:required_keywords] is an array of symbols
+# let(:parent_class) { Module or currently described class (Data, Assemblers)}
+# let(:described_class) { method in symbol form (:put, :post)}
+# let(:call_params) { parameters to pass to the send call}
+RSpec.shared_examples "when a required keyword isn't set" do
+  metadata[:required_keywords].each do |keyword|
+    context "when a #{keyword} is not provided" do
+      before { call_params.delete keyword }
+
+      it { expect { parent_class.send(described_class, call_params) }.to raise_error_without_required_keyword keyword }
     end
   end
 end

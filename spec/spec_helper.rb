@@ -7,6 +7,7 @@ require 'excon'
 require 'spec_helper_parameters'
 require 'spec_helper_shared_examples'
 require 'spec_helper_shared_contexts'
+require 'spec_helper_custom_matchers'
 
 Excon.defaults[:mock] = true # blocks outbound communication.
 

@@ -1,3 +1,26 @@
+RSpec::Matchers.define :raise_error_without_required_keyword do |keyword|
+  match do
+    begin
+      actual.call
+    rescue ArgumentError => e
+      return e.message.match?(/#{keyword} is a required keyword./)
+    end
+    false
+  end
+
+  def supports_block_expectations?
+    true
+  end
+
+  description do
+    "raise an ArgumentError with: '#{keyword} is a required keyword'"
+  end
+
+  failure_message do
+    "#{actual.source} did not raise an ArgumentException with: #{keyword} is a required keyword."
+  end
+end
+
 RSpec::Matchers.define :raise_error_without_user_token do
   match do
     token = user.token

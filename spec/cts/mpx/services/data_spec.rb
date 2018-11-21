@@ -7,6 +7,7 @@ module Cts::Mpx::Services
     include_context "with media objects"
     include_context "with user objects"
 
+    let(:parent_class) { Cts::Mpx::Services::Data }
     let(:root_domain) { Driver.load_json_file('config/root_registry_sea1.json')['resolveDomainResponse'] }
     let(:call_params) { { user: user, service: media_service, endpoint: media_endpoint, query: {} } }
     let(:with_params) { { method: call_method, url: "http://data.media.theplatform.com/media/data/Media/feed", query: { form: "cjson", schema: "1.7.0", token: "carpe diem" }, headers: {} } }
@@ -52,7 +53,6 @@ module Cts::Mpx::Services
 
     shared_context "with data call setup" do
       let(:call_params) { { user: user, service: service, endpoint: endpoint, query: {} } }
-      let(:parent_class) { Cts::Mpx::Services::Data }
       let(:with_parameters) { { method: described_class, url: "http://data.media.theplatform.com/media/data/Media/feed", query: { form: "cjson", schema: "1.7.0", token: "carpe diem" }, headers: {} } }
     end
 
@@ -71,7 +71,6 @@ module Cts::Mpx::Services
         end
       end
     end
-
 
     shared_context "with post" do
       include_context "with page objects"

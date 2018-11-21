@@ -28,7 +28,7 @@ module Cts
 
           before { Registry.initialize }
 
-          include_examples "when a required keyword isn't set", :host
+          include_examples "when a required keyword isn't set"
           include_examples "when the user is not logged in"
 
           it { expect { parent_class.host(call_params) }.to raise_error_without_user_token(call_params[:user]) }
@@ -44,7 +44,7 @@ module Cts
           end
         end
 
-        describe :path, required_keywords: [:user, :service, :endpoint] do
+        describe :path, required_keywords: [:service, :endpoint] do
           let(:call_params) { { service: service, endpoint: endpoint } }
 
           include_examples "when a required keyword isn't set"
