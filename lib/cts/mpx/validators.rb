@@ -27,6 +27,7 @@ module Cts
       def argument_error?(data, type = nil, &block)
         return block.yield if block
         return true unless type && data.is_a?(type)
+
         false
       end
 

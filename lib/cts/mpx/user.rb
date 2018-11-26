@@ -18,7 +18,7 @@ module Cts
       attribute name: 'password', kind_of: String
       attribute name: 'idle_timeout', kind_of: Integer
       attribute name: 'duration', kind_of: Integer
-      attribute name: 'token', kind_of: String
+      attribute name: 'token', kind_of: [String,NilClass]
 
       # Attempt to sign the user in with the provided credentials
       # @param [Numeric] idle_timeout how long the token will stay alive without communicating with the services
@@ -37,6 +37,7 @@ module Cts
         response = Services::Web.post user: self, service: 'User Data Service', endpoint: 'Authentication', method: 'signIn', arguments: arguments, headers: headers
 
         raise "sign_in exception, status: #{response.status}" unless response.status == 200
+
         self.token = response.data['signInResponse']['token']
         self
       end

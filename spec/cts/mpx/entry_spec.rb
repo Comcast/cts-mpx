@@ -10,6 +10,7 @@ module Cts
       include_context "with empty objects"
 
       let(:data) { { id: media_id } }
+      let(:parent_class) { Entry }
 
       it { is_expected.to be_a_kind_of Creatable }
 
@@ -27,39 +28,46 @@ module Cts
         it { expect(described_class).to respond_to(:load_by_id).with_keywords :user, :id }
       end
 
-      describe '::self.load_by_id' do
+      describe :load_by_id, required_keywords: %i[user id], keyword_types: {user: User} do
         include_context "with user objects"
         include_context "with request and response objects"
 
         let(:entries) { [{ "id" => media_id, "guid" => "123" }] }
+        let(:call_params) {{ user: user, id: media_id }}
 
         before do
-          allow(described_class).to receive(:new).and_return media_entry
+          allow(parent_class).to receive(:new).and_return media_entry
           allow(Cts::Mpx::Services::Data).to receive(:get).and_return(populated_response)
         end
 
-        it { is_expected.to require_keyword_arguments(:load_by_id, user: user, id: nil) }
+        # include_examples "when the user is not logged in"
+        include_examples "when a required keyword isn't set"
+        include_examples "when a keyword is not a type of", described_class
 
-        it { expect { described_class.load_by_id user: 1, id: media_id }.to raise_argument_error(1, User) }
-        it { expect { described_class.load_by_id user: user, id: 1 }.to raise_unless_reference(1, String) }
+        context "when id is not a reference" do
+          it "is expected to raise an ArgumentError" do
+            expect {parent_class.load_by_id user: user, id: 'a_string'}.to raise_error ArgumentError, /a_string is not a valid reference/
+          end
+        end
+        it { expect { parent_class.load_by_id user: user, id: 1 }.to raise_unless_reference(1, String) }
 
         it "is expected to create a new entry" do
-          described_class.load_by_id user: user, id: media_id
-          expect(described_class).to have_received(:new)
+          parent_class.load_by_id user: user, id: media_id
+          expect(parent_class).to have_received(:new)
         end
 
         it "is expected to set the id" do
-          e = described_class.load_by_id user: user, id: media_id
+          e = parent_class.load_by_id user: user, id: media_id
           expect(e.id).to eq media_id
         end
 
         it "is expected to call entry.load" do
           allow(entry).to receive(:load).and_return media_entry
-          described_class.load_by_id user: user, id: 'http://data.media.theplatform.com/media/data/Media/1'
+          parent_class.load_by_id user: user, id: media_id
           expect(media_entry).to have_received(:load)
         end
 
-        it { is_expected.to be_a_kind_of described_class }
+        it { expect(parent_class.load_by_id(call_params)).to be_a_kind_of parent_class }
       end
 
       describe '#id' do

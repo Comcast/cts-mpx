@@ -61,7 +61,7 @@ module Cts
           query.endpoint = media_endpoint
         end
 
-        it { expect { query.run user: 1 }.to raise_argument_error(1, User) }
+        it { expect { query.run user: 1 }.to raise_argument_exception(1, User) }
 
         context "when service is not set" do
           before { query.instance_variable_set :@service, nil }

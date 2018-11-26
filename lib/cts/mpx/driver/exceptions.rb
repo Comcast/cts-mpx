@@ -20,7 +20,7 @@ module Cts
         # @raise [ArgumentError] if the argument is not of the correct type
         # @return [nil]
         def raise_unless_argument_error?(data, type = nil, &block)
-          raise(ArgumentError, "#{data} is not a valid #{type}") if Validators.argument_error?(data, type, &block)
+          raise(ArgumentError, "#{data ||= 'nil'} is not a valid #{type}") if Validators.argument_error?(data, type, &block)
 
           nil
         end
@@ -42,6 +42,8 @@ module Cts
         def raise_unless_required_keyword?(a_binding, keyword)
           value = a_binding.local_variable_get(keyword)
           raise ArgumentError, "#{keyword} is a required keyword." unless value
+
+          nil
         end
       end
     end

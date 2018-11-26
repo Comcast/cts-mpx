@@ -60,7 +60,7 @@ module Cts
 
       describe '::add' do
         context "when the provided argument is not a kind of #{Entry}" do
-          it { expect { media_entries.add 1 }.to raise_argument_error(1, Entry) }
+          it { expect { media_entries.add 1 }.to raise_error ArgumentError, '1 is not a valid Cts::Mpx::Entry' }
         end
 
         context 'when the provided entry is already in @collections' do
@@ -87,7 +87,7 @@ module Cts
 
       describe '::remove' do
         context "when the provided field is not a kind of Field" do
-          it { expect { media_entries.add 1 }.to raise_argument_error(1, Entry) }
+          it { expect { media_entries.add 1 }.to raise_error ArgumentError, '1 is not a valid Cts::Mpx::Entry' }
         end
 
         it { expect { media_entries.remove media_entry }.to change(media_entries, :collection).to([]) }

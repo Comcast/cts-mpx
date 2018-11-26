@@ -16,7 +16,6 @@ module Cts
       # @return [Entry] the resulting entry
       def self.load_by_id(user: nil, id: nil, fields: nil, account_id: nil)
         Driver::Helpers.required_arguments %i[user id], binding
-
         Driver::Exceptions.raise_unless_argument_error? user, User
         Driver::Exceptions.raise_unless_reference? id
 

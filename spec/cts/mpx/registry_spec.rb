@@ -86,11 +86,11 @@ module Cts
         end
 
         context "when the user is not a Cts::Mpx::User object" do
-          it { expect { described_class.fetch_domain '1', account_id }.to raise_argument_error(1, 'User') }
+          it { expect { described_class.fetch_domain '1', account_id }.to raise_argument_exception(1, 'User') }
         end
 
         context "when the account_id is not a valid account_id" do
-          it { expect { described_class.fetch_domain user, '1' }.to raise_argument_error(1, 'account_id') }
+          it { expect { described_class.fetch_domain user, '1' }.to raise_argument_exception(1, 'account_id') }
         end
 
         context "when no account_id is supplied" do
@@ -124,13 +124,13 @@ module Cts
 
       describe "::store_domain" do
         context "when the account_id is not a valid account_id" do
-          it { expect { described_class.fetch_domain user, '1' }.to raise_argument_error(1, 'account_id') }
+          it { expect { described_class.fetch_domain user, '1' }.to raise_argument_exception(1, 'account_id') }
         end
 
         context "when the data is not a Hash object" do
           let(:result_hash) { 'not_a_hash' }
 
-          it { expect { described_class.store_domain(result_hash, account_id) }.to raise_argument_error(result_hash, Hash) }
+          it { expect { described_class.store_domain(result_hash, account_id) }.to raise_argument_exception(result_hash, Hash) }
         end
 
         it "is expected to store the result_hash in domains" do

@@ -112,7 +112,7 @@ module Cts
 
       describe '::add' do
         context "when the provided field is not a kind of Field" do
-          it { expect { fields.add(1) }.to raise_argument_error(1, Field) }
+          it { expect { fields.add(1) }.to raise_argument_exception(1, Field) }
         end
 
         context 'when the provided field is already in @collections' do
@@ -142,7 +142,7 @@ module Cts
         let(:data) { { id: media_id, service: media_service, endpoint: media_endpoint } }
 
         context "when data is not a hash" do
-          it { expect { fields.parse data: 1 }.to raise_argument_error(1, Hash) }
+          it { expect { fields.parse data: 1 }.to raise_argument_exception(1, Hash) }
         end
 
         context "when xmlns is provided" do
@@ -183,7 +183,7 @@ module Cts
 
       describe '::remove' do
         context "when the provided field is not a kind of Field" do
-          it { expect { fields.add(1) }.to raise_argument_error(1, Field) }
+          it { expect { fields.add(1) }.to raise_argument_exception(1, Field) }
         end
 
         it "is expected to remove the argument from @collection" do

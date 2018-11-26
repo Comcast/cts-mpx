@@ -145,7 +145,7 @@
      fetch_domain(user, account_id = 'urn:theplatform:auth:root')
      store_domain(data, account_id = 'urn:theplatform:auth:root')
      initialize
-     raise_argument_error(data, name)
+     raise_argument_exception(data, name)
  ]
  [<class> Service|
   |

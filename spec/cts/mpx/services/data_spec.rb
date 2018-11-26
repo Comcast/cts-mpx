@@ -77,7 +77,7 @@ module Cts::Mpx::Services
 
       let(:call_method) { :post }
 
-      metadata[:required_keywords].push 'page'
+      metadata[:required_keywords].push :page
       metadata[:keyword_types][:page] = Cts::Mpx::Driver::Page
 
       before do
@@ -99,7 +99,7 @@ module Cts::Mpx::Services
     end
 
     describe_hash = {
-      required_keywords: ['user', 'service', 'endpoint'],
+      required_keywords: %i[user service endpoint],
       keyword_types:     { user: User, query: Hash, headers: Hash }
     }
 
@@ -107,7 +107,7 @@ module Cts::Mpx::Services
       describe verb, method: verb, required_keywords: describe_hash[:required_keywords], keyword_types: describe_hash[:keyword_types]  do
         include_context "with data call setup", described_class
         include_context "with #{verb}"
-        include_examples "when the user is not logged in", described_class
+        include_examples "when the user is not logged in"
         include_examples "when a required keyword isn't set"
         include_examples "when a keyword is not a type of", described_class
 

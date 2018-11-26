@@ -78,7 +78,7 @@ RSpec.shared_context "with web parameters" do
   let(:endpoint) { 'Authentication' }
   let(:method) { 'signIn' }
   let(:payload) { {} }
-  let(:post_parameters) { assembler_parameters.merge(user: user, query: {}) }
+  let(:call_params) { assembler_parameters.merge(user: user, query: {}) }
   let(:service) { 'User Data Service' }
 end
 

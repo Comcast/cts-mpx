@@ -57,7 +57,9 @@ module Cts
 
         describe "::raise_unless_required_keyword?" do
           it "is expected to raise an error if required_keyword? returns false" do
-            expect { described_class.raise_unless_required_keyword? }.to raise_error ArgumentError, /is a required keyword./
+            b = binding.dup
+            b.local_variable_set(:arg, nil)
+            expect { described_class.raise_unless_required_keyword? b, :arg }.to raise_error ArgumentError, /is a required keyword./
           end
         end
       end
