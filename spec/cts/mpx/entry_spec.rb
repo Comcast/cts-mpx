@@ -28,12 +28,12 @@ module Cts
         it { expect(described_class).to respond_to(:load_by_id).with_keywords :user, :id }
       end
 
-      describe :load_by_id, required_keywords: %i[user id], keyword_types: {user: User} do
+      describe :load_by_id, required_keywords: %i[user id], keyword_types: { user: User } do
         include_context "with user objects"
         include_context "with request and response objects"
 
         let(:entries) { [{ "id" => media_id, "guid" => "123" }] }
-        let(:call_params) {{ user: user, id: media_id }}
+        let(:call_params) { { user: user, id: media_id } }
 
         before do
           allow(parent_class).to receive(:new).and_return media_entry
@@ -46,7 +46,7 @@ module Cts
 
         context "when id is not a reference" do
           it "is expected to raise an ArgumentError" do
-            expect {parent_class.load_by_id user: user, id: 'a_string'}.to raise_error ArgumentError, /a_string is not a valid reference/
+            expect { parent_class.load_by_id user: user, id: 'a_string' }.to raise_error ArgumentError, /a_string is not a valid reference/
           end
         end
         it { expect { parent_class.load_by_id user: user, id: 1 }.to raise_unless_reference(1, String) }

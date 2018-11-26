@@ -9,13 +9,13 @@ module Cts
 
         let(:parent_class) { Assemblers }
 
-        describe "Module method signatures"do
+        describe "Module method signatures" do
           it { expect(described_class).to respond_to(:host).with_keywords :user, :service }
           it { expect(described_class).to respond_to(:path).with_keywords :service, :endpoint, :ids, :extra_path }
           it { expect(described_class).to respond_to(:query).with_keywords :user, :account_id, :service, :endpoint, :query }
         end
 
-        describe :host, required_keywords: %i{user service} do
+        describe :host, required_keywords: %i[user service] do
           let(:call_params) { { user: user, service: 'Publish Data Service' } }
           let(:host) { "http://data.publish.theplatform.com" }
           let(:result_hash) do
@@ -44,7 +44,7 @@ module Cts
           end
         end
 
-        describe :path, required_keywords: [:service, :endpoint] do
+        describe :path, required_keywords: %i[service endpoint] do
           let(:call_params) { { service: service, endpoint: endpoint } }
 
           include_examples "when a required keyword isn't set"
@@ -89,7 +89,7 @@ module Cts
           end
         end
 
-        describe :query, required_keywords: [:user, :service, :endpoint] do
+        describe :query, required_keywords: %i[user service endpoint] do
           let(:call_params) { { user: user, service: service, endpoint: endpoint } }
 
           include_examples "when a required keyword isn't set"

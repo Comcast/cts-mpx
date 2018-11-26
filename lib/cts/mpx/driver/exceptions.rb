@@ -20,7 +20,7 @@ module Cts
         # @raise [ArgumentError] if the argument is not of the correct type
         # @return [nil]
         def raise_unless_argument_error?(data, type = nil, &block)
-          raise(ArgumentError, "#{data ||= 'nil'} is not a valid #{type}") if Validators.argument_error?(data, type, &block)
+          raise(ArgumentError, "#{data || 'nil'} is not a valid #{type}") if Validators.argument_error?(data, type, &block)
 
           nil
         end

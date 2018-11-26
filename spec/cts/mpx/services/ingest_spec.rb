@@ -35,7 +35,7 @@ module Cts
           it { expect(described_class[service]).to be_instance_of Driver::Service }
         end
 
-        describe :post, required_keywords: [:user, :service, :endpoint], keyword_types: {headers: Hash} do
+        describe :post, required_keywords: %i[user service endpoint], keyword_types: { headers: Hash } do
           let(:call_method) { :post }
           let(:call_params) do
             {
@@ -69,8 +69,8 @@ module Cts
           include_examples "when a keyword is not a type of", described_class
 
           {
-            host:    { user: User, service: String },
-            path:    { service: String, endpoint: String, extra_path: nil }
+            host: { user: User, service: String },
+            path: { service: String, endpoint: String, extra_path: nil }
           }.each do |assembler, required_arguments|
             it "is expected to call Assemblers:#{assembler} with #{required_arguments.keys}" do
               allow(Driver::Assemblers).to receive(assembler).and_call_original

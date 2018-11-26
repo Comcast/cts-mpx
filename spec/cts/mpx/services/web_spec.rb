@@ -110,9 +110,9 @@ module Cts
           it { expect(parent_class.send(described_class, call_params)).to be_a_kind_of(Driver::Response) }
 
           {
-            host:    { user: User, service: String },
-            path:    { service: String, endpoint: String, extra_path: nil },
-            query:   { user: User, service: String, endpoint: String, query: Hash }
+            host:  { user: User, service: String },
+            path:  { service: String, endpoint: String, extra_path: nil },
+            query: { user: User, service: String, endpoint: String, query: Hash }
           }.each do |assembler, required_arguments|
             it "is expected to call Assemblers:#{assembler} with #{required_arguments.keys}" do
               allow(Driver::Assemblers).to receive(assembler).and_call_original

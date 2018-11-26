@@ -27,9 +27,7 @@ module Cts
 
       # Return the id of the entry.
       # @return [Entry] the resulting entry
-      def id
-        @id
-      end
+      attr_reader :id
 
       # Set the id of the entry, will check if it's a valid reference.
       # @param [String] account_id account_id to set the entry to

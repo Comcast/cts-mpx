@@ -55,6 +55,11 @@ Style/FrozenStringLiteralComment:
 Style/MixinUsage:
   Exclude:
   - 'bin/*'
+  - 'spec/spec_helper_shared_examples.rb'
+
+# it's about the line count, and white space on the left.
+Style/ClassAndModuleChildren:
+  Enabled: false
 
 # Purty hashes.
 Layout/AlignHash:
@@ -82,6 +87,9 @@ Metrics/ParameterLists:
     - 'lib/cts/mpx/services/web.rb'
 
 RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/DescribeSymbol:
   Enabled: false
 
 Lint/Debugger:

@@ -9,10 +9,13 @@ RSpec.shared_examples 'registry_check' do |method|
       allow(Services[call_params[:service]]).to receive(:url?).and_return nil
     end
 
+    # rubocop: disable RSpec/MultipleExpectations
+    # reason, sometimes it just has to go down like that.
     it "is expected to call Registry.fetch_and_store_domain with the user and account" do
       expect { described_class.send method, call_params }.to raise_error(UncaughtThrowError)
       expect(Registry).to have_received(:fetch_and_store_domain).with(user, nil)
     end
+    # rubocop: enable RSpec/MultipleExpectations
   end
 end
 

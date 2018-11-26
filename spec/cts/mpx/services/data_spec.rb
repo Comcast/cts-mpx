@@ -102,7 +102,7 @@ module Cts::Mpx::Services
     }
 
     %i[delete get put post].each do |verb|
-      describe verb, method: verb, required_keywords: describe_hash[:required_keywords], keyword_types: describe_hash[:keyword_types]  do
+      describe verb, method: verb, required_keywords: describe_hash[:required_keywords], keyword_types: describe_hash[:keyword_types] do
         include_context "with data call setup", described_class
         include_context "with #{verb}"
         include_examples "when the user is not logged in"

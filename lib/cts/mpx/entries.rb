@@ -68,7 +68,7 @@ module Cts
       # A hash of all available entries
       # @return [Hash]
       def to_h
-        output = {xmlns: {}, entries: []}
+        output = { xmlns: {}, entries: [] }
 
         each do |entry|
           output[:entries].push entry.to_h[:entry]
