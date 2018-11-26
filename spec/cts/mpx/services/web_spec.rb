@@ -9,23 +9,20 @@ module Cts
         include_context "with request and response objects"
 
         it { expect(described_class.class).to be Module }
-
-        describe "Module method signatures" do
-          it { expect(described_class).to respond_to(:[]).with(0..1).arguments }
-          it { expect(described_class).to respond_to(:assemble_payload).with_keywords :service, :endpoint, :method, :arguments }
-          it { expect(described_class).to respond_to(:post).with_keywords :user, :account, :service, :endpoint, :method, :query, :arguments, :headers, :extra_path }
-          it { expect(described_class).to respond_to(:services).with(0).arguments }
-        end
+        it { expect(described_class).to respond_to(:[]).with(0..1).arguments }
+        it { expect(described_class).to respond_to(:assemble_payload).with_keywords :service, :endpoint, :method, :arguments }
+        it { expect(described_class).to respond_to(:post).with_keywords :user, :account, :service, :endpoint, :method, :query, :arguments, :headers, :extra_path }
+        it { expect(described_class).to respond_to(:services).with(0).arguments }
 
         describe "::[] (addressable method)" do
           let(:service) { 'User Data Service' }
 
           context "when the key is not a string" do
-            it { expect { described_class[1] }.to raise_argument_error(1, String) }
+            it { expect { described_class[1] }.to raise_unless_required_argument(1, String) }
           end
 
           context "when the key is not a service name" do
-            it { expect { described_class['1'] }.to raise_argument_error(nil, Cts::Mpx::Driver::Service) }
+            it { expect { described_class['1'] }.to raise_unless_required_argument(nil, Cts::Mpx::Driver::Service) }
           end
 
           context "when a key is not provided" do
@@ -40,42 +37,53 @@ module Cts
         end
 
         describe "::assemble_payload" do
+          include_context "with web parameters"
+
           it "is expected to look up the service in the service reference" do
             allow(Services).to receive(:[]).and_call_original
-            described_class.assemble_payload call_params
-            expect(Services).to have_received(:[]).with call_params[:service]
+            described_class.assemble_payload assembler_params
+            expect(Services).to have_received(:[]).with assembler_params[:service]
           end
 
-          it { is_expected.to require_keyword_arguments(:assemble_payload, call_params) }
+          %i[service endpoint method arguments].each do |key|
+            context "when #{key} is not supplied" do
+              before { assembler_params.delete key }
+
+              it { expect { described_class.assemble_payload assembler_params }.to raise_exception_without_required_keyword key }
+            end
+          end
 
           context "when the method is not valid" do
-            before { call_params[:method] = 'yabadabado' }
+            before { assembler_params[:method] = 'yabadabado' }
 
-            it { expect { described_class.assemble_payload call_params }.to raise_error ArgumentError, /is not a valid method/ }
+            it { expect { described_class.assemble_payload assembler_params }.to raise_error ArgumentError, /is not a valid method/ }
           end
 
           context "when any argument is not valid" do
-            before { call_params[:arguments] = { yaba: 'daba', doo: 'doo' } }
+            before { assembler_params[:arguments] = { yaba: 'daba', doo: 'doo' } }
 
-            it { expect { described_class.assemble_payload call_params }.to raise_error ArgumentError, /is not a valid argument/ }
+            it { expect { described_class.assemble_payload assembler_params }.to raise_error ArgumentError, /is not a valid argument/ }
           end
 
           it "is expected to embed the method on the first tier as a hash" do
-            expect(described_class.assemble_payload(call_params).keys).to eq [call_params[:method]]
+            expect(described_class.assemble_payload(assembler_params).keys).to eq [assembler_params[:method]]
           end
 
           it "is expected to embed the argument on the second tier" do
-            expect(described_class.assemble_payload(call_params)[call_params[:method]]).to eq call_params[:arguments]
+            expect(described_class.assemble_payload(assembler_params)[assembler_params[:method]]).to eq assembler_params[:arguments]
           end
 
           it "is expected to return a hash" do
-            expect(described_class.assemble_payload(call_params)).to be_a_kind_of Hash
+            expect(described_class.assemble_payload(assembler_params)).to be_a_kind_of Hash
           end
         end
 
-        describe "::post" do
+        describe(:post,
+                 required_keywords: ['user', 'service', 'endpoint', 'method', 'arguments'],
+                 keyword_types:     { query: Hash, headers: Hash, arguments: Hash }) do
+          let(:parent_class) { Cts::Mpx::Services::Web }
           let(:call_method) { :post }
-          let(:request_params) do
+          let(:with_params) do
             {
               method:  call_method,
               url:     "https://identity.auth.theplatform.com/idm/web/Authentication",
@@ -95,28 +103,49 @@ module Cts
             Registry.initialize
           end
 
-          it { expect { described_class.post(web_post_parameters) }.to raise_error_without_user_token }
-          it { is_expected.to require_keyword_arguments(:post, web_post_parameters) }
+          include_examples "when the user is not logged in"
+          include_examples "when a required keyword isn't set"
+          include_examples "when a keyword is not a type of", described_class
 
-          include_examples 'registry_check', :post
+          it { expect(parent_class.send(described_class, call_params)).to be_a_kind_of(Driver::Response) }
 
-          # include_examples 'call_assembler', :host, %i[user service]
-          # include_examples 'call_assembler', :path, %i[service endpoint]
-          # include_examples 'call_assembler', :query, %i[user service endpoint query]
+          {
+            host:    { user: User, service: String },
+            path:    { service: String, endpoint: String, extra_path: nil },
+            query:   { user: User, service: String, endpoint: String, query: Hash }
+          }.each do |assembler, required_arguments|
+            it "is expected to call Assemblers:#{assembler} with #{required_arguments.keys}" do
+              allow(Driver::Assemblers).to receive(assembler).and_call_original
+              parent_class.send described_class, call_params
+              expect(Driver::Assemblers).to have_received(assembler).with a_hash_including required_arguments
+            end
+          end
 
-          it "is expected to call Request.create with POST with url, query, and payload" do
+          it "is expected to call assemble_payload" do
+            allow(parent_class).to receive(:assemble_payload).and_return nil
+            parent_class.send :assemble_payload, assembler_params
+            expect(parent_class).to have_received(:assemble_payload).with assembler_params
+          end
+
+          it "is expected to call Request.create with '...'" do
             allow(Driver::Request).to receive(:create).and_call_original
-            described_class.post web_post_parameters
-            expect(Driver::Request).to have_received(:create).with(request_params)
+            parent_class.send described_class, call_params
+            expect(Driver::Request).to have_received(:create).with with_params
           end
 
           it "is expected to call request.call" do
-            described_class.post web_post_parameters
-            expect(request).to have_received(:call)
+            parent_class.send described_class, call_params
+            expect(request).to have_received(:call).with(no_args)
+          end
+
+          it "is expected to call Request.create with POST with url, query, and payload" do
+            allow(Driver::Request).to receive(:create).and_call_original
+            parent_class.post call_params
+            expect(Driver::Request).to have_received(:create).with(with_params)
           end
 
           it "is expected to return a Response object" do
-            expect(described_class.post(web_post_parameters)).to be_a_kind_of Driver::Response
+            expect(parent_class.post(call_params)).to be_a_kind_of Driver::Response
           end
         end
 

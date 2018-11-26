@@ -84,8 +84,6 @@ module Cts::Mpx::Services
         call_params[:page] = page
         with_parameters[:payload] = Oj.dump(page_parameters)
       end
-
-      it "is expected to call assembler_payload"
     end
 
     shared_context "with put" do
@@ -113,22 +111,16 @@ module Cts::Mpx::Services
 
         it { expect(parent_class.send(described_class, call_params)).to be_a_kind_of(Driver::Response) }
 
-        it "is expected to call Assemblers::host with user, service" do
-          allow(Driver::Assemblers).to receive(:host).and_call_original
-          parent_class.send described_class, call_params
-          expect(Driver::Assemblers).to have_received(:host).with a_hash_including(service: service, user: user)
-        end
-
-        it "is expected to call Assemblers::path with service, endpoint, and extra_path" do
-          allow(Driver::Assemblers).to receive(:path).and_call_original
-          parent_class.send described_class, call_params
-          expect(Driver::Assemblers).to have_received(:path).with a_hash_including(service: service, endpoint: endpoint)
-        end
-
-        it "is expected to call Assemblers::query with user, service, endpoint, query" do
-          allow(Driver::Assemblers).to receive(:query).and_call_original
-          parent_class.send described_class, call_params
-          expect(Driver::Assemblers).to have_received(:query).with a_hash_including(service: service, user: user, endpoint: endpoint, query: {})
+        {
+          host:  { user: User, service: String },
+          path:  { service: String, endpoint: String, extra_path: nil },
+          query: { user: User, service: String, endpoint: String, query: Hash }
+        }.each do |assembler, required_arguments|
+          it "is expected to call Assemblers:#{assembler} with #{required_arguments}" do
+            allow(Driver::Assemblers).to receive(assembler).and_call_original
+            parent_class.send described_class, call_params
+            expect(Driver::Assemblers).to have_received(assembler).with a_collection_including required_arguments
+          end
         end
 
         it "is expected to call Request.create with '...'" do

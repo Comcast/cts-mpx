@@ -74,11 +74,11 @@ RSpec.shared_context "with web parameters" do
   include_context "with user objects"
 
   let(:arguments) { { 'username' => user_name, 'password' => user_password } }
-  let(:assembler_parameters) { { service: service, endpoint: endpoint, method: method, arguments: arguments } }
+  let(:assembler_params) { { service: service, endpoint: endpoint, method: method, arguments: arguments } }
+  let(:call_params) { assembler_params.merge(user: user, query: {}) }
   let(:endpoint) { 'Authentication' }
   let(:method) { 'signIn' }
   let(:payload) { {} }
-  let(:call_params) { assembler_parameters.merge(user: user, query: {}) }
   let(:service) { 'User Data Service' }
 end
 
@@ -149,4 +149,7 @@ RSpec.shared_context "with empty objects" do
   let(:query) { Cts::Mpx::Query.new }
   let(:request) { Cts::Mpx::Driver::Request.new }
   let(:response) { Cts::Mpx::Driver::Response.new }
+end
+
+RSpec.shared_context "with assemblers" do
 end

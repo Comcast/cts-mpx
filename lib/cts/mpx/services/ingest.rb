@@ -13,6 +13,7 @@ module Cts
         # @return [Service] a service
         def [](key = nil)
           return services unless key
+
           Driver::Exceptions.raise_unless_argument_error?(key, String)
 
           service = services.find { |e| e.name == key }
