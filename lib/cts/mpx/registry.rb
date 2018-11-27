@@ -32,8 +32,8 @@ module Cts
         return domains['urn:theplatform:auth:root'] if account_id == 'urn:theplatform:auth:root'
 
         Driver::Exceptions.raise_unless_argument_error?(user, 'User') { !user.is_a? User }
-        Driver::Exceptions.raise_unless_argument_error?(account_id, 'account_id') { !Validators.account_id? account_id }
         user.token!
+        Driver::Exceptions.raise_unless_argument_error?(account_id, 'account_id') { !Validators.account_id? account_id }
 
         response = Services::Web.post user: user, service: 'Access Data Service', endpoint: 'Registry', method: 'resolveDomain', arguments: { 'accountId' => account_id }
         response.data['resolveDomainResponse']

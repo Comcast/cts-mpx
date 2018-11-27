@@ -150,6 +150,3 @@ RSpec.shared_context "with empty objects" do
   let(:request) { Cts::Mpx::Driver::Request.new }
   let(:response) { Cts::Mpx::Driver::Response.new }
 end
-
-RSpec.shared_context "with assemblers" do
-end
