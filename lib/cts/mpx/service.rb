@@ -53,6 +53,7 @@ module Cts
           Exceptions.raise_unless_account_id account_id
           reg = Registry.domains[account_id]
           return reg[name] if reg
+
           nil
         end
 
@@ -63,6 +64,7 @@ module Cts
           Exceptions.raise_unless_account_id account_id
           u = url account_id
           return true if u
+
           false
         end
       end

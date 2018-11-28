@@ -32,11 +32,9 @@ require 'cts/mpx/entry'
 require 'cts/mpx/entries'
 require 'cts/mpx/query'
 
-# Comcast Technical Solutions
-module Cts
-  # Media Platform
-  module Mpx
-    Services.initialize
-    Registry.initialize
-  end
+# Comcast Technical Solutions - Mpx
+module Cts::Mpx
+  Services.initialize
+  Registry.initialize
+  Driver::Connections.initialize
 end

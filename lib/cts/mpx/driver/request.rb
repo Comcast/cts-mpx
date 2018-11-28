@@ -44,6 +44,7 @@ module Cts
           params[:body] = payload if payload
 
           r = socket.send method, params
+
           @response = Response.create original: r
           @response
         end

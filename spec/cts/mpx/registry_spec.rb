@@ -13,7 +13,7 @@ module Cts::Mpx
     let(:parent_class) { Cts::Mpx::Registry }
     let(:described_method) { described_class }
 
-    # after { Registry.instance_variable_set(:@domains, root_account_id => root_domain) }
+    after { Registry.initialize }
 
     it { is_expected.to have_attributes(domains: an_instance_of(Hash)) }
     it { expect(parent_class).to respond_to(:fetch_and_store_domain).with(2).arguments }

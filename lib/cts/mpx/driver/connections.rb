@@ -11,7 +11,8 @@ module Cts
         # @return [Excon] assembled excon objects with service defaults.
         # @return [Excon[]] if nil, an array of all open connections.
         def [](uri = nil)
-          return @open_connections unless uri
+          return @collection unless uri
+
           begin
             parsed_uri = URI.parse uri
           rescue URI::InvalidURIError
@@ -20,15 +21,30 @@ module Cts
 
           raise ArgumentError, "(#{uri}) does not contain theplatform in it." unless parsed_uri.host&.include? "theplatform"
 
-          Excon.new([parsed_uri.scheme, parsed_uri.host].join("://"), persistent: true) unless @open_connections.include? parsed_uri.host
+          create_connection parsed_uri unless @collection.include? parsed_uri.host
+          @collection
         end
 
-        Excon.defaults[:headers] = {
-          'Content-Type'     => "application/json",
-          "User-Agent"       => "cts-mpx ruby sdk version #{Cts::Mpx::VERSION}",
-          'Content-Encoding' => 'bzip2,xz,gzip,deflate'
-        }
-        @open_connections = []
+        def create_connection(parsed_uri)
+          c = Excon.new([parsed_uri.scheme, parsed_uri.host].join("://"), persistent: true)
+          @collection.push c
+          c
+        end
+
+        def collection
+          @collection
+        end
+
+        def initialize
+          Excon.defaults[:persistent] = true
+          Excon.defaults[:headers] = {
+            'Content-Type'     => "application/json",
+            "User-Agent"       => "cts-mpx ruby sdk version #{Cts::Mpx::VERSION}",
+            'Content-Encoding' => 'bzip2,xz,gzip,deflate'
+          }
+
+          @collection = []
+        end
       end
     end
   end

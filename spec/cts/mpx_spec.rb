@@ -1,9 +1,13 @@
 require 'spec_helper'
 
 describe Cts::Mpx do
+  it "is expected to have called Driver::Connections.initialize" do
+    expect(Cts::Mpx::Driver::Connections[]).to eq []
+  end
   it "is expected to have loaded the service references" do
     expect(Cts::Mpx::Services['Media Data Service']).not_to be nil
   end
+
   it "is expected to have loaded the root registry" do
     expect(Cts::Mpx::Registry.domains).not_to be({})
   end
