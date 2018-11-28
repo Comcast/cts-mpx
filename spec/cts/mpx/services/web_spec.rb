@@ -17,23 +17,17 @@ module Cts
         describe "::[] (addressable method)" do
           let(:service) { 'User Data Service' }
 
-          context "when the key is not a string" do
-            it { expect { described_class[1] }.to raise_unless_required_argument(1, String) }
-          end
-
-          context "when the key is not a service name" do
-            it { expect { described_class['1'] }.to raise_unless_required_argument(nil, Cts::Mpx::Driver::Service) }
-          end
-
-          context "when a key is not provided" do
-            it { expect(described_class[]).to be_instance_of Array }
-          end
+          it { expect { described_class[1] }.to raise_unless_required_argument(1, String) }
+          it { expect { described_class['1'] }.to raise_unless_required_argument(nil, Cts::Mpx::Driver::Service) }
+          it { expect(described_class[service]).to be_instance_of Driver::Service }
 
           it "is expected to equal Web.services (web type only)" do
             expect(described_class[]).to eq described_class.services
           end
 
-          it { expect(described_class[service]).to be_instance_of Driver::Service }
+          context "when a key is not provided" do
+            it { expect(described_class[]).to be_instance_of Array }
+          end
         end
 
         describe "::assemble_payload" do
@@ -73,13 +67,11 @@ module Cts
             expect(described_class.assemble_payload(assembler_params)[assembler_params[:method]]).to eq assembler_params[:arguments]
           end
 
-          it "is expected to return a hash" do
-            expect(described_class.assemble_payload(assembler_params)).to be_a_kind_of Hash
-          end
+          it { expect(described_class.assemble_payload(assembler_params)).to be_a_kind_of Hash }
         end
 
         describe(:post,
-                 required_keywords: ['user', 'service', 'endpoint', 'method', 'arguments'],
+                 required_keywords: %i[user service endpoint method arguments],
                  keyword_types:     { query: Hash, headers: Hash, arguments: Hash }) do
           let(:parent_class) { Cts::Mpx::Services::Web }
           let(:call_method) { :post }
@@ -103,9 +95,9 @@ module Cts
             Registry.initialize
           end
 
-          include_examples "when the user is not logged in"
           include_examples "when a required keyword isn't set"
           include_examples "when a keyword is not a type of", described_class
+          include_examples "when the user is not logged in"
 
           it { expect(parent_class.send(described_class, call_params)).to be_a_kind_of(Driver::Response) }
 

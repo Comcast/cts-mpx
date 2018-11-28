@@ -13,7 +13,7 @@ RSpec::Matchers.define :raise_argument_exception do |variable, variable_type|
   end
 
   description do
-    "raise an error if the argument is not a(n) #{variable_type}"
+    "have raised an error if the argument is not a(n) #{variable_type}"
   end
 
   failure_message do
@@ -36,11 +36,11 @@ RSpec::Matchers.define :raise_exception_without_required do |keyword|
   end
 
   description do
-    "raise an ArgumentError with: '#{keyword} is a required'"
+    "have raised an ArgumentError when #{keyword} is not provided."
   end
 
   failure_message do
-    "#{actual.source} did not raise an ArgumentException with: #{keyword} is a required"
+    "#{actual.source} did not raise an ArgumentError with: /^#{keyword} is a required/"
   end
 end
 
@@ -63,7 +63,7 @@ RSpec::Matchers.define :raise_error_without_user_token do
   end
 
   description do
-    "raise an error if the user does not have a token."
+    "have raised an ArgumentError when the user is not signed in (token is nil)"
   end
 
   failure_message do

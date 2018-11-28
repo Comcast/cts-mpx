@@ -20,7 +20,7 @@ RSpec.shared_examples "when a keyword is not a type of" do |method|
                                end
       end
 
-      it { expect { parent_class.send method, call_params }.to raise_argument_exception call_params[keyword], value }
+      it { expect { parent_class.send(method, call_params) }.to raise_argument_exception call_params[keyword], value }
     end
   end
 end

@@ -68,10 +68,8 @@ module Cts
           include_examples "when a required keyword isn't set"
           include_examples "when a keyword is not a type of", described_class
 
-          {
-            host: { user: User, service: String },
-            path: { service: String, endpoint: String, extra_path: nil }
-          }.each do |assembler, required_arguments|
+          { host: { user: User, service: String }, path: { service: String, endpoint: String, extra_path: nil } }
+            .each do |assembler, required_arguments|
             it "is expected to call Assemblers:#{assembler} with #{required_arguments.keys}" do
               allow(Driver::Assemblers).to receive(assembler).and_call_original
               parent_class.send described_class, call_params
