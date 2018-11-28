@@ -15,28 +15,21 @@ module Cts
       end
 
       it { is_expected.to be_a_kind_of Creatable }
-
-      describe "Attributes" do
-        it { is_expected.to have_attributes(account_id: nil) }
-        it { is_expected.to have_attributes(endpoint: nil) }
-        it { is_expected.to have_attributes(extra_path: nil) }
-        it { is_expected.to have_attributes(fields: nil) }
-        it { is_expected.to have_attributes(ids: nil) }
-        it { is_expected.to have_attributes(page: a_kind_of(Driver::Page)) }
-        it { is_expected.to have_attributes(query: {}) }
-        it { is_expected.to have_attributes(range: nil) }
-        it { is_expected.to have_attributes(return_count: false) }
-        it { is_expected.to have_attributes(return_entries: true) }
-        it { is_expected.to have_attributes(service: nil) }
-        it { is_expected.to have_attributes(sort: nil) }
-      end
-
-      describe "Responds to" do
-        it { expect(described_class).to respond_to(:create) }
-        it { is_expected.to respond_to(:entries).with(0).arguments }
-        it { is_expected.to respond_to(:to_h).with(0).arguments.and_keywords(:include_entries) }
-        it { is_expected.to respond_to(:run).with(0).arguments.and_keywords(:user) }
-      end
+      it { is_expected.to have_attributes(account_id: nil) }
+      it { is_expected.to have_attributes(endpoint: nil) }
+      it { is_expected.to have_attributes(extra_path: nil) }
+      it { is_expected.to have_attributes(fields: nil) }
+      it { is_expected.to have_attributes(ids: nil) }
+      it { is_expected.to have_attributes(page: a_kind_of(Driver::Page)) }
+      it { is_expected.to have_attributes(query: a_kind_of(Hash)) }
+      it { is_expected.to have_attributes(range: nil) }
+      it { is_expected.to have_attributes(return_count: false) }
+      it { is_expected.to have_attributes(return_entries: true) }
+      it { is_expected.to have_attributes(service: nil) }
+      it { is_expected.to have_attributes(sort: nil) }
+      it { is_expected.to respond_to(:entries).with(0).arguments }
+      it { is_expected.to respond_to(:run).with(0).arguments.and_keywords(:user) }
+      it { is_expected.to respond_to(:to_h).with(0).arguments.and_keywords(:include_entries) }
 
       describe "::entries" do
         before do

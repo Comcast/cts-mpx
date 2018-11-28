@@ -5,25 +5,21 @@ module Cts
     module Driver
       describe Service do
         include_context "with parameters"
+
         let(:service) { Services[ident_service] }
         let(:url) { ident_endpoint }
 
-        describe "Attributes" do
-          it { is_expected.to have_attributes(endpoints: []) }
-          it { is_expected.to have_attributes(form: "") }
-          it { is_expected.to have_attributes(name: "") }
-          it { is_expected.to have_attributes(path: "") }
-          it { is_expected.to have_attributes(read_only: false) }
-          it { is_expected.to have_attributes(schema: "") }
-          it { is_expected.to have_attributes(search_schema: "") }
-          it { is_expected.to have_attributes(type: nil) }
-          it { is_expected.to have_attributes(uri_hint: "") }
-        end
-
-        describe "Instance method signatures" do
-          it { is_expected.to respond_to(:url).with(0..1).argument }
-          it { is_expected.to respond_to(:url?).with(0..1).argument }
-        end
+        it { is_expected.to have_attributes(endpoints: a_kind_of(Array)) }
+        it { is_expected.to have_attributes(form: a_kind_of(String)) }
+        it { is_expected.to have_attributes(name: a_kind_of(String)) }
+        it { is_expected.to have_attributes(path: a_kind_of(String)) }
+        it { is_expected.to have_attributes(read_only: false) }
+        it { is_expected.to have_attributes(schema: a_kind_of(String)) }
+        it { is_expected.to have_attributes(search_schema: a_kind_of(String)) }
+        it { is_expected.to have_attributes(type: nil) }
+        it { is_expected.to have_attributes(uri_hint: a_kind_of(String)) }
+        it { is_expected.to respond_to(:url).with(0..1).argument }
+        it { is_expected.to respond_to(:url?).with(0..1).argument }
 
         describe "::url" do
           context 'when the account_id is not an account_id' do

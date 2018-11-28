@@ -7,20 +7,14 @@ module Cts
       let(:token) { 'a_token' }
 
       it { is_expected.to be_a_kind_of Creatable }
-
-      describe "Attributes" do
-        it { is_expected.to have_attributes(username: nil) }
-        it { is_expected.to have_attributes(password: nil) }
-        it { is_expected.to have_attributes(idle_timeout: nil) }
-        it { is_expected.to have_attributes(duration: nil) }
-        it { is_expected.to have_attributes(token: nil) }
-      end
-
-      describe "Instance methods" do
-        it { is_expected.to respond_to(:sign_out).with(0).arguments }
-        it { is_expected.to respond_to(:token!).with(0).arguments }
-        it { is_expected.to respond_to(:sign_in).with_keywords(:idle_timeout, :duration) }
-      end
+      it { is_expected.to have_attributes(duration: nil) }
+      it { is_expected.to have_attributes(idle_timeout: nil) }
+      it { is_expected.to have_attributes(password: nil) }
+      it { is_expected.to have_attributes(token: nil) }
+      it { is_expected.to have_attributes(username: nil) }
+      it { is_expected.to respond_to(:sign_in).with_keywords(:idle_timeout, :duration) }
+      it { is_expected.to respond_to(:sign_out).with(0).arguments }
+      it { is_expected.to respond_to(:token!).with(0).arguments }
 
       describe "::inspect" do
         before { user.token = '1234' }

@@ -3,56 +3,23 @@ require 'spec_helper'
 module Cts
   module Mpx
     describe Fields do
-      # let(:data) do
-      #   {
-      #     id:       id,
-      #     service:  service,
-      #     endpoint: endpoint
-      #   }
-      # end
-
-      # let(:endpoint) { 'Media' }
-      # let(:id) { 'http://data.media.theplatform.com/media/data/Media/1' }
-      # let(:service) { 'Media Data Service' }
-
-      # let(:fields) { described_class.new }
-      # let(:id_field) { Field.create name: 'id', value: 'value' }
-      # let(:guid_field) { Field.create name: 'guid', value: 'value' }
-      # let(:custom_field) { Field.create name: '$uuid', xmlns: { 'custom' => 'uuid' } }
-      # let(:xmlns) { { "custom" => 'namespace://' } }
-      # let(:loadable_hash) do
-      #   {
-      #     xmlns: xmlns,
-      #     entry: data
-      #   }
-      # end
       include_context "with field objects"
       include_context "with empty objects"
 
-      it { is_expected.to be_a_kind_of Enumerable }
+      it { expect(described_class).to respond_to(:create_from_data).with_keywords :data, :xmlns }
       it { is_expected.to be_a_kind_of Creatable }
-
-      describe "Attributes" do
-        it { is_expected.to have_attributes(collection: []) }
-      end
-
-      describe "Class methods" do
-        it { expect(described_class).to respond_to(:create) }
-        it { expect(described_class).to respond_to(:create_from_data).with_keywords :data, :xmlns }
-      end
-
-      describe "Instance methods" do
-        it { is_expected.to respond_to(:[]).with(0..1).arguments }
-        it { is_expected.to respond_to(:[]=).with(2).arguments.and_keywords(:xmlns) }
-        it { is_expected.to respond_to(:add).with(1).argument }
-        it { is_expected.to respond_to(:each) }
-        it { is_expected.to respond_to(:parse).with_keywords :xmlns, :data }
-        it { is_expected.to respond_to(:remove).with(1).argument }
-        it { is_expected.to respond_to(:reset).with(0).arguments }
-        it { is_expected.to respond_to(:to_h).with(0).arguments }
-        it { is_expected.to respond_to(:to_s).with(0).arguments }
-        it { is_expected.to respond_to(:xmlns).with(0).arguments }
-      end
+      it { is_expected.to be_a_kind_of Enumerable }
+      it { is_expected.to have_attributes(collection: a_kind_of(Array)) }
+      it { is_expected.to respond_to(:[]).with(0..1).arguments }
+      it { is_expected.to respond_to(:[]=).with(2).arguments.and_keywords(:xmlns) }
+      it { is_expected.to respond_to(:add).with(1).argument }
+      it { is_expected.to respond_to(:each) }
+      it { is_expected.to respond_to(:parse).with_keywords :xmlns, :data }
+      it { is_expected.to respond_to(:remove).with(1).argument }
+      it { is_expected.to respond_to(:reset).with(0).arguments }
+      it { is_expected.to respond_to(:to_h).with(0).arguments }
+      it { is_expected.to respond_to(:to_s).with(0).arguments }
+      it { is_expected.to respond_to(:xmlns).with(0).arguments }
 
       describe '::self.create_from_data' do
         let(:data) { {} }

@@ -4,20 +4,16 @@ module Cts
   module Mpx
     describe Services do
       include_context "with user objects"
+
       let(:service_name) { 'Access Data Service' }
 
-      describe "Attributes" do
-        it { is_expected.to have_attributes(reference: an_instance_of(Hash)) }
-        it { is_expected.to have_attributes(types: %i[web data ingest]) }
-      end
-
-      describe "Module method signatures" do
-        it { is_expected.to respond_to(:[]).with(0..1).arguments }
-        it { is_expected.to respond_to(:load_reference_file).with_keywords(:file, :file) }
-        it { is_expected.to respond_to(:load_references).with(0).arguments }
-        it { is_expected.to respond_to(:load_services).with(0).arguments }
-        it { is_expected.to respond_to(:reference).with(0..1).arguments }
-      end
+      it { is_expected.to have_attributes(reference: an_instance_of(Hash)) }
+      it { is_expected.to have_attributes(types: %i[web data ingest]) }
+      it { is_expected.to respond_to(:[]).with(0..1).arguments }
+      it { is_expected.to respond_to(:load_reference_file).with_keywords(:file, :file) }
+      it { is_expected.to respond_to(:load_references).with(0).arguments }
+      it { is_expected.to respond_to(:load_services).with(0).arguments }
+      it { is_expected.to respond_to(:reference).with(0..1).arguments }
 
       describe '::[]' do
         let(:result) { described_class[service_name] }

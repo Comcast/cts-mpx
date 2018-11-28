@@ -10,19 +10,9 @@ module Cts
         it { is_expected.to be_a_kind_of Enumerable }
         it { is_expected.to be_a_kind_of Page }
         it { is_expected.to be_a_kind_of Creatable }
-
-        describe "Attributes" do
-          it { is_expected.to have_attributes(entries: an_instance_of(Array)) }
-          it { is_expected.to have_attributes(xmlns: an_instance_of(Hash)) }
-        end
-
-        describe "Class method signatures" do
-          it { expect(described_class).to respond_to(:create) }
-        end
-
-        describe "Instance method signatures" do
-          it { is_expected.to respond_to(:to_s).with(1).arguments }
-        end
+        it { is_expected.to have_attributes(entries: an_instance_of(Array)) }
+        it { is_expected.to have_attributes(xmlns: an_instance_of(Hash)) }
+        it { is_expected.to respond_to(:to_s).with(1).arguments }
 
         describe "::to_s" do
           let(:entries) { [{ "id" => "http://data.media.theplatform.com/media/data/Media/1", "guid" => "123" }] }
