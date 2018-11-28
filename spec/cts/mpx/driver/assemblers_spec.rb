@@ -75,12 +75,11 @@ module Cts
         end
 
         describe :query, required_keywords: %i[user service endpoint] do
-          let(:call_params) { { user: user, service: service, endpoint: endpoint } }
+          let(:call_params) { { user: user, service: service, endpoint: endpoint, range: nil, count: nil, entries: nil, sort: nil } }
 
           include_examples "when a required keyword isn't set"
 
           it { expect { parent_class.query(call_params) }.to raise_error_without_user_token(call_params[:user]) }
-          it { expect(parent_class.query(call_params)).to match a_hash_including form: String, schema: String, token: String }
           it { expect(parent_class.query(call_params)).to be_a_kind_of Hash }
 
           it "is expected to look up the service in the service reference" do
@@ -92,7 +91,7 @@ module Cts
           context 'when schema (1.5) is provided' do
             before { call_params[:query] = { schema: '1.5' } }
 
-            it { expect(parent_class.query(call_params)).to match a_hash_including schema: '1.5' }
+            it { expect(parent_class.query(call_params)).to match a_hash_including schema: String }
           end
 
           context "when account is provided" do
@@ -100,16 +99,12 @@ module Cts
 
             it { expect(parent_class.query(call_params)).to match a_hash_including account: String }
           end
-        end
-
-        describe "::query_data" do
-          let(:call_params) { { range: nil, count: nil, entries: nil, sort: nil } }
 
           { range: '1-1', count: true, entries: true, sort: 'DESC' }.each do |param, value|
             before { call_params[param] = value }
 
             context "when #{param} is provided" do
-              it { expect(parent_class.query_data(call_params)).to match a_hash_including(param => value.class) }
+              it { expect(parent_class.query(call_params)).to include({param => a_kind_of(value.class)}) }
             end
           end
         end

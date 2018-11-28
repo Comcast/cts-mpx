@@ -136,6 +136,13 @@ module Cts
           media_entry.fields['ownerId'] = account_id
           allow(Driver::Page).to receive(:create).and_return populated_page
           allow(Services::Data).to receive(:put).and_return populated_response
+          allow(Services[media_service]).to receive(:url?).and_return nil
+        end
+
+        it "is expected to call Registry.fetch_and_store_domain with the user and account" do
+          allow(Registry).to receive(:fetch_and_store_domain).and_throw :yo
+          expect { media_entry.save user: user }.to raise_error(UncaughtThrowError)
+          expect(Registry).to have_received(:fetch_and_store_domain).with(account_id: account_id, user: user)
         end
 
         it "is expected to create a page populated with data" do

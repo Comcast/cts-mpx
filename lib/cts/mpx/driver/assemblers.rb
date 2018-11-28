@@ -62,33 +62,16 @@ module Cts
 
           service = Services[].find { |s| s.name == service && s.endpoints.include?(endpoint) }
 
-          h = {}
-          if service.type == 'data'
-            h.merge!(token: user.token, schema: service.schema, form: service.form)
-            h.merge!(query_data(range: range, count: count, entries: entries, sort: sort))
-          else
-            h.merge!(token: user.token, schema: service.endpoints[endpoint]['schema'], form: service.form)
-          end
-
-          h[:account] = account_id if account_id
-          h.delete :token if user.token == 'sign_in_token'
-          h.merge! query
-          h
-        end
-
-        # Assembles range, count, entries, sort into a query
-        # @param [String] range string (service) format of a range.
-        # @param [TrueFalse] count ask for a count of objects from the services.
-        # @param [TrueFalse] entries return an array of entries.
-        # @param [String] sort set the sort field
-        # @return [Hash] assembled query for a data call
-        def query_data(range: nil, count: nil, entries: nil, sort: nil)
-          h = {}
-          h.store :range, range if range
-          h.store :count, count if count
-          h.store :entries, entries if entries
-          h.store :sort, sort if sort
-          h
+         {
+            account: account_id || nil,
+            count:   count || nil,
+            entries: entries || nil,
+            form:    service.form,
+            range:   range || nil,
+            schema:  service.type == 'data' ? service.schema : service.endpoints[endpoint]['schema'],
+            sort:    sort || nil,
+            token:   user.token == 'sign_in_token' ? user.token : nil
+          }.merge query
         end
       end
     end

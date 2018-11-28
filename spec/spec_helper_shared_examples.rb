@@ -1,24 +1,5 @@
 include Cts::Mpx
 
-RSpec.shared_examples 'registry_check' do |method|
-  include_context "with web parameters"
-
-  context "when the url is not availble locally" do
-    before do
-      allow(Registry).to receive(:fetch_and_store_domain).and_throw :yo
-      allow(Services[call_params[:service]]).to receive(:url?).and_return nil
-    end
-
-    # rubocop: disable RSpec/MultipleExpectations
-    # reason, sometimes it just has to go down like that.
-    it "is expected to call Registry.fetch_and_store_domain with the user and account" do
-      expect { described_class.send method, call_params }.to raise_error(UncaughtThrowError)
-      expect(Registry).to have_received(:fetch_and_store_domain).with(user, nil)
-    end
-    # rubocop: enable RSpec/MultipleExpectations
-  end
-end
-
 RSpec.shared_examples "when the user is not logged in" do
   context "when the user is not logged in" do
     before { user.instance_variable_set :@token, nil }
