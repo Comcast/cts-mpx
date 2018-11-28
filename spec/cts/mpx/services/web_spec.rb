@@ -49,7 +49,7 @@ module Cts
             context "when #{key} is not supplied" do
               before { assembler_params.delete key }
 
-              it { expect { described_class.assemble_payload assembler_params }.to raise_exception_without_required_keyword key }
+              it { expect { described_class.assemble_payload assembler_params }.to raise_exception_without_required key }
             end
           end
 

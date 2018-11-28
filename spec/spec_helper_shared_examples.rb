@@ -53,7 +53,7 @@ RSpec.shared_examples "when a required keyword isn't set" do
     context "when a #{keyword} is not provided" do
       before { call_params[keyword] = nil }
 
-      it { expect { parent_class.send(described_class, call_params) }.to raise_exception_without_required_keyword keyword }
+      it { expect { parent_class.send(described_class, call_params) }.to raise_exception_without_required keyword }
     end
   end
 end

@@ -21,12 +21,12 @@ RSpec::Matchers.define :raise_argument_exception do |variable, variable_type|
   end
 end
 
-RSpec::Matchers.define :raise_exception_without_required_keyword do |keyword|
+RSpec::Matchers.define :raise_exception_without_required do |keyword|
   match do
     begin
       actual.call
     rescue ArgumentError => e
-      return e.message.match?(//)
+      return e.message.match?(/#{keyword} is a required/)
     end
     false
   end
@@ -36,11 +36,11 @@ RSpec::Matchers.define :raise_exception_without_required_keyword do |keyword|
   end
 
   description do
-    "raise an ArgumentError with: '#{keyword} is a required keyword'"
+    "raise an ArgumentError with: '#{keyword} is a required'"
   end
 
   failure_message do
-    "#{actual.source} did not raise an ArgumentException with: #{keyword} is a required keyword."
+    "#{actual.source} did not raise an ArgumentException with: #{keyword} is a required"
   end
 end
 
