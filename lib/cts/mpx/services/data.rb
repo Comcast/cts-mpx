@@ -56,7 +56,6 @@ module Cts
           query = Driver::Assemblers.query user: user, account_id: account_id, service: service, endpoint: endpoint, query: query
 
           if Services[service].type == 'data'
-            query.merge! Driver::Assemblers.query_data range: range, count: count, entries: entries, sort: sort
             query[:fields] = fields if fields
           end
           request = Driver::Request.create(method: method, url: [host, path].join, query: query, headers: headers)

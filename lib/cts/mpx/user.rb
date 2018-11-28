@@ -35,6 +35,7 @@ module Cts
 
         self.token = 'sign_in_token'
         response = Services::Web.post user: self, service: 'User Data Service', endpoint: 'Authentication', method: 'signIn', arguments: arguments, headers: headers
+        self.token = nil
 
         raise "sign_in exception, status: #{response.status}" unless response.status == 200
 

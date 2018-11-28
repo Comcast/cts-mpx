@@ -62,16 +62,19 @@ module Cts
 
           service = Services[].find { |s| s.name == service && s.endpoints.include?(endpoint) }
 
-         {
-            account: account_id || nil,
-            count:   count || nil,
-            entries: entries || nil,
-            form:    service.form,
-            range:   range || nil,
-            schema:  service.type == 'data' ? service.schema : service.endpoints[endpoint]['schema'],
-            sort:    sort || nil,
-            token:   user.token == 'sign_in_token' ? user.token : nil
-          }.merge query
+          h = {
+            schema: service.type == 'data' ? service.schema : service.endpoints[endpoint]['schema'],
+            form:   service.form,
+            token:  user.token
+          }
+
+          h[:account] = account_id if account_id
+          h[:count] =   count if count
+          h[:entries] = entries if entries
+          h[:range] =   range if range
+          h[:sort] =    sort if sort
+          h[:query]&.merge! query if query.any?
+          h
         end
       end
     end
