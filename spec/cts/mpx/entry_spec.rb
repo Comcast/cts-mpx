@@ -71,22 +71,22 @@ module Cts
       end
 
       describe '#id' do
-        context "when the argument is not a reference" do
-          it { expect { entry.id = 'no' }.to raise_error ArgumentError, /is not a valid reference/ }
-        end
+        before { entry.id = media_id }
 
         it "is expected to set service" do
-          entry.id = media_id
           expect(entry.service).to eq media_service
         end
 
         it "is expected to set endpoint" do
-          entry.id = media_id
           expect(entry.endpoint).to eq 'Media'
         end
+
         it "is expected to build an id field" do
-          entry.id = media_id
           expect(entry.fields['id']).to eq media_id
+        end
+
+        context "when the argument is not a reference" do
+          it { expect { entry.id = 'no' }.to raise_error ArgumentError, /is not a valid reference/ }
         end
       end
 
@@ -128,94 +128,66 @@ module Cts
         end
       end
 
-      shared_examples 'save_constraints' do
-        context "when the user is not provided" do
-          it { expect { media_entry.save user: nil }.to raise_error ArgumentError, /is a required keyword/ }
-        end
-
-        context "when user is not a valid user" do
-          it { expect { media_entry.save user: 1 }.to raise_error ArgumentError, /is not a valid Cts::Mpx::User/ }
-        end
-      end
-
-      describe '#save (when ID is not set)' do
+      describe '#save' do
         include_context "with user objects"
         include_context "with request and response objects"
 
         before do
           media_entry.fields['ownerId'] = account_id
+          allow(Driver::Page).to receive(:create).and_return populated_page
           allow(Services::Data).to receive(:put).and_return populated_response
-          allow(Driver::Page).to receive(:create).and_return page
         end
-
-        include_examples 'save_constraints'
 
         it "is expected to create a page populated with data" do
           media_entry.save user: user
           expect(Driver::Page).to have_received(:create).with populated_page_parameters
         end
 
-        it "is expected to call Data.post with with user, service, endpoint, and page" do
-          media_entry.instance_variable_set :@id, nil
-          allow(Services::Data).to receive(:post).and_return ''
-          media_entry.save user: user
-          expect(Services::Data).to have_received(:post).with(account_id: account_id, user: user, service: media_service, endpoint: media_endpoint, page: page)
-        end
-
         it "is expected to return self" do
-          expect(media_entry.save(user: user)).to be media_entry
+          expect(media_entry.save(user: user)).to eq media_entry
         end
 
         context "when fields['ownerId'] is not set" do
           before { entry.fields['ownerId'] = nil }
 
-          it { expect { entry.save user: user }.to raise_error ArgumentError, "fields['ownerId'] must be set" }
+          it { expect { entry.save user: user }.to raise_error ArgumentError, "fields['ownerId'] is a required field" }
         end
 
-        context "when service is not set" do
+        context "when id is set" do
+          let(:expected_method) { :put }
+
+          it "is expected to call Data.put with user, service, endpoint, and page" do
+            allow(Services::Data).to receive(expected_method).and_return ''
+            media_entry.save user: user
+            expect(Services::Data).to have_received(expected_method).with(account_id: account_id, user: user, service: media_service, endpoint: media_endpoint, page: page)
+          end
+        end
+
+        context "when id is not set" do
+          let(:expected_method) { :post }
+
           before do
-            entry.fields['ownerId'] = account_id
-            entry.instance_variable_set :@service, nil
+            allow(Services::Data).to receive(expected_method).and_return populated_response
+            media_entry.instance_variable_set :@id, nil
           end
 
-          it { expect { entry.save user: user }.to raise_error ArgumentError, /is a required keyword/ }
-        end
-
-        context "when endpoint is not set" do
-          before do
-            entry.fields['ownerId'] = account_id
-            entry.instance_variable_set :@endpoint, nil
+          it "is expected to call Data.post with user, service, endpoint, and page" do
+            allow(Services::Data).to receive(expected_method).and_return ''
+            media_entry.save user: user
+            expect(Services::Data).to have_received(expected_method).with(account_id: account_id, user: user, service: media_service, endpoint: media_endpoint, page: page)
           end
-
-          it { expect { entry.save user: user }.to raise_error ArgumentError, /is a required keyword/ }
-        end
-      end
-
-      describe '#save (when ID is set)' do
-        include_context "with user objects"
-        include_context "with request and response objects"
-
-        before do
-          media_entry.fields['ownerId'] = account_id
-          allow(Services::Data).to receive(:put).and_return populated_response
-          allow(Driver::Page).to receive(:create).and_return page
         end
 
-        include_examples 'save_constraints'
+        %i[service endpoint].each do |verb|
+          context "when #{verb} is not set" do
+            before do
+              entry.id = media_id
+              entry.fields['ownerId'] = account_id
+              entry.instance_variable_set "@#{verb}", nil
+            end
 
-        it "is expected to create a page populated with data" do
-          media_entry.save user: user
-          expect(Driver::Page).to have_received(:create).with(entries: [media_entry.to_h[:entry]], xmlns: media_entry.fields.xmlns)
-        end
-
-        it "is expected to call Data.post with with user, service, endpoint, and page" do
-          allow(Services::Data).to receive(:put).and_return ''
-          media_entry.save user: user
-          expect(Services::Data).to have_received(:put).with(account_id: account_id, user: user, service: media_service, endpoint: media_endpoint, page: page)
-        end
-
-        it "is expected to return self" do
-          expect(media_entry.save(user: user)).to eq media_entry
+            it { expect { entry.save user: user }.to raise_exception_without_required verb }
+          end
         end
       end
     end
