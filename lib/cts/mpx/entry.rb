@@ -65,8 +65,7 @@ module Cts
       # @param [String] fields comma delimited list of fields to collect
       # @return [Driver::Response] Response of the call.
       def load(user: nil, fields: nil, account_id: 'urn:theplatform:auth:root')
-        Driver::Helpers.required_arguments %i[user], binding
-
+        Driver::Exceptions.raise_unless_required_keyword? binding, :user
         Driver::Exceptions.raise_unless_argument_error? user, User
         Driver::Exceptions.raise_unless_argument_error? fields, String if fields
         Driver::Exceptions.raise_unless_reference? id
@@ -74,9 +73,11 @@ module Cts
         Registry.fetch_and_store_domain user: user, account_id: account_id
         response = Services::Data.get account_id: account_id, user: user, service: service, endpoint: endpoint, fields: fields, ids: id.split("/").last
 
-        raise 'could not load ' + id unless response.data['entries'].count.positive?
+        entries = response.data['entries']
 
-        self.fields.parse data: response.data['entries'].first, xmlns: response.data['xmlns']
+        raise "could not load #{id}" unless entries.any?
+
+        self.fields.parse data: entries.first, xmlns: response.data['xmlns']
         self
       end
 
@@ -86,20 +87,15 @@ module Cts
       def save(user: nil)
         Driver::Helpers.required_arguments %i[user], binding
         Driver::Exceptions.raise_unless_argument_error? user, User
-        raise ArgumentError, "fields['ownerId'] must be set" unless fields['ownerId']
+        raise ArgumentError, "fields['ownerId'] is a required field" unless fields['ownerId']
+        raise ArgumentError, "endpoint is a required attribute" unless endpoint
+        raise ArgumentError, "service is a required attribute" unless service
 
         p = Driver::Page.create entries: [fields.to_h], xmlns: fields.xmlns
         Registry.fetch_and_store_domain user: user, account_id: fields["ownerId"]
 
         response_params = { account_id: fields['ownerId'], user: user, service: service, endpoint: endpoint, page: p }
-
-        if id
-          Services::Data.put response_params
-        else
-          raise ArgumentError, "service is a required keyword" unless service
-          raise ArgumentError, "endpoint is a required keyword" unless endpoint
-          Services::Data.post response_params
-        end
+        Services::Data.send(id ? :put : :post, response_params)
 
         self
       end
