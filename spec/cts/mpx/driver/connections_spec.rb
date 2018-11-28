@@ -20,7 +20,8 @@ module Cts
             expect(Excon.defaults[:headers]).to match a_hash_including(
               "Content-Type"     => 'application/json',
               "User-Agent"       => a_string_including("cts-mpx").and(a_string_including(Cts::Mpx::VERSION)),
-              'Content-Encoding' => 'bzip2,xz,gzip,deflate')
+              'Content-Encoding' => 'bzip2,xz,gzip,deflate'
+            )
           end
 
           it "is expected to initialize the collection" do
