@@ -8,7 +8,7 @@ module Cts::Mpx::Services
     include_context "with user objects"
 
     let(:parent_class) { Cts::Mpx::Services::Data }
-    let(:root_domain) { Driver.load_json_file('config/root_registry_sea1.json')['resolveDomainResponse'] }
+    let(:root_domain) { Driver.parse_json(File.read 'config/root_registry_sea1.json')['resolveDomainResponse'] }
     let(:call_params) { { user: user, service: media_service, endpoint: media_endpoint, query: {} } }
     let(:with_params) { { method: call_method, url: "http://data.media.theplatform.com/media/data/Media/feed", query: { form: "cjson", schema: "1.7.0", token: "carpe diem" }, headers: {} } }
 

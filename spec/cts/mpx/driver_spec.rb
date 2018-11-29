@@ -3,9 +3,13 @@ require 'spec_helper'
 module Cts
   module Mpx
     describe Driver do
-      it { is_expected.to respond_to(:load_json_file).with(1).arguments }
-      it { is_expected.to respond_to(:gem_dir).with(0).arguments }
       it { is_expected.to respond_to(:config_dir).with(0).arguments }
+      it { is_expected.to respond_to(:gem_dir).with(0).arguments }
+      it { is_expected.to respond_to(:parse_json).with(1).arguments }
+
+      describe "Exceptions" do
+        it { expect(described_class.constants).to include(:TokenError, :ServiceError, :ConnectionError, :CredentialsError) }
+      end
 
       describe "::config_dir" do
         it "is expected to return the gem_dir + 'config'" do
@@ -34,35 +38,15 @@ module Cts
         end
       end
 
-      describe "::load_json_file" do
-        subject { described_class.load_json_file filename }
-
-        let(:filename) { 'test_file.json' }
+      describe "::parse_json" do
+        let(:filename) { 'filename' }
         let(:content) { '{"one": 1}' }
         let(:hash) { Oj.load content }
 
-        before do
-          allow(File).to receive(:exist?).with(filename).and_return(true)
-          allow(File).to receive(:read).with(filename).and_return(content)
-        end
-
-        context "when file is not found" do
-          before { allow(File).to receive(:exist?).with(filename).and_return(false) }
-
-          it { expect { described_class.load_json_file filename }.to raise_error(/#{filename} does not exist/) }
-        end
+        it { expect(described_class.parse_json(content)).to be_instance_of Hash }
 
         context "when it is not parsable json" do
-          before { allow(File).to receive(:read).with(filename).and_return('.') }
-
-          it { expect { described_class.load_json_file filename }.to raise_error(/#{filename}:.*line.*column/) }
-        end
-
-        context "when the file is readable json" do
-          it { is_expected.to be_instance_of Hash }
-          it "is expected equal the contents of the file" do
-            expect(subject).to eq hash
-          end
+          it { expect { described_class.parse_json '.' }.to raise_error(/.: unexpected character/) }
         end
       end
     end

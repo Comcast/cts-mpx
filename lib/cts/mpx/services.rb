@@ -57,7 +57,7 @@ module Cts
         raise ArgumentError, 'type must be supplied' unless type
         raise ArgumentError, 'file must be supplied' unless file
 
-        @raw_reference.store(type, Driver.load_json_file(file))
+        @raw_reference.store(type, Driver.parse_json(File.read(file)))
         true
       end
 

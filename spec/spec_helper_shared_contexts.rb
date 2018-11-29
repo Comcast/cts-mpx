@@ -38,7 +38,8 @@ RSpec.shared_context "with excon parameters" do
       "Content-Length"              => "2050",
       "Server"                      => "Jetty(8.1.16.2)" }
   end
-  let(:service_exception) do
+  let(:service_exception_body) { Oj.dump service_exception_hash}
+  let(:service_exception_hash) do
     {
       "title"            => "ObjectNotFoundException",
       "description"      => "Could not find object with ID q",

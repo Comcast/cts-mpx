@@ -4,6 +4,22 @@ module Cts
     module Driver
       module_function
 
+      # used when the token has a problem
+      class TokenError < RuntimeError
+      end
+
+      # used when the login credentials are incorrect
+      class CredentialsError < RuntimeError
+      end
+
+      # used when the services cannot be communicated with
+      class ConnectionError < RuntimeError
+      end
+
+      # used when the service returns an exception
+      class ServiceError < RuntimeError
+      end
+
       # path to our gem directory, includes support for bundled env's.
       # @return [String] full path to the root of our gem directory.
       def gem_dir
@@ -23,14 +39,10 @@ module Cts
       # @raise [RuntimeError] if the filename does not exist.
       # @raise [RuntimeError] if the file cannot be parsed, supplies the exception.
       # @return [Hash] data from the file
-      def load_json_file(filename)
-        raise "#{filename} does not exist" unless File.exist? filename
-
-        begin
-          Oj.load File.read filename
-        rescue Oj::ParseError => exception
-          raise "#{filename}: #{exception.message}"
-        end
+      def parse_json(string)
+        Oj.load string
+      rescue Oj::ParseError => exception
+        raise "#{string}: #{exception.message}"
       end
     end
   end

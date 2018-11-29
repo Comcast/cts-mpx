@@ -2,11 +2,10 @@ module Cts
   module Mpx
     module Driver
       # Class to contain a response from the services, has a few helper methods to make reading the data easier.
+      # @!attribute original
+      #   @return [Excon::Response] copy of the original excon response.
       class Response
         include Creatable
-
-        # @!attribute original
-        #   @return [Excon::Response] copy of the original excon response.
         attribute name: 'original', kind_of: Excon::Response
 
         # Hash output of the data returned from the services.
@@ -23,8 +22,7 @@ module Cts
             raise "could not parse data: #{e}"
           end
 
-          # TODO: spec your proper service exception.
-          raise "service exception for #{@data["title"]}: #{@data["description"]} (#{@data["correlationId"]})" if @data['isException']
+          raise ServiceError, "title: #{@data["title"]} description: #{@data["description"]} cid: (#{@data["correlationId"]})" if @data['isException']
 
           @data
         end
@@ -40,7 +38,7 @@ module Cts
         # Does this response contain a service exception
         # @return [TrueFalse] true if it does, false if it does not.
         def service_exception?
-          data['isException'] == true
+          original.body.include? '"isException":true,'
         end
 
         # a page of data, processes the response.data for any entries.

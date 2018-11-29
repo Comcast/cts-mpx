@@ -69,11 +69,18 @@ module Cts
       end
 
       describe '::load_reference_file' do
-        let(:result) { described_class.load_reference_file type: 'data', file: 'file' }
-
         before do
-          allow(Driver).to receive(:load_json_file).and_return({})
+          allow(Driver).to receive(:parse_json).and_return({})
+          allow(File).to receive(:read).and_return({})
         end
+
+        ['web', 'data', 'ingest'].each do |type|
+          it "is expected to set reference[type] to the result of Driver.parse_json" do
+            expect(described_class.raw_reference[type]).to be_instance_of Hash
+          end
+        end
+
+        it { expect(described_class.load_reference_file(type: 'data', file: 'file')).to be true }
 
         context "when type is not supplied" do
           it { expect { described_class.load_reference_file file: 'file' }.to raise_error(ArgumentError, 'type must be supplied') }
@@ -82,14 +89,6 @@ module Cts
         context "when file is not supplied" do
           it { expect { described_class.load_reference_file type: 'data' }.to raise_error(ArgumentError, 'file must be supplied') }
         end
-
-        ['web', 'data', 'ingest'].each do |type|
-          it "is expected to set reference[type] to the result of Driver.load_json_file" do
-            expect(described_class.raw_reference[type]).to be_instance_of Hash
-          end
-        end
-
-        it { expect(result).to be true }
       end
 
       describe '::load_references' do

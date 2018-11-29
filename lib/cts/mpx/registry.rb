@@ -56,7 +56,8 @@ module Cts
       # find and store the root registry from the US
       def initialize
         @domains = {}
-        store_domain(Driver.load_json_file("#{Driver.config_dir}/root_registry_sea1.json")['resolveDomainResponse'], 'urn:theplatform:auth:root')
+        content = File.read "#{Driver.config_dir}/root_registry_sea1.json"
+        store_domain(Driver.parse_json(content)['resolveDomainResponse'], 'urn:theplatform:auth:root')
       end
     end
   end

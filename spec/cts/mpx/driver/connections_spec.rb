@@ -49,7 +49,7 @@ module Cts
           end
 
           it "is expected to return an Excon object" do
-            expect(described_class[uri]).to match a_collection_including(Excon::Connection)
+            expect(described_class[uri]).to be_a_kind_of Excon::Connection
           end
 
           context "when collection does not contain a connection for the host" do
@@ -60,7 +60,7 @@ module Cts
           end
 
           context "when no argument is provided it" do
-            before { described_class.create_connection(URI.parse(uri)) }
+            before { described_class[uri] }
 
             it { expect(described_class[]).to be_a_kind_of Array }
             it { expect(described_class[]).to match a_collection_including a_kind_of Excon::Connection }

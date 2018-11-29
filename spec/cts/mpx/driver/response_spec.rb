@@ -13,6 +13,20 @@ module Cts
         it { is_expected.to respond_to(:status).with(0).arguments }
 
         describe "#data" do
+          it { expect(response.data).to be_a_kind_of Hash }
+
+          it "is expected to call Oj.load against original.body" do
+            allow(Oj).to receive(:load).and_call_original
+            response.data
+            expect(Oj).to have_received(:load).with(excon_body)
+          end
+
+          context "when the response contains a service exception" do
+            let(:excon_body) { service_exception_body }
+
+            it { expect { response.data }.to raise_error ServiceError, /title.*description.*cid/ }
+          end
+
           context "when healthy? is false" do
             before { excon_response.params[:status] = 500 }
 
@@ -28,19 +42,13 @@ module Cts
               expect { response.data }.to raise_error(RuntimeError, /could not parse data/)
             end
           end
-
-          it "is expected to call Oj.load against original.body" do
-            allow(Oj).to receive(:load).and_call_original
-            response.data
-            expect(Oj).to have_received(:load).with(excon_body)
-          end
-
-          it "is expected to return a hash" do
-            expect(response.data).to be_a_kind_of Hash
-          end
         end
 
         describe "#healthy?" do
+          it "is expected to return true" do
+            expect(response.healthy?).to eq true
+          end
+
           context "when original.status is not 2xx or 3xx" do
             before { excon_response.params[:status] = 500 }
 
@@ -48,23 +56,15 @@ module Cts
               expect(response.healthy?).to eq false
             end
           end
-
-          it "is expected to return true" do
-            expect(response.healthy?).to eq true
-          end
         end
 
         describe "#service_exception?" do
+          it { expect(response.service_exception?).to be false }
+
           context "when the isException field is true" do
-            before { excon_response.params[:body] = Oj.dump service_exception }
+            before { excon_response.params[:body] = service_exception_body }
 
-            it "is expected to return true" do
-              expect(response.service_exception?).to eq true
-            end
-          end
-
-          it "is expected to return false" do
-            expect(response.service_exception?).to be false
+            it { expect(response.service_exception?).to eq true }
           end
         end
 

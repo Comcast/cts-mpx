@@ -6,7 +6,7 @@ module Cts::Mpx
     include_context "with parameters"
 
     let(:file) { 'config/root_registry_sea1.json' }
-    let(:root_domain) { Driver.load_json_file(file)[hash_key] }
+    let(:root_domain) { Driver.parse_json(File.read file)[hash_key] }
     let(:hash_key) { 'resolveDomainResponse' }
     let(:hash_value) { root_domain }
     let(:result_hash) { { hash_key => hash_value } }
@@ -93,13 +93,13 @@ module Cts::Mpx
     end
 
     describe :initialize do
-      before { allow(Driver).to receive(:load_json_file).with(/#{file}/).and_return(result_hash) }
+      before { allow(Driver).to receive(:parse_json).and_return(result_hash) }
 
       it { expect(parent_class.initialize).to eq nil }
 
       it "is expected to call File.read with 'config/root_registry.sea1.json'" do
         parent_class.initialize
-        expect(Driver).to have_received(:load_json_file)
+        expect(Driver).to have_received(:parse_json)
       end
 
       it "is expected to call store_domain with root_account_id and the hash" do
