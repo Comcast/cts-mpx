@@ -15,14 +15,14 @@ module Cts
 
           raise 'response does not appear to be healthy' unless healthy?
 
-          # TODO make the driver.load file become load string.
+          # TODO: make the driver.load file become load string.
           begin
             @data = Oj.load(original.body)
           rescue Oj::ParseError => e
             raise "could not parse data: #{e}"
           end
 
-          raise ServiceError, "title: #{@data["title"]} description: #{@data["description"]} cid: (#{@data["correlationId"]})" if @data['isException']
+          raise ServiceError, "title: #{@data['title']} description: #{@data['description']} cid: (#{@data['correlationId']})" if @data['isException']
 
           @data
         end

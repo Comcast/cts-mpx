@@ -6,7 +6,7 @@ module Cts::Mpx
     include_context "with parameters"
 
     let(:file) { 'config/root_registry_sea1.json' }
-    let(:root_domain) { Driver.parse_json(File.read file)[hash_key] }
+    let(:root_domain) { Driver.parse_json(File.read(file))[hash_key] }
     let(:hash_key) { 'resolveDomainResponse' }
     let(:hash_value) { root_domain }
     let(:result_hash) { { hash_key => hash_value } }

@@ -140,8 +140,8 @@ module Cts
         end
 
         it "is expected to call Registry.fetch_and_store_domain with the user and account" do
-          allow(Registry).to receive(:fetch_and_store_domain).and_throw :yo
-          expect { media_entry.save user: user }.to raise_error(UncaughtThrowError)
+          allow(Registry).to receive(:fetch_and_store_domain).and_return []
+          media_entry.save user: user
           expect(Registry).to have_received(:fetch_and_store_domain).with(account_id: account_id, user: user)
         end
 

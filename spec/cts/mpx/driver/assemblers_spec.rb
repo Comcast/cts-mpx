@@ -104,7 +104,7 @@ module Cts
             before { call_params[param] = value }
 
             context "when #{param} is provided" do
-              it { expect(parent_class.query(call_params)).to include({param => a_kind_of(value.class)}) }
+              it { expect(parent_class.query(call_params)).to include(param => a_kind_of(value.class)) }
             end
           end
         end

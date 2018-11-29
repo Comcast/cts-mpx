@@ -168,7 +168,7 @@ module Cts
       end
 
       describe 'xmlns' do
-        # TODO weak test, ends up not testing composite logic since only one custom field
+        # TODO: weak test, ends up not testing composite logic since only one custom field
         it "is expected to return a composite of all fields with xmlns set" do
           fields.add field
           fields.add custom_field
