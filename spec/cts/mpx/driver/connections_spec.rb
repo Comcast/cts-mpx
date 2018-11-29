@@ -45,7 +45,7 @@ module Cts
           let(:connection) { described_class[account_id] }
 
           it "is expected to index by host" do
-            expect(described_class[uri]).to be connection
+            expect(described_class[uri]).to match a_kind_of Excon::Connection
           end
 
           it "is expected to return an Excon object" do

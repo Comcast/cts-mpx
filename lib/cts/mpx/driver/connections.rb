@@ -21,14 +21,14 @@ module Cts
 
           raise ArgumentError, "(#{uri}) does not contain theplatform in it." unless parsed_uri.host&.include? "theplatform"
 
-          create_connection parsed_uri unless @collection.include? parsed_uri.host
-          @collection
+          c = create_connection parsed_uri unless @collection.include? parsed_uri.host
+          @collection.push c
+          @collection.last
+          c
         end
 
         def create_connection(parsed_uri)
-          c = Excon.new([parsed_uri.scheme, parsed_uri.host].join("://"), persistent: true)
-          @collection.push c
-          c
+          Excon.new([parsed_uri.scheme, parsed_uri.host].join("://"), persistent: true)
         end
 
         def collection

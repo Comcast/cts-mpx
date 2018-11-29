@@ -32,6 +32,7 @@ module Cts
       # Set the id of the entry, will check if it's a valid reference.
       # @param [String] account_id account_id to set the entry to
       # @return [Entry] the resulting entry
+      # TODO add a spec here to assure @id is set to id
       def id=(id)
         if id.nil?
           fields.remove 'id'
@@ -39,7 +40,7 @@ module Cts
         else
           Driver::Exceptions.raise_unless_reference? id
           result = Services.from_url id
-          fields['id'] = id
+          @id = fields['id'] = id
           @service = result[:service]
           @endpoint = result[:endpoint]
         end

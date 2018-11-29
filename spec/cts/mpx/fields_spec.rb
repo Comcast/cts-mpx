@@ -6,9 +6,9 @@ module Cts
       include_context "with field objects"
       include_context "with empty objects"
 
-      it { expect(described_class).to respond_to(:create_from_data).with_keywords :data, :xmlns }
       it { is_expected.to be_a_kind_of Creatable }
       it { is_expected.to be_a_kind_of Enumerable }
+      it { expect(described_class).to respond_to(:create_from_data).with_keywords :data, :xmlns }
       it { is_expected.to have_attributes(collection: a_kind_of(Array)) }
       it { is_expected.to respond_to(:[]).with(0..1).arguments }
       it { is_expected.to respond_to(:[]=).with(2).arguments.and_keywords(:xmlns) }
@@ -149,13 +149,13 @@ module Cts
       end
 
       describe '::remove' do
-        context "when the provided field is not a kind of Field" do
-          it { expect { fields.add(1) }.to raise_argument_exception(1, Field) }
-        end
-
         it "is expected to remove the argument from @collection" do
           fields.add field
           expect { fields.remove field_name }.to change(fields, :collection).to([])
+        end
+
+        context "when the provided field is not a kind of Field" do
+          it { expect { fields.add(1) }.to raise_argument_exception(1, Field) }
         end
       end
 
@@ -168,6 +168,7 @@ module Cts
       end
 
       describe 'xmlns' do
+        # TODO weak test, ends up not testing composite logic since only one custom field
         it "is expected to return a composite of all fields with xmlns set" do
           fields.add field
           fields.add custom_field

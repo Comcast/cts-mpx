@@ -7,13 +7,10 @@ module Cts
         include_context "with request and response objects"
 
         it { is_expected.to be_a_kind_of Creatable }
-
-        describe "Instance method signatures" do
-          it { is_expected.to respond_to(:data).with(0).arguments }
-          it { is_expected.to respond_to(:healthy?).with(0).arguments }
-          it { is_expected.to respond_to(:page).with(0).arguments }
-          it { is_expected.to respond_to(:status).with(0).arguments }
-        end
+        it { is_expected.to respond_to(:data).with(0).arguments }
+        it { is_expected.to respond_to(:healthy?).with(0).arguments }
+        it { is_expected.to respond_to(:page).with(0).arguments }
+        it { is_expected.to respond_to(:status).with(0).arguments }
 
         describe "#data" do
           context "when healthy? is false" do
@@ -72,14 +69,6 @@ module Cts
         end
 
         describe "#page" do
-          context "when healthy? is false" do
-            before { excon_response.params[:status] = 500 }
-
-            it "is expected to raise an exception" do
-              expect { response.page }.to raise_error RuntimeError, 'response does not appear to be healthy'
-            end
-          end
-
           it "is expected to call Page.create with the entries and xmlns values extracted from the body." do
             allow(Page).to receive(:create)
             response.page
@@ -89,6 +78,14 @@ module Cts
           it "is expected to return an instance of Page" do
             expect(response.page).to be_a_kind_of Cts::Mpx::Driver::Page
           end
+
+          context "when healthy? is false" do
+            before { excon_response.params[:status] = 500 }
+
+            it "is expected to raise an exception" do
+              expect { response.page }.to raise_error RuntimeError, 'response does not appear to be healthy'
+            end
+          end
         end
 
         describe "#status" do
@@ -96,9 +93,7 @@ module Cts
             expect(response.status).to eq 200
           end
 
-          it "is expected to be an Integer" do
-            expect(response.status).to be_a_kind_of Integer
-          end
+          it { expect(response.status).to be_a_kind_of Integer }
         end
       end
     end
