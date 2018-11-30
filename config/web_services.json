@@ -29,10 +29,10 @@
 				"schema": "1.0",
 				"methods": {
 					"getAccountInfoByIds": [
-						"AccountIds"
+						"accountIds"
 					],
 					"getParentAccountInfoByIds": [
-						"AccountIds"
+						"accountIds"
 					]
 				}
 			},
