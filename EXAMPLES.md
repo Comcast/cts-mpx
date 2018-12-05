@@ -13,8 +13,7 @@ account = 'http://access.auth.theplatform.com/data/Account/1'
 ### Login
 
 ``` ruby
-user = Cts::Mpx::User.create username: username, password: password
-user.sign_in
+user = Cts::Mpx::User.create(username: ENV["MPX_USERNAME"], password: ENV["MPX_PASSWORD"]).sign_in
 ```
 
 ### Logout
@@ -38,7 +37,7 @@ puts response.status
 
 ``` ruby
 response = Cts::Mpx::Services::Data.get user: user, service:  'Media Data Service', endpoint: 'Media', account: account, fields: 'id,guid'
-puts response.page
+puts response.page.entries
 ```
 
 ### POST
@@ -57,7 +56,7 @@ Cts::Mpx::Services::Data.put user: user, service:  'Media Data Service', endpoin
 
 ``` ruby
 response = Cts::Mpx::Services::Data.delete user: user, service:  'Media Data Service', endpoint: 'Media', account: account, fields: 'id,guid', ids: "1,2,3,4"
-puts response.page
+puts response.page.entries
 ```
 
 ## Page class
@@ -78,4 +77,17 @@ puts page.to_s
 
 ``` ruby
 puts page.to_s(true)
+```
+
+## Query
+
+``` ruby
+media_query = Query.create({
+  account_id:  "http://access.auth.theplatform.com/data/Account/2034777617",
+  service:  'Media Data Service',
+  endpoint: 'Media',
+  fields:    'id,guid,title,ownerId'
+}).run user: user
+
+media_query.entries
 ```

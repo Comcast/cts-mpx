@@ -55,9 +55,8 @@ module Cts
           path = Driver::Assemblers.path service: service, endpoint: endpoint, extra_path: extra_path, ids: ids
           query = Driver::Assemblers.query user: user, account_id: account_id, service: service, endpoint: endpoint, query: query
 
-          if Services[service].type == 'data'
-            query[:fields] = fields if fields
-          end
+          query[:fields] = fields if Services[service].type == 'data' && fields
+
           request = Driver::Request.create(method: method, url: [host, path].join, query: query, headers: headers)
           request.call
         end

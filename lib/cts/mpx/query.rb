@@ -97,13 +97,8 @@ module Cts
           output.store attribute, instance_variable_get("@#{attribute}") unless instance_variable_get("@#{attribute}").nil?
         end
 
-        unless output[:return_count].nil?
-          output[:count] = output.delete :return_count
-        end
-
-        unless output[:return_entries].nil?
-          output[:entries] = output.delete :return_entries
-        end
+        output[:count] = output.delete :return_count unless output[:return_count].nil?
+        output[:entries] = output.delete :return_entries unless output[:return_entries].nil?
 
         output
       end
