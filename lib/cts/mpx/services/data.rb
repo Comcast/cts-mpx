@@ -53,7 +53,7 @@ module Cts
 
           host = Driver::Assemblers.host user: user, service: service, account_id: account_id
           path = Driver::Assemblers.path service: service, endpoint: endpoint, extra_path: extra_path, ids: ids
-          query = Driver::Assemblers.query user: user, account_id: account_id, service: service, endpoint: endpoint, query: query
+          query = Driver::Assemblers.query user: user, account_id: account_id, service: service, endpoint: endpoint, query: query, range: range
 
           query[:fields] = fields if Services[service].type == 'data' && fields
 
