@@ -26,8 +26,10 @@ module Cts
       # @return [Self.collection,Field,nil] Can return the collection, a single field, or nil if nothing found
       def [](key = nil)
         return @collection unless key
+
         result = @collection.find { |f| f.name == key }
         return result.value if result
+
         nil
       end
 
@@ -54,6 +56,7 @@ module Cts
       # @return [Self]
       def add(field)
         return self if @collection.include? field
+
         Driver::Exceptions.raise_unless_argument_error? field, Field
         @collection.push field
         self
@@ -83,7 +86,7 @@ module Cts
         data.delete :service
         data.delete :endpoint
         reset
-        @collection = data.map { |k, v| Field.create name: k.to_s, value: v, xmlns: xmlns }
+        @collection = data.map { |k, v| Field.create(name: k.to_s, value: v, xmlns: xmlns) }
       end
 
       # Remove a field object from the collection
