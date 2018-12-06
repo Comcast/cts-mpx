@@ -12,7 +12,7 @@ module Cts
 
       attribute name: 'name', kind_of: String
       attribute name: 'value'
-      attribute(name:'xmlns', kind_of: Hash) { |o| o.remove_instance_variable :@xmlns if o.type == :internal }
+      attribute name:'xmlns', kind_of: Hash
 
       # Return just the name value as key/value
       # @return [Hash]
