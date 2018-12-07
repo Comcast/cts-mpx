@@ -67,7 +67,7 @@ RSpec.shared_context "with media parameters" do
 end
 
 RSpec.shared_context "with page parameters" do
-  let(:page_parameters) { { 'xmlns' => {}, 'entries' => [] } }
+  let(:page_parameters) { { '$xmlns' => {}, 'entries' => [] } }
   let(:populated_page_parameters) { media_entries.to_h }
 end
 

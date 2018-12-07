@@ -11,7 +11,7 @@ module Cts
       it { is_expected.to have_attributes(xmlns: nil) }
       it { is_expected.to respond_to(:name).with(0).argument }
       it { is_expected.to respond_to(:to_h).with(0).argument }
-      it { is_expected.to respond_to(:type).with(0).argument }
+      it { is_expected.to respond_to(:custom?).with(0).argument }
 
       describe '::to_h' do
         it "is expected to have a key set to name" do
@@ -23,12 +23,12 @@ module Cts
         end
       end
 
-      describe '::type' do
+      describe '::custom?' do
         context "when xmlns is not nil" do
-          it { expect(custom_field.type).to eq :custom }
+          it { expect(custom_field.custom?).to eq true }
         end
 
-        it { expect(field.type).to eq :internal }
+        it { expect(field.custom?).to eq false }
       end
     end
   end

@@ -164,7 +164,7 @@ module Cts
           let(:expected_method) { :put }
 
           it "is expected to call Data.put with user, service, endpoint, and page" do
-            allow(Services::Data).to receive(expected_method).and_return ''
+            allow(Services::Data).to receive(expected_method).and_return populated_response
             media_entry.save user: user
             expect(Services::Data).to have_received(expected_method).with(account_id: account_id, user: user, service: media_service, endpoint: media_endpoint, page: page)
           end
@@ -179,7 +179,7 @@ module Cts
           end
 
           it "is expected to call Data.post with user, service, endpoint, and page" do
-            allow(Services::Data).to receive(expected_method).and_return ''
+            allow(Services::Data).to receive(expected_method).and_return populated_response
             media_entry.save user: user
             expect(Services::Data).to have_received(expected_method).with(account_id: account_id, user: user, service: media_service, endpoint: media_endpoint, page: page)
           end

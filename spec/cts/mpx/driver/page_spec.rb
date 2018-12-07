@@ -18,7 +18,7 @@ module Cts
           let(:entries) { [{ "id" => "http://data.media.theplatform.com/media/data/Media/1", "guid" => "123" }] }
           let(:xmlns)   { { "ns" => "a_value" } }
           let(:params)  { { xmlns: xmlns, entries: entries } }
-          let(:string_params) { { "xmlns" => xmlns, "entries" => entries } }
+          let(:string_params) { { "$xmlns" => xmlns, "entries" => entries } }
           let(:output)  { Oj.dump string_params }
           let(:page)    { Page.create params }
           let(:input)   { Oj.compat_load page.to_s }
@@ -32,7 +32,7 @@ module Cts
           end
 
           it "is expected to output xmlns first" do
-            expect(input.keys).to eq ['xmlns', 'entries']
+            expect(input.keys).to eq ['$xmlns', 'entries']
           end
 
           it { expect(input).to be_a_kind_of Hash }
