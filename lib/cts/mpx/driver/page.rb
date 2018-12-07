@@ -37,8 +37,8 @@ module Cts
 
           Oj.dump(
             {
-              "$xmlns"   => xmlns,
-              "entries"  => entries
+              "$xmlns"  => xmlns,
+              "entries" => entries
             },
             indent: indent_depth
           )

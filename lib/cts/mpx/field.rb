@@ -12,7 +12,7 @@ module Cts
 
       attribute name: 'name', kind_of: String
       attribute name: 'value'
-      attribute(name:'xmlns', kind_of: Hash) { |o, xmlns| o.xmlns = xmlns if o.custom?}
+      attribute(name: 'xmlns', kind_of: Hash) { |o, xmlns| o.xmlns = xmlns if o.custom? }
 
       # Return just the name value as key/value
       # @return [Hash]
