@@ -71,7 +71,7 @@ module Cts
         Driver::Exceptions.raise_unless_argument_error? fields, String if fields
         Driver::Exceptions.raise_unless_reference? id
 
-        Registry.fetch_and_store_domain user: user, account_id: account_id
+        Registry.fetch_and_store_domain user, account_id
         response = Services::Data.get account_id: account_id, user: user, service: service, endpoint: endpoint, fields: fields, ids: id.split("/").last
 
         entries = response.data['entries']
@@ -93,7 +93,7 @@ module Cts
         raise ArgumentError, "service is a required attribute" unless service
 
         p = Driver::Page.create entries: [fields.to_h], xmlns: fields.xmlns
-        Registry.fetch_and_store_domain user: user, account_id: fields["ownerId"]
+        Registry.fetch_and_store_domain user, fields["ownerId"]
 
         response_params = { account_id: fields['ownerId'], user: user, service: service, endpoint: endpoint, page: p }
         result = Services::Data.send(id ? :put : :post, response_params)

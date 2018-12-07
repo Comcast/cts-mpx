@@ -131,6 +131,7 @@ module Cts
       describe '#save' do
         include_context "with user objects"
         include_context "with request and response objects"
+        let(:account_id) { root_account_id }
 
         before do
           media_entry.fields['ownerId'] = account_id
@@ -142,7 +143,7 @@ module Cts
         it "is expected to call Registry.fetch_and_store_domain with the user and account" do
           allow(Registry).to receive(:fetch_and_store_domain).and_return []
           media_entry.save user: user
-          expect(Registry).to have_received(:fetch_and_store_domain).with(account_id: account_id, user: user)
+          expect(Registry).to have_received(:fetch_and_store_domain).with(user, account_id)
         end
 
         it "is expected to create a page populated with data" do

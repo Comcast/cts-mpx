@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cts-mpx (1.0.3)
+    cts-mpx (1.1.0)
       creatable (~> 2.2.1)
       excon
       oj (= 3.5.0)
