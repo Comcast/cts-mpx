@@ -36,6 +36,7 @@ module Cts
         end
 
         def initialize
+          Excon.defaults[:omit_nil] = true
           Excon.defaults[:persistent] = true
           Excon.defaults[:headers] = {
             'Content-Type'     => "application/json",

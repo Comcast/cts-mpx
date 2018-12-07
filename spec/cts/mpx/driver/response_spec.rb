@@ -15,10 +15,10 @@ module Cts
         describe "#data" do
           it { expect(response.data).to be_a_kind_of Hash }
 
-          it "is expected to call Oj.load against original.body" do
-            allow(Oj).to receive(:load).and_call_original
+          it "is expected to call Oj.compat_load against original.body" do
+            allow(Oj).to receive(:compat_load).and_call_original
             response.data
-            expect(Oj).to have_received(:load).with(excon_body)
+            expect(Oj).to have_received(:compat_load).with(excon_body)
           end
 
           context "when the response contains a service exception" do

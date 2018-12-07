@@ -40,7 +40,7 @@ module Cts
       # @raise [RuntimeError] if the file cannot be parsed, supplies the exception.
       # @return [Hash] data from the file
       def parse_json(string)
-        Oj.load string
+        Oj.compat_load string
       rescue Oj::ParseError => exception
         raise "#{string}: #{exception.message}"
       end

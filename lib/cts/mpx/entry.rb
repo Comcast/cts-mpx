@@ -96,7 +96,8 @@ module Cts
         Registry.fetch_and_store_domain user: user, account_id: fields["ownerId"]
 
         response_params = { account_id: fields['ownerId'], user: user, service: service, endpoint: endpoint, page: p }
-        Services::Data.send(id ? :put : :post, response_params)
+        result = Services::Data.send(id ? :put : :post, response_params)
+        result.data if result.service_exception?
 
         self
       end

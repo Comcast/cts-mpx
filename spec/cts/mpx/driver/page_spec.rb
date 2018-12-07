@@ -21,7 +21,7 @@ module Cts
           let(:string_params) { { "xmlns" => xmlns, "entries" => entries } }
           let(:output)  { Oj.dump string_params }
           let(:page)    { Page.create params }
-          let(:input)   { Oj.load page.to_s }
+          let(:input)   { Oj.compat_load page.to_s }
 
           context "when any argument is provided" do
             let(:output) { Oj.dump string_params, indent: 2 }

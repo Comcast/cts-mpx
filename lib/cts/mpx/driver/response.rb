@@ -17,7 +17,7 @@ module Cts
 
           # TODO: make the driver.load file become load string.
           begin
-            @data = Oj.load(original.body)
+            @data = Oj.compat_load(original.body)
           rescue Oj::ParseError => e
             raise "could not parse data: #{e}"
           end

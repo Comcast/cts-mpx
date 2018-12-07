@@ -12,7 +12,7 @@ module Cts
 
       attribute name: 'name', kind_of: String
       attribute name: 'value'
-      attribute name:'xmlns', kind_of: Hash
+      attribute(name:'xmlns', kind_of: Hash) { |o, xmlns| o.xmlns = xmlns if o.custom?}
 
       # Return just the name value as key/value
       # @return [Hash]
@@ -21,11 +21,11 @@ module Cts
       end
 
       # Determines if this field is a custom field or not
-      # @return [Symbol] :internal or :custom if it is a custom field
-      def type
-        return :custom if name.include? "$"
+      # @return [Symbol] true if it is a custom field
+      def custom?
+        return true if name.include? "$"
 
-        :internal
+        false
       end
 
       # Set the namespace of the field

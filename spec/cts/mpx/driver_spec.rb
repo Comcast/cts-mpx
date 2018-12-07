@@ -41,7 +41,7 @@ module Cts
       describe "::parse_json" do
         let(:filename) { 'filename' }
         let(:content) { '{"one": 1}' }
-        let(:hash) { Oj.load content }
+        let(:hash) { Oj.compat_load content }
 
         it { expect(described_class.parse_json(content)).to be_instance_of Hash }
 
