@@ -1,6 +1,7 @@
 module Cts
   module Mpx
     module Driver
+      # custom exception method helpers
       module Exceptions
         module_function
 

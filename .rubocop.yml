@@ -33,9 +33,17 @@ Metrics/LineLength:
 
 Metrics/BlockLength:
   Exclude:
-    - 'Guardfile'
-    - '*.gemspec'
     - 'spec/**/*'
+    - '*.gemspec'
+    - 'Rakefile'
+    - 'Guardfile'
+
+Metrics/ParameterLists:
+  Exclude:
+    - 'lib/cts/mpx/services/data.rb'
+    - 'lib/cts/mpx/driver/assemblers.rb'
+    - 'lib/cts/mpx/services/ingest.rb'
+    - 'lib/cts/mpx/services/web.rb'
 
 # we exclude these two files since they are generated, the rest of our projects
 # should use // style regexps.
@@ -69,6 +77,9 @@ Style/Documentation:
 RSpec/NamedSubject:
   Enabled: false
 
+RSpec/DescribeSymbol:
+  Enabled: false
+
 Lint/Debugger:
   Enabled: false
 
@@ -76,3 +87,10 @@ Lint/Debugger:
 Layout/AlignHash:
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/MixinUsage:
+  Exclude:
+    - "spec/*"
