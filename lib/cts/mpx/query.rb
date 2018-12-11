@@ -86,6 +86,18 @@ module Cts
         h
       end
 
+      def save_results_to_file(filename)
+        File.write filename, Oj.dump(to_h)
+      end
+
+      def self.load_results_from_file(filename)
+        tmp_to_h = Oj.load File.read filename
+        n = Query.create tmp_to_h[:params]
+        n.page.entries = tmp_to_h[:entries][:entries]
+        n.page.xmlns = tmp_to_h[:entries][:xmlns]
+        n
+      end
+
       private
 
       # List of parameters that are currently set in the query
