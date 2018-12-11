@@ -7,9 +7,7 @@ AllCops:
     - 'tmp/**/*'
     - 'spec/spec_helper.rb'
 
-
 # The defaults for these seem to be based on a rails env, this is not rails.
-# TODO tune this down and recode.
 Metrics/ModuleLength:
   CountComments: false
   Max: 250
@@ -33,6 +31,12 @@ Metrics/PerceivedComplexity:
 Metrics/LineLength:
   Enabled: false
 
+Metrics/BlockLength:
+  Exclude:
+    - 'Guardfile'
+    - '*.gemspec'
+    - 'spec/**/*'
+
 # we exclude these two files since they are generated, the rest of our projects
 # should use // style regexps.
 Style/RegexpLiteral:
@@ -55,42 +59,20 @@ Style/FrozenStringLiteralComment:
 Style/MixinUsage:
   Exclude:
   - 'bin/*'
-  - 'spec/spec_helper_shared_examples.rb'
 
-# it's about the line count, and white space on the left.
-Style/ClassAndModuleChildren:
+# Specs don't need inline documentation.
+Style/Documentation:
+  Enabled: true
+  Exclude:
+    - 'spec/**/*'
+
+RSpec/NamedSubject:
+  Enabled: false
+
+Lint/Debugger:
   Enabled: false
 
 # Purty hashes.
 Layout/AlignHash:
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
-
-# Specs don't need inline documentation.
-# TODO at some point, re-enable this.
-Style/Documentation:
-  Enabled: false
-  Exclude:
-    - 'spec/**/*'
-
-Metrics/BlockLength:
-  Exclude:
-    - 'spec/**/*'
-    - '*.gemspec'
-    - 'Rakefile'
-
-Metrics/ParameterLists:
-  Exclude:
-    - 'lib/cts/mpx/services/data.rb'
-    - 'lib/cts/mpx/driver/assemblers.rb'
-    - 'lib/cts/mpx/services/ingest.rb'
-    - 'lib/cts/mpx/services/web.rb'
-
-RSpec/NamedSubject:
-  Enabled: false
-
-RSpec/DescribeSymbol:
-  Enabled: false
-
-Lint/Debugger:
-  Enabled: false
