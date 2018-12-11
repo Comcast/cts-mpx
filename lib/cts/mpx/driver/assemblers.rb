@@ -73,7 +73,7 @@ module Cts
           h[:entries] = entries if entries
           h[:range] =   range if range
           h[:sort] =    sort if sort
-          h[:query]&.merge! query if query.any?
+          h.merge! query if query.any?
           h
         end
       end
