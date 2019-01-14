@@ -49,6 +49,7 @@ module Cts
             expect { parent_class.load_by_id user: user, id: 'a_string' }.to raise_error ArgumentError, /a_string is not a valid reference/
           end
         end
+
         it { expect { parent_class.load_by_id user: user, id: 1 }.to raise_unless_reference(1, String) }
 
         it "is expected to create a new entry" do

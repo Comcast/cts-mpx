@@ -45,6 +45,7 @@ module Cts
         return false unless ref.scheme == "http" || ref.scheme == "https"
         return false unless ref.host.end_with? ".theplatform.com"
         return false if ref.host.start_with? 'feed.media.theplatform'
+
         true
       end
     end

@@ -70,6 +70,7 @@ module Cts
       # @return [String] token
       def token!
         raise "#{username} is not signed in, (token is set to nil)." unless token
+
         token
       end
     end
