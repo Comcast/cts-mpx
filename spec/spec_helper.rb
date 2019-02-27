@@ -19,6 +19,15 @@ RSpec.configure do |config|
   config.example_status_persistence_file_path = "tmp/examples.txt"
 end
 
+RSpec::Matchers.alias_matcher :return_a_kind_of, :be_a_kind_of
+RSpec::Core::MemoizedHelpers.define_method(:result_is_expected) do
+  expect(subject.yield) # rubocop: disable RSpec/VoidExpect
+end
+
+RSpec::Core::MemoizedHelpers.define_method(:result) do
+  subject.yield
+end
+
 SimpleCov.formatters = [
   SimpleCov::Formatter::HTMLFormatter
 ]

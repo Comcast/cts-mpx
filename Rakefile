@@ -20,7 +20,7 @@ desc "updates for various bits of the development environment."
 
 namespace :update do
   desc "update everything (multitasked)"
-  multitask(all: [:gemfile, :rakefile, :rubocop, :tasks])
+  multitask(all: %i[gemfile rakefile rubocop tasks])
 
   desc 'Update Gemfile from gist'
   task :gemfile do

@@ -23,4 +23,5 @@ group :development, optional: true do
   gem 'guard-rubocop'
   gem 'guard-yard'
   gem 'pry'
+  gem 'solargraph'
 end

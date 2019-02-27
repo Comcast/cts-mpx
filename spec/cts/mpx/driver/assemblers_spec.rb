@@ -14,19 +14,29 @@ module Cts
         it { expect(described_class).to respond_to(:path).with_keywords :service, :endpoint, :ids, :extra_path }
         it { expect(described_class).to respond_to(:query).with_keywords :user, :account_id, :service, :endpoint, :query }
 
-        describe :host, required_keywords: %i[user service] do
-          let(:call_params) { { user: user, service: service } }
+        describe ".host" do
           let(:host) { "http://data.media.theplatform.com" }
+          let(:params) { { user: user, service: service } }
+          let(:subject) { proc { Assemblers.host params } }
 
           before { Registry.initialize }
 
-          include_examples "when a required keyword isn't set"
-          include_examples "when the user is not logged in"
+          it { is_expected.to raise_error_without_user_token(user) }
 
-          it { expect { parent_class.host(call_params) }.to raise_error_without_user_token(call_params[:user]) }
+          context "when the service is a media service" do
+            it { result_is_expected.to eq host }
+          end
 
-          it "is expected to return the host" do
-            expect(parent_class.host(call_params)).to eq host
+          context "when the user is not provided" do
+            let(:params) { { service: service }}
+
+            it { is_expected.to raise_error ArgumentError, /user is a required keyword/ }
+          end
+
+          context "when the service is not provided" do
+            let(:params) { { user: user }}
+
+            it { is_expected.to raise_error ArgumentError, /service is a required keyword/ }
           end
         end
 
