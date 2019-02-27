@@ -9,6 +9,7 @@ module Cts
         let(:connection) { Excon.new uri }
 
         before { allow(Excon).to receive(:new).and_call_original }
+
         after { described_class.initialize }
 
         it { expect(described_class).to have_attributes(collection: Array) }
