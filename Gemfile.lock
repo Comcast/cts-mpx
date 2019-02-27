@@ -1,4 +1,9 @@
 PATH
+  remote: ../../github-public/creatable
+  specs:
+    creatable (2.3.1)
+
+PATH
   remote: .
   specs:
     cts-mpx (1.1.1)
@@ -13,7 +18,6 @@ GEM
     ast (2.4.0)
     bump (0.7.0)
     coderay (1.1.2)
-    creatable (2.3.1)
     diff-lcs (1.3)
     docile (1.3.1)
     excon (0.62.0)
@@ -114,6 +118,7 @@ PLATFORMS
 DEPENDENCIES
   bump
   bundler (~> 1.16)
+  creatable!
   cts-mpx!
   guard
   guard-bundler
@@ -130,4 +135,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.16.5
+   1.17.2

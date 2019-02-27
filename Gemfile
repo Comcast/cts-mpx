@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'creatable', path: '../../github-public/creatable'
+
 group :development do
   gem 'bump'
   gem "bundler", "~> 1.16"
