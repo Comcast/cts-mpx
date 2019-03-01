@@ -49,7 +49,8 @@ module Cts
         # @raise (see #prep_call)
         # @return [Response] Response of the call
         def get(user: nil, account_id: nil, service: nil, fields: nil, endpoint: nil, sort: nil, extra_path: nil, range: nil, ids: nil, query: {}, headers: {}, count: nil, entries: nil, method: :get)
-          prep_call(user: user, account_id: account_id, service: service, query: query, headers: headers, required_arguments: ['user', 'service', 'endpoint'], binding: binding)
+          constraints!(user: user, service: service, query: query, headers: headers, required_keywords: ['service', 'endpoint'])
+          Registry.fetch_and_store_domain(user, account_id)
 
           host = Driver::Assemblers.host user: user, service: service, account_id: account_id
           path = Driver::Assemblers.path service: service, endpoint: endpoint, extra_path: extra_path, ids: ids
@@ -73,6 +74,7 @@ module Cts
         # @raise (see #prep_call)
         # @return [Response] Response of the call
         def post(user: nil, account_id: nil, service: nil, endpoint: nil, extra_path: nil, query: {}, page: nil, headers: {}, method: :post)
+          # check_constraints!()
           prep_call(user: user, account_id: account_id, service: service, query: query, headers: headers, required_arguments: ['user', 'service', 'endpoint', 'page'], page: page, binding: binding)
           host = Driver::Assemblers.host user: user, service: service, account_id: account_id
           path = Driver::Assemblers.path service: service, endpoint: endpoint, extra_path: extra_path
@@ -107,13 +109,16 @@ module Cts
         # @raise (see Registry#fetch_domain)
         # @raise (see Registry#store_domain)
         # @return [Response] Response of the call
-        # @private
-        def prep_call(args = {})
-          Driver::Helpers.required_arguments args[:required_arguments], args[:binding]
-          Driver::Helpers.raise_if_not_a([args[:user]], User) if args[:user]
-          Driver::Helpers.raise_if_not_a_hash [args[:query], args[:headers]]
-          Driver::Helpers.raise_if_not_a([args[:page]], Driver::Page) if args[:page]
+        def constraints!(args = {})
+          args[:required_keywords]&.each do |keyword|
+            locals = binding.receiver.send(:local_variables)
+
+            raise ArgumentError, "#{keyword} is a required keyword." unless locals.include? keyword
+          end
           args[:user].token!
+
+          Driver::Helpers.raise_if_not_a([args[:page]], Driver::Page) if args[:page]
+          Driver::Helpers.raise_if_not_a_hash [args[:query], args[:headers]]
           Registry.fetch_and_store_domain(args[:user], args[:account_id])
         end
       end

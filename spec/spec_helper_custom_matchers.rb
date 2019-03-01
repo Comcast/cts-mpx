@@ -44,7 +44,7 @@ RSpec::Matchers.define :raise_exception_without_required do |keyword|
   end
 end
 
-RSpec::Matchers.define :raise_error_without_user_token do
+RSpec::Matchers.define :raise_error_without_user_token do |user|
   match do
     token = user.token
     user.token = nil

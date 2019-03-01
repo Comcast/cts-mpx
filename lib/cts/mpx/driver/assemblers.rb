@@ -1,9 +1,7 @@
 module Cts
   module Mpx
     module Driver
-      #
       # collection of methods used to assemble various parts of a request.
-      #
       module Assemblers
         module_function
 
@@ -34,11 +32,12 @@ module Cts
         # @return [String] assembled path for a data call
         def path(service: nil, endpoint: nil, extra_path: nil, ids: nil, account_id: 'urn:theplatform:auth:root')
           Helpers.required_arguments %i[service endpoint], binding
-          service = Services[].find { |s| s.name == service && s.endpoints.include?(endpoint) }
+          service_obj = Services[].find { |s| s.name == service && s.endpoints.include?(endpoint) }
 
-          path = "#{URI.parse(service.url(account_id)).path}/#{service.path}/#{endpoint}"
+          binding.pry unless service_obj
+          path = "#{URI.parse(service_obj.url(account_id)).path}/#{service_obj.path}/#{endpoint}"
           path += "/#{extra_path}" if extra_path
-          path += "/feed" if service.type == 'data'
+          path += "/feed" if service_obj.type == 'data'
           path += "/#{ids}" if ids
           path
         end

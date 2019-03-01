@@ -7,8 +7,9 @@ module Cts
 
       let(:service_name) { 'Access Data Service' }
 
-      it { is_expected.to have_attributes(reference: an_instance_of(Hash)) }
+      it { is_expected.to have_attributes(reference: a_kind_of(Hash)) }
       it { is_expected.to have_attributes(types: %i[web data ingest]) }
+
       it { is_expected.to respond_to(:[]).with(0..1).arguments }
       it { is_expected.to respond_to(:load_reference_file).with_keywords(:file, :file) }
       it { is_expected.to respond_to(:load_references).with(0).arguments }
@@ -16,7 +17,15 @@ module Cts
       it { is_expected.to respond_to(:reference).with(0..1).arguments }
 
       describe '::[]' do
-        let(:result) { described_class[service_name] }
+        let(:subject) { proc { described_class[service_name] } }
+
+        context "when the key ends with a number" do
+          let(:service_name) { 'Media Data Service 3' }
+
+          it "is expected to return the correct service" do
+            result_is_expected.to eq Services["Media Data Service"]
+          end
+        end
 
         context "when the key is not a string" do
           it { expect { described_class[1] }.to raise_error(/key must be a string/) }
@@ -27,12 +36,12 @@ module Cts
         end
 
         context "when a key is not provided" do
-          let(:result) { described_class[] }
+          let(:service_name) { nil }
 
-          it { expect(result).to be_instance_of Array }
+          it { result_is_expected.to return_a_kind_of Array }
         end
 
-        it { expect(result).to be_instance_of Driver::Service }
+        it { result_is_expected.to return_a_kind_of Driver::Service }
       end
 
       describe '::from_url' do

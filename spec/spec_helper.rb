@@ -20,6 +20,7 @@ RSpec.configure do |config|
 end
 
 RSpec::Matchers.alias_matcher :return_a_kind_of, :be_a_kind_of
+
 RSpec::Core::MemoizedHelpers.define_method(:result_is_expected) do
   expect(subject.yield) # rubocop: disable RSpec/VoidExpect
 end

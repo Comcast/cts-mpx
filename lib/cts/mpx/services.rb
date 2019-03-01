@@ -14,7 +14,9 @@ module Cts
         return @services unless key
         raise 'key must be a string' unless key.is_a? String
 
-        service = @services.find { |e| e.name == key }
+        r = /^(?<name>.*?)(?:| )(?<shard>\d|$)/
+        m = r.match key
+        service = @services.find { |e| e.name == m[:name] }
         raise "#{key} must be a service name." unless service
 
         service
