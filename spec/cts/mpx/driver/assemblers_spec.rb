@@ -16,12 +16,19 @@ module Cts
 
         describe ".host" do
           let(:host) { "http://data.media.theplatform.com" }
+          let(:host3) { "http://data.media3.theplatform.com" }
           let(:params) { { user: user, service: service } }
           let(:subject) { proc { Assemblers.host params } }
 
           before { Registry.initialize }
 
           it { is_expected.to raise_error_without_user_token(user) }
+
+          context "when the service includes a shard numeric (Media Data Service 3)" do
+            let(:service) { "Media Data Service 3" }
+
+            it { result_is_expected.to eq host3 }
+          end
 
           context "when the service is a media service" do
             it { result_is_expected.to eq host }

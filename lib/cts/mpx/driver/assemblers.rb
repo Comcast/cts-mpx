@@ -16,8 +16,12 @@ module Cts
           Helpers.required_arguments %i[user service], binding
           user.token!
 
-          service = Services[service]
+          r = /^(?<name>.*?)(?:| )(?<shard>\d|$)/
+          m = r.match service
+          service = Services[m[:name]]
+
           u = URI.parse service.url(account_id)
+          u.host.gsub!(service.uri_hint, service.uri_hint + m[:shard])
 
           [u.scheme, u.host].join('://')
         end
