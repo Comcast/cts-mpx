@@ -18,10 +18,11 @@ module Cts
 
           r = /^(?<name>.*?)(?:| )(?<shard>\d|$)/
           m = r.match service
-          service = Services[m[:name]]
+          service = Services[service]
 
           u = URI.parse service.url(account_id)
-          u.host.gsub!(service.uri_hint, service.uri_hint + m[:shard])
+          u.host.gsub!(service.uri_hint, service.uri_hint + m[:shard]) if service.type == "data" && m[:shard]
+
 
           [u.scheme, u.host].join('://')
         end
@@ -36,9 +37,11 @@ module Cts
         # @return [String] assembled path for a data call
         def path(service: nil, endpoint: nil, extra_path: nil, ids: nil, account_id: 'urn:theplatform:auth:root')
           Helpers.required_arguments %i[service endpoint], binding
-          service_obj = Services[].find { |s| s.name == service && s.endpoints.include?(endpoint) }
 
-          binding.pry unless service_obj
+          r = /^(?<name>.*?)(?:| )(?<shard>\d|$)/
+          m = r.match service
+          service_obj = Services[].find { |s| s.name == m[:name] && s.endpoints.include?(endpoint) }
+
           path = "#{URI.parse(service_obj.url(account_id)).path}/#{service_obj.path}/#{endpoint}"
           path += "/#{extra_path}" if extra_path
           path += "/feed" if service_obj.type == 'data'
@@ -63,7 +66,9 @@ module Cts
           Helpers.required_arguments %i[user service endpoint], binding
           user.token!
 
-          service = Services[].find { |s| s.name == service && s.endpoints.include?(endpoint) }
+          r = /^(?<name>.*?)(?:| )(?<shard>\d|$)/
+          m = r.match service
+          service = Services[].find { |s| s.name == m[:name] && s.endpoints.include?(endpoint) }
 
           h = {
             schema: service.type == 'data' ? service.schema : service.endpoints[endpoint]['schema'],

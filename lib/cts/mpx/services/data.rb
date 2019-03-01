@@ -49,7 +49,7 @@ module Cts
         # @raise (see #prep_call)
         # @return [Response] Response of the call
         def get(user: nil, account_id: nil, service: nil, fields: nil, endpoint: nil, sort: nil, extra_path: nil, range: nil, ids: nil, query: {}, headers: {}, count: nil, entries: nil, method: :get)
-          constraints!(user: user, service: service, query: query, headers: headers, required_keywords: ['service', 'endpoint'])
+          constraints!(binding: binding, user: user, service: service, query: query, headers: headers, required_keywords: [:service, :endpoint])
           Registry.fetch_and_store_domain(user, account_id)
 
           host = Driver::Assemblers.host user: user, service: service, account_id: account_id
@@ -74,7 +74,7 @@ module Cts
         # @raise (see #prep_call)
         # @return [Response] Response of the call
         def post(user: nil, account_id: nil, service: nil, endpoint: nil, extra_path: nil, query: {}, page: nil, headers: {}, method: :post)
-          constraints!(user: user, account_id: account_id, service: service, query: query, headers: headers, required_arguments: ['user', 'service', 'endpoint', 'page'], page: page)
+          constraints!(binding: binding, user: user, account_id: account_id, service: service, query: query, headers: headers, required_arguments: ['user', :service, :endpoint, 'page'], page: page)
           Registry.fetch_and_store_domain(user, account_id)
 
           host = Driver::Assemblers.host user: user, service: service, account_id: account_id
@@ -112,7 +112,7 @@ module Cts
         # @return [Response] Response of the call
         def constraints!(args = {})
           args[:required_keywords]&.each do |keyword|
-            locals = binding.receiver.send(:local_variables)
+            locals = args[:binding].send(:local_variables)
 
             raise ArgumentError, "#{keyword} is a required keyword." unless locals.include? keyword
           end
