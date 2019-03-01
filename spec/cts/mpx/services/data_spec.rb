@@ -4,7 +4,6 @@ describe Cts::Mpx::Services::Data do
   let(:params) do
     {
       endpoint: 'Media',
-      fields:   'id,guid',
       headers:  {},
       service:  'Media Data Service',
       query:    {},
@@ -33,6 +32,8 @@ describe Cts::Mpx::Services::Data do
   end
 
   shared_examples "Driver::Request" do
+    before { subject.call }
+
     describe "Driver::Request (with a media endpoint)" do
       it { expect(Driver::Request).to have_received(:create).with(a_hash_including(:url, :query, :method, :headers)) }
       it { expect(Driver::Request).to have_received(:create).with(a_hash_including(url: a_string_including('media/data/Media'))) }
@@ -40,7 +41,7 @@ describe Cts::Mpx::Services::Data do
     end
   end
 
-  shared_examples "when_x_is_not_a_y" do |x,y|
+  shared_examples "when_x_is_not_a_y" do |x, y|
     context "when #{x} is not a #{y}" do
       before { params[x] = 'a_string' }
 
@@ -70,12 +71,8 @@ describe Cts::Mpx::Services::Data do
     end
   end
 
-  describe '.get' do
-    let(:subject) { proc { described_class.get(params) } }
-
-    before do
-      subject.call
-    end
+  describe '.post' do
+    let(:subject) { proc { described_class.post(params) } }
 
     it { expect(described_class).to have_received(:constraints!) }
     it { result_is_expected.to return_a_kind_of Driver::Response }
@@ -83,8 +80,63 @@ describe Cts::Mpx::Services::Data do
     include_examples "registry_fetch_and_store_domain"
     include_examples "Driver::Request"
 
+    describe "Driver::Request" do
+      it { expect(Driver::Request).to have_received(:create).with(a_hash_including(method: :post)) }
+      it { expect(Driver::Request).to have_received(:create).with(a_hash_including(:payload)) }
+    end
+  end
+
+  describe '.put' do
+    let(:subject) { proc { described_class.put(params) } }
+
+    it { expect(described_class).to have_received(:constraints!) }
+    it { result_is_expected.to return_a_kind_of Driver::Response }
+
+    include_examples "registry_fetch_and_store_domain"
+    include_examples "Driver::Request"
+
+    describe "Driver::Request" do
+      it { expect(Driver::Request).to have_received(:create).with(a_hash_including(method: :put)) }
+      it { expect(Driver::Request).to have_received(:create).with(a_hash_including(:payload)) }
+    end
+  end
+
+  describe '.get' do
+    let(:subject) { proc { described_class.get(params) } }
+
+    it { expect(described_class).to have_received(:constraints!) }
+    it { result_is_expected.to return_a_kind_of Driver::Response }
+
+    include_examples "registry_fetch_and_store_domain"
+    include_examples "Driver::Request"
+
+    describe "Driver::Request" do
+      it { expect(Driver::Request).to have_received(:create).with(a_hash_including(method: :get)) }
+    end
+
     context "when the fields keyword is provided, Driver::Request" do
-      it { expect(Driver::Request).to have_received(:create).with(a_hash_including(query: a_hash_including(:fields))) }
+      before do
+        params[:fields] = 'id,guid'
+        subject.call
+      end
+
+      describe "Driver::Request" do
+        it { expect(Driver::Request).to have_received(:create).with(a_hash_including(query: a_hash_including(:fields))) }
+      end
+    end
+  end
+
+  describe '.delete' do
+    let(:subject) { proc { described_class.delete(params) } }
+
+    it { expect(described_class).to have_received(:constraints!) }
+    it { result_is_expected.to return_a_kind_of Driver::Response }
+
+    include_examples "registry_fetch_and_store_domain"
+    include_examples "Driver::Request"
+
+    describe "Driver::Request" do
+      it { expect(Driver::Request).to have_received(:create).with(a_hash_including(method: :delete)) }
     end
   end
 
