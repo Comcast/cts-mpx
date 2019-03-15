@@ -40,7 +40,7 @@ module Cts
 
           r = /^(?<name>.*?)(?:| )(?<shard>\d|$)/
           m = r.match service
-          service_obj = Services[].find { |s| s.name == m[:name] && s.endpoints.include?(endpoint) }
+          service_obj = Services[m[:name]]
 
           path = "#{URI.parse(service_obj.url(account_id)).path}/#{service_obj.path}/#{endpoint}"
           path += "/#{extra_path}" if extra_path
@@ -68,11 +68,12 @@ module Cts
 
           r = /^(?<name>.*?)(?:| )(?<shard>\d|$)/
           m = r.match service
-          service = Services[].find { |s| s.name == m[:name] && s.endpoints.include?(endpoint) }
+
+          service_obj = Services[m[:name]]
 
           h = {
-            schema: service.type == 'data' ? service.schema : service.endpoints[endpoint]['schema'],
-            form:   service.form,
+            schema: service_obj.type == 'data' ? service_obj.schema : service_obj.endpoints[endpoint]['schema'],
+            form:   service_obj.form,
             token:  user.token
           }
 

@@ -35,7 +35,7 @@ module Cts
         user.token!
         Driver::Exceptions.raise_unless_argument_error?(account_id, 'account_id') { !Validators.account_id? account_id }
 
-        response = Services::Web.post user: user, service: 'Access Data Service', endpoint: 'Registry', method: 'resolveDomain', arguments: { 'accountId' => account_id }
+        response = Services::Web.post user: user, service: 'Access Data Web Service', endpoint: 'Registry', method: 'resolveDomain', arguments: { 'accountId' => account_id }
         response.data['resolveDomainResponse']
       end
 

@@ -16,6 +16,8 @@ module Cts
         def [](key = nil)
           return services unless key
 
+          return services.find { |s| s.name = "Access Data Service" } if key == "Access Data Web Service"
+
           Driver::Exceptions.raise_unless_argument_error?(key, String)
           service = services.find { |e| e.name == key }
           Driver::Exceptions.raise_unless_argument_error?(service, Driver::Service)

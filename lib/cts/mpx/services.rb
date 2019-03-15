@@ -16,10 +16,18 @@ module Cts
 
         r = /^(?<name>.*?)(?:| )(?<shard>\d|$)/
         m = r.match key
-        service = @services.find { |e| e.name == m[:name] }
-        raise "#{key} must be a service name." unless service
 
-        service
+        if key == 'Access Data Web Service'
+          return Web[].find { |s| s.name == 'Access Data Service' }
+        elsif key == "Access Data Service"
+          return Data[].find { |s| s.name == 'Access Data Service' }
+        else
+          # binding.pry
+          service = @services.find { |e| e.name == m[:name] }
+          raise "#{key} must be a service name." unless service
+
+          service
+        end
       end
 
       # return a service from the supplied url
