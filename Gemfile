@@ -5,7 +5,7 @@ gemspec
 group :development do
   gem 'bump'
   gem "bundler", "~> 1.16"
-  gem "rake", "~> 10.0"
+  gem "rake", "~> 13.0"
   gem "rspec", "~> 3.0"
   gem 'rubocop'
   gem 'rubocop-rspec'
